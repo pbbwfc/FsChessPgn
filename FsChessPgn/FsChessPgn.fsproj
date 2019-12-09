@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Ref.fs" />
+    <Compile Include="Types.fs" />
+    <Compile Include="Pos.fs" />
+    <Compile Include="FastPgn.fs" />
+    <Compile Include="PGN.fs" />
+    <Compile Include="chess.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Script1.fsx" />
+  </ItemGroup>
+
+</Project>

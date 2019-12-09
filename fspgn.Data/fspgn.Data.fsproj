@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Util.fs" />
+    <Compile Include="Player.fs" />
+    <Compile Include="PieceType.fs" />
+    <Compile Include="Piece.fs" />
+    <Compile Include="Rank.fs" />
+    <Compile Include="File.fs" />
+    <Compile Include="Position.fs" />
+    <Compile Include="FEN.fs" />
+  </ItemGroup>
+
+</Project>
