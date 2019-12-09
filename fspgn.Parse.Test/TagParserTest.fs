@@ -109,30 +109,30 @@ type TagParserTests() =
         Assert.Equal("Result", tag.Name)
         Assert.Equal(GameResult.WhiteWins, (tag :?> PgnResultTag).Result)
 
-    //[<Fact>]
-    //member this.pTag_should_create_a_FenTag_object_from_a_valid_tag() =
-    //    let tag= parse pTag "[FEN \"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\"]"
-    //    Assert.IsType<FenTag>(tag) |> ignore
+    [<Fact>]
+    member this.pTag_should_create_a_FenTag_object_from_a_valid_tag() =
+        let tag= parse pTag "[FEN \"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\"]"
+        Assert.IsType<FenTag>(tag) |> ignore
 
-    //    let setup= (tag :?> FenTag).Setup
+        let setup= (tag :?> FenTag).Setup
 
-    //    Assert.Equal(Piece.BRook, setup.[File.A, 1])
-    //    Assert.Equal(Piece.WKnight, setup.[File.B, 8])
-    //    Assert.Equal(Piece.BBishop, setup.[File.C, 1])
-    //    Assert.Equal(null, setup.[File.C, 5])
-    //    Assert.Equal(Piece.WKing, setup.[File.E, 8])
+        //Assert.Equal(Piece.BRook, setup.[File.A, 1])
+        //Assert.Equal(Piece.WKnight, setup.[File.B, 8])
+        //Assert.Equal(Piece.BBishop, setup.[File.C, 1])
+        //Assert.Equal(null, setup.[File.C, 5])
+        //Assert.Equal(Piece.WKing, setup.[File.E, 8])
 
-    //    Assert.Equal(true, setup.IsWhiteMove)
+        Assert.Equal(Player.White, setup.Whosturn)
 
-    //    Assert.Equal(true, setup.CanWhiteCastleKingSide)
-    //    Assert.Equal(true, setup.CanWhiteCastleQueenSide)
-    //    Assert.Equal(true, setup.CanBlackCastleKingSide)
-    //    Assert.Equal(true, setup.CanBlackCastleQueenSide)
+        Assert.Equal(true, setup.CastleWS)
+        Assert.Equal(true, setup.CastleWL)
+        Assert.Equal(true, setup.CastleBS)
+        Assert.Equal(true, setup.CastleBL)
 
-    //    Assert.Equal(null, setup.EnPassantSquare)
+        Assert.Equal(Position.OUTOFBOUNDS, setup.Enpassant)
 
-    //    Assert.Equal(0, setup.HalfMoveClock)
-    //    Assert.Equal(1, setup.FullMoveCount)
+        Assert.Equal(0, setup.Fiftymove)
+        Assert.Equal(1, setup.Fullmove)
 
 
     //[<Fact>]
