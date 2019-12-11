@@ -73,3 +73,12 @@ module PgnTextTypes =
 
     let pMoveCreateCastle(mt) = pMoveCreateOrig(mt,None,OUTOFBOUNDS,None,None,OUTOFBOUNDS,None,None)
 
+    type MoveTextEntry =
+        |MovePairEntry of int option * pMove * pMove
+        |HalfMoveEntry of int option * bool * pMove
+        |CommentEntry of string
+        |GameEndEntry of GameResult
+        |NAGEntry of int
+        |RAVEntry of MoveTextEntry list
+    
+ 
