@@ -13,7 +13,7 @@
     <Compile Include="Piece.fs" />
     <Compile Include="Rank.fs" />
     <Compile Include="File.fs" />
-    <Compile Include="Position.fs" />
+    <Compile Include="Square.fs" />
     <Compile Include="FEN.fs" />
   </ItemGroup>
 

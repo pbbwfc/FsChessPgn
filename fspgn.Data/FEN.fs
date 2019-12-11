@@ -3,11 +3,11 @@
 open System.Text
 open System.Text.RegularExpressions
 
-type PosPcDict = System.Collections.Generic.Dictionary<Position, Piece>
+type PosPcDict = System.Collections.Generic.Dictionary<Square, Piece>
 
 module FEN = 
     let Create(pieces : PosPcDict, whosTurn, castleWS, castleWL, castleBS, castleBL, enpassant, fiftyMove, fullMove) = 
-        let pieceat = Position.AllPositions|>Array.map(fun p -> pieces.[p])
+        let pieceat = SQUARES|>Array.map(fun p -> pieces.[p])
         { Pieceat = pieceat
           Whosturn = whosTurn
           CastleWS = castleWS
@@ -20,11 +20,11 @@ module FEN =
     
     let Reverse(fen : Fen) = 
         let pieces = new PosPcDict()
-        for pos in Position.AllPositions do
-            pieces.[pos] <- fen.Pieceat.[int (pos |> Position.Reverse)] |> Piece.ToOppositePlayer//OK
+        for pos in SQUARES do
+            pieces.[pos] <- fen.Pieceat.[int (pos |> Square.Reverse)] |> Piece.ToOppositePlayer//OK
         Create(pieces, fen.Whosturn |> Player.PlayerOther, fen.CastleBS, fen.CastleBL, fen.CastleWS, fen.CastleWL, 
-               (if fen.Enpassant |> Position.IsInBounds then fen.Enpassant |> Position.Reverse
-                else Position.OUTOFBOUNDS), fen.Fiftymove, fen.Fullmove)
+               (if fen.Enpassant |> Square.IsInBounds then fen.Enpassant |> Square.Reverse
+                else OUTOFBOUNDS), fen.Fiftymove, fen.Fullmove)
     
     let ToStr(fen : Fen) = 
         let sb = new StringBuilder(50)
@@ -32,8 +32,8 @@ module FEN =
             let rec getect ect ifile = 
                 if ifile > 7 then ect
                 else 
-                    let rank = Rank.AllRanks.[irank]
-                    let file = File.AllFiles.[ifile]
+                    let rank = RANKS.[irank]
+                    let file = FILES.[ifile]
                     let piece = fen.Pieceat.[int (file |> File.ToPosition(rank))]
                     if piece = Piece.EMPTY then getect (ect + 1) (ifile + 1)
                     else 
@@ -52,7 +52,7 @@ module FEN =
             if fen.CastleBS then sb.Append("k") |> ignore
             if fen.CastleBL then sb.Append("q") |> ignore
         else sb.Append("-") |> ignore
-        if fen.Enpassant |> Position.IsInBounds then sb.Append(" " + (fen.Enpassant |> Position.Name)) |> ignore
+        if fen.Enpassant |> Square.IsInBounds then sb.Append(" " + (fen.Enpassant |> Square.Name)) |> ignore
         else sb.Append(" -") |> ignore
         sb.Append(" " + fen.Fiftymove.ToString()) |> ignore
         sb.Append(" " + fen.Fullmove.ToString()) |> ignore
@@ -91,20 +91,20 @@ module FEN =
         if matches.Count = 0 then failwith "No valid fen found"
         if matches.Count > 1 then failwith "Multiple FENs in string"
         let matchr = matches.[0]
-        let sRanks = Rank.AllRanks|>Array.map(fun r -> matchr.Groups.["R" + (r |> Rank.RankToString)].Value)|>Array.rev
+        let sRanks = RANKS|>Array.map(fun r -> matchr.Groups.["R" + (r |> Rank.RankToString)].Value)|>Array.rev
         let sPlayer = matchr.Groups.["Player"].Value
         let sCastle = matchr.Groups.["Castle"].Value
         let sEnpassant = matchr.Groups.["Enpassant"].Value
         let sFiftyMove = matchr.Groups.["FiftyMove"].Value
         let sFullMove = matchr.Groups.["FullMove"].Value
-        for rank in Rank.AllRanks do
+        for rank in RANKS do
             let rec getpc (cl : char list) ifl = 
                 if not (List.isEmpty cl) then 
                     if ifl > 7 then failwith ("too many pieces in rank " + (rank |> Rank.RankToString))
                     let c = cl.Head
                     if "1234567890".IndexOf(c) >= 0 then getpc cl.Tail (ifl + System.Int32.Parse(c.ToString()))
                     else 
-                        pieceat.[int (File.AllFiles.[ifl] |> File.ToPosition(rank))] <- Piece.Parse(c)//OK
+                        pieceat.[int (FILES.[ifl] |> File.ToPosition(rank))] <- Piece.Parse(c)//OK
                         getpc cl.Tail (ifl + 1)
             
             let srank = sRanks.[System.Int32.Parse(rank |> Rank.RankToString) - 1]
@@ -120,8 +120,8 @@ module FEN =
         let castleBL = sCastle.IndexOf("q") >= 0
         
         let enpassant = 
-            if sEnpassant <> "-" then Position.Parse(sEnpassant)
-            else Position.OUTOFBOUNDS
+            if sEnpassant <> "-" then Square.Parse(sEnpassant)
+            else OUTOFBOUNDS
         
         let fiftyMove = 
             if sFiftyMove <> "-" then System.Int32.Parse(sFiftyMove)

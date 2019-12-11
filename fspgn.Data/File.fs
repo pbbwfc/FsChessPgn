@@ -3,16 +3,15 @@
 open System
 
 module File = 
-    let Filedesclookup = "abcdefgh"
-    let AllFiles = [| File.FileA; File.FileB; File.FileC; File.FileD; File.FileE; File.FileF; File.FileG; File.FileH |]
     
-    let Parse(c : char) = 
+    let Parse(c : char):File = 
+        let Filedesclookup = FILE_NAMES|>Array.reduce(+)
         let idx = Filedesclookup.IndexOf(c.ToString().ToLower())
         if idx < 0 then failwith (c.ToString() + " is not a valid file")
-        else idx |> Fl
+        else idx
     
-    let FileToString(file : File) = Filedesclookup.Substring(int (file), 1)
+    let FileToString(file : File) = FILE_NAMES.[int(file)]
     let IsInBounds(file : File) = int (file) >= 0 && int (file) <= 7
-    let ToPosition (rank : Rank) (file : File) = (int (rank) * 8 + int (file)) |> Pos
+    let ToPosition (rank : Rank) (file : File) :Square = (int (rank) * 8 + int (file))
     
     let ToBitboard(file : File) = FileBits.[int(file)]

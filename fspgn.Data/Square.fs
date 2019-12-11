@@ -2,16 +2,7 @@
 
 open System
 
-module Position = 
-    let AllPositions = 
-        [| Position.A8; Position.B8; Position.C8; Position.D8; Position.E8; Position.F8; Position.G8; Position.H8; 
-           Position.A7; Position.B7; Position.C7; Position.D7; Position.E7; Position.F7; Position.G7; Position.H7; 
-           Position.A6; Position.B6; Position.C6; Position.D6; Position.E6; Position.F6; Position.G6; Position.H6; 
-           Position.A5; Position.B5; Position.C5; Position.D5; Position.E5; Position.F5; Position.G5; Position.H5; 
-           Position.A4; Position.B4; Position.C4; Position.D4; Position.E4; Position.F4; Position.G4; Position.H4; 
-           Position.A3; Position.B3; Position.C3; Position.D3; Position.E3; Position.F3; Position.G3; Position.H3; 
-           Position.A2; Position.B2; Position.C2; Position.D2; Position.E2; Position.F2; Position.G2; Position.H2; 
-           Position.A1; Position.B1; Position.C1; Position.D1; Position.E1; Position.F1; Position.G1; Position.H1 |]
+module Square = 
     
     let Parse(s : string) = 
         if s.Length <> 2 then failwith (s + " is not a valid position")
@@ -20,11 +11,11 @@ module Position =
             let rank = Rank.Parse(s.[1])
             file |> File.ToPosition(rank)
     
-    let IsInBounds(pos : Position) = int (pos) >= 0 && int (pos) <= 63
-    let ToRank(pos : Position) = (int (pos) / 8) |> Rnk
-    let ToFile(pos : Position) = (int (pos) % 8) |> Fl
+    let IsInBounds(pos : Square) = int (pos) >= 0 && int (pos) <= 63
+    let ToRank(pos : Square) :Rank = (int (pos) / 8)
+    let ToFile(pos : Square) :File = (int (pos) % 8)
     
-    let Name(pos : Position) = 
+    let Name(pos : Square) = 
         (pos
          |> ToFile
          |> File.FileToString)
@@ -32,7 +23,7 @@ module Position =
            |> ToRank
            |> Rank.RankToString)
     
-    let DistanceTo (pto : Position) (pfrom : Position) = 
+    let DistanceTo (pto : Square) (pfrom : Square) = 
         let rankfrom = int (pfrom |> ToRank)
         let filefrom = int (pfrom |> ToFile)
         let rankto = int (pto |> ToRank)
@@ -42,7 +33,7 @@ module Position =
         if rDiff > fDiff then rDiff
         else fDiff
     
-    let DistanceToNoDiag (pto : Position) (pfrom : Position) = 
+    let DistanceToNoDiag (pto : Square) (pfrom : Square) = 
         let rankfrom = int (pfrom |> ToRank)
         let filefrom = int (pfrom |> ToFile)
         let rankto = int (pto |> ToRank)
@@ -51,7 +42,7 @@ module Position =
         let fDiff = abs (filefrom - fileto)
         rDiff + fDiff
     
-    let DirectionTo (pto : Position) (pfrom : Position) = 
+    let DirectionTo (pto : Square) (pfrom : Square) = 
         let rankfrom = int (pfrom |> ToRank)
         let filefrom = int (pfrom |> ToFile)
         let rankto = int (pto |> ToRank)
@@ -83,10 +74,10 @@ module Position =
             else if filechange > 0 then Direction.DirSE
             else Direction.DirSW
     
-    let PositionInDirectionUnsafe (dir : Direction) (pos : Position) = ((int) pos + (int) dir) |> Pos
+    let PositionInDirectionUnsafe (dir : Direction) (pos : Square) :Square= ((int) pos + (int) dir)
     
-    let PositionInDirection (dir : Direction) (pos : Position) = 
-        if not (pos |> IsInBounds) then Position.OUTOFBOUNDS
+    let PositionInDirection (dir : Direction) (pos : Square) = 
+        if not (pos |> IsInBounds) then OUTOFBOUNDS
         else 
             let f = pos |> ToFile
             let r = pos |> ToRank
@@ -109,38 +100,37 @@ module Position =
                 | Direction.DirWWS -> r +! 1, f -- 2
                 | Direction.DirWWN -> r -! 1, f -- 2
                 | Direction.DirNNW -> r -! 2, f -- 1
-                | _ -> Rank.EMPTY, File.EMPTY
-            if nr = Rank.EMPTY && nf = File.EMPTY then Position.OUTOFBOUNDS
+                | _ -> RANK_EMPTY, FILE_EMPTY
+            if nr = RANK_EMPTY && nf = FILE_EMPTY then OUTOFBOUNDS
             elif (nr |> Rank.IsInBounds) && (nf |> File.IsInBounds) then nr |> Rank.ToPosition(nf)
-            else Position.OUTOFBOUNDS
+            else OUTOFBOUNDS
     
-    let Reverse(pos : Position) = 
+    let Reverse(pos : Square) = 
         let r = pos |> ToRank
         let f = pos |> ToFile
         
         let newrank = 
-            match r with
-            | Rank.Rank1 -> Rank.Rank8
-            | Rank.Rank2 -> Rank.Rank7
-            | Rank.Rank3 -> Rank.Rank6
-            | Rank.Rank4 -> Rank.Rank5
-            | Rank.Rank5 -> Rank.Rank4
-            | Rank.Rank6 -> Rank.Rank3
-            | Rank.Rank7 -> Rank.Rank2
-            | Rank.Rank8 -> Rank.Rank1
-            | _ -> Rank.EMPTY
+            if r=Rank1 then Rank8
+            elif r=Rank2 then Rank7
+            elif r=Rank3 then Rank6
+            elif r=Rank4 then Rank5
+            elif r=Rank5 then Rank4
+            elif r=Rank6 then Rank3
+            elif r=Rank7 then Rank2
+            elif r=Rank8 then Rank1
+            else RANK_EMPTY
         f |> File.ToPosition(newrank)
     
-    let ToBitboard(pos : Position) = 
+    let ToBitboard(pos : Square) = 
         if pos |> IsInBounds then (1UL <<< int (pos)) |> BitB
         else Bitboard.Empty
     
-    let ToBitboardL(posl : Position list) = 
+    let ToBitboardL(posl : Square list) = 
         posl
         |> List.map (ToBitboard)
         |> List.reduce (|||)
     
-    let Between (pto : Position) (pfrom : Position) = 
+    let Between (pto : Square) (pfrom : Square) = 
         let dir = pfrom |> DirectionTo(pto)
         
         let rec getb f rv = 

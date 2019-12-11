@@ -14,7 +14,7 @@ type MoveInfo(piece, file, rank) =
 let getSquare(moveInfo : MoveInfo) =
     match moveInfo.File, moveInfo.Rank with
     | (x:File option, y:Rank option) when x.IsSome && y.IsSome -> (y.Value |> Rank.ToPosition x.Value)
-    | _, _ -> Position.OUTOFBOUNDS
+    | _, _ -> OUTOFBOUNDS
 
 let getMove(originInfo: MoveInfo option, targetInfo: MoveInfo, moveType: pMoveType) =
     match originInfo, targetInfo with
@@ -57,7 +57,7 @@ let pSimplifiedPawnCapture =  // e.g. dxe or de
         match f1 = f2 with //do not allow a6xa7
         | true -> pzero
         | false -> preturn (f1, f2)
-    |>> fun (file1, file2) -> pMoveCreateOrig(pMoveType.Capture,None,Position.OUTOFBOUNDS,Some(file2),Some(PieceType.Pawn),Position.OUTOFBOUNDS,Some(file1),None)
+    |>> fun (file1, file2) -> pMoveCreateOrig(pMoveType.Capture,None,OUTOFBOUNDS,Some(file2),Some(PieceType.Pawn),OUTOFBOUNDS,Some(file1),None)
     <!> "pSimplifiedPawnCapture"
 
 let pSuffixCaptureMove = // e.g. Qf4d4x or Qf4:

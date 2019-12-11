@@ -9,7 +9,7 @@ module Player =
         else Direction.DirS
     
     let MyRanks = 
-        [| [| Rank.Rank8; Rank.Rank7; Rank.Rank6; Rank.Rank5; Rank.Rank4; Rank.Rank3; Rank.Rank2; Rank.Rank1 |]
-           [| Rank.Rank1; Rank.Rank2; Rank.Rank3; Rank.Rank4; Rank.Rank5; Rank.Rank6; Rank.Rank7; Rank.Rank8 |] |]
+        [| [| Rank8; Rank7; Rank6; Rank5; Rank4; Rank3; Rank2; Rank1 |]
+           [| Rank1; Rank2; Rank3; Rank4; Rank5; Rank6; Rank7; Rank8 |] |]
     
     let MyRank (rank : Rank) (player : Player) = MyRanks.[int (player)].[int (rank)]

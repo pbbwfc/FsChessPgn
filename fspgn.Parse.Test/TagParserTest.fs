@@ -117,11 +117,11 @@ type TagParserTests() =
 
         let setup= (tag :?> FenTag).Setup
 
-        Assert.AreEqual(Piece.BRook, setup.Pieceat.[(Rank.ToPosition File.FileA Rank.Rank8)|>int])
-        Assert.AreEqual(Piece.WKnight, setup.Pieceat.[(Rank.ToPosition File.FileB Rank.Rank1)|>int])
-        Assert.AreEqual(Piece.BBishop, setup.Pieceat.[(Rank.ToPosition File.FileC Rank.Rank8)|>int])
-        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[(Rank.ToPosition File.FileC Rank.Rank3)|>int])
-        Assert.AreEqual(Piece.WKing, setup.Pieceat.[(Rank.ToPosition File.FileE Rank.Rank1)|>int])
+        Assert.AreEqual(Piece.BRook, setup.Pieceat.[(Rank.ToPosition FileA Rank8)|>int])
+        Assert.AreEqual(Piece.WKnight, setup.Pieceat.[(Rank.ToPosition FileB Rank1)|>int])
+        Assert.AreEqual(Piece.BBishop, setup.Pieceat.[(Rank.ToPosition FileC Rank8)|>int])
+        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[(Rank.ToPosition FileC Rank3)|>int])
+        Assert.AreEqual(Piece.WKing, setup.Pieceat.[(Rank.ToPosition FileE Rank1)|>int])
 
         Assert.AreEqual(Player.White, setup.Whosturn)
 
@@ -130,7 +130,7 @@ type TagParserTests() =
         Assert.AreEqual(true, setup.CastleBS)
         Assert.AreEqual(true, setup.CastleBL)
 
-        Assert.AreEqual(Position.OUTOFBOUNDS, setup.Enpassant)
+        Assert.AreEqual(OUTOFBOUNDS, setup.Enpassant)
 
         Assert.AreEqual(0, setup.Fiftymove)
         Assert.AreEqual(1, setup.Fullmove)
@@ -143,12 +143,12 @@ type TagParserTests() =
 
         let setup= (tag :?> FenTag).Setup
 
-        Assert.AreEqual(Piece.BRook, setup.Pieceat.[(Rank.ToPosition File.FileA Rank.Rank8)|>int])
-        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[(Rank.ToPosition File.FileB Rank.Rank7)|>int])
-        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[(Rank.ToPosition File.FileC Rank.Rank5)|>int])
-        Assert.AreEqual(Piece.WPawn, setup.Pieceat.[(Rank.ToPosition File.FileE Rank.Rank4)|>int])
-        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[(Rank.ToPosition File.FileE Rank.Rank2)|>int])
-        Assert.AreEqual(Piece.WKing, setup.Pieceat.[(Rank.ToPosition File.FileE Rank.Rank1)|>int])
+        Assert.AreEqual(Piece.BRook, setup.Pieceat.[(Rank.ToPosition FileA Rank8)|>int])
+        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[(Rank.ToPosition FileB Rank7)|>int])
+        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[(Rank.ToPosition FileC Rank5)|>int])
+        Assert.AreEqual(Piece.WPawn, setup.Pieceat.[(Rank.ToPosition FileE Rank4)|>int])
+        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[(Rank.ToPosition FileE Rank2)|>int])
+        Assert.AreEqual(Piece.WKing, setup.Pieceat.[(Rank.ToPosition FileE Rank1)|>int])
 
         Assert.AreEqual(Player.Black, setup.Whosturn)
 
@@ -157,7 +157,7 @@ type TagParserTests() =
         Assert.AreEqual(false, setup.CastleBS)
         Assert.AreEqual(true, setup.CastleBL)
 
-        Assert.AreEqual(Position.C6, setup.Enpassant)
+        Assert.AreEqual(C6, setup.Enpassant)
 
         Assert.AreEqual(1, setup.Fiftymove)
         Assert.AreEqual(2, setup.Fullmove)

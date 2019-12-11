@@ -42,10 +42,10 @@ module PgnTextTypes =
     type pMove = 
         {Mtype:pMoveType 
          TargetPiece:PieceType option
-         TargetSquare:Position 
+         TargetSquare:Square 
          TargetFile:File option
          Piece: PieceType option
-         OriginSquare:Position
+         OriginSquare:Square
          OriginFile:File option
          OriginRank:Rank option
          PromotedPiece: PieceType option
@@ -69,7 +69,7 @@ module PgnTextTypes =
          IsCheckMate=None
          Annotation=None}
 
-    let pMoveCreate(mt,tgp,tgs,tgf,pc) = pMoveCreateOrig(mt,tgp,tgs,tgf,pc,Position.OUTOFBOUNDS,None,None)
+    let pMoveCreate(mt,tgp,tgs,tgf,pc) = pMoveCreateOrig(mt,tgp,tgs,tgf,pc,OUTOFBOUNDS,None,None)
 
-    let pMoveCreateCastle(mt) = pMoveCreateOrig(mt,None,Position.OUTOFBOUNDS,None,None,Position.OUTOFBOUNDS,None,None)
+    let pMoveCreateCastle(mt) = pMoveCreateOrig(mt,None,OUTOFBOUNDS,None,None,OUTOFBOUNDS,None,None)
 

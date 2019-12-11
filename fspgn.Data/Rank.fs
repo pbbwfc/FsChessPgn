@@ -3,26 +3,24 @@
 open System
 
 module Rank = 
-    let Rankdesclookup = "87654321"
-    let AllRanks = [| Rank.Rank8; Rank.Rank7; Rank.Rank6; Rank.Rank5; Rank.Rank4; Rank.Rank3; Rank.Rank2; Rank.Rank1 |]
     
-    let Parse(c : char) = 
+    let Parse(c : char) :Rank = 
+        let Rankdesclookup = RANK_NAMES|>Array.reduce(+)
         let idx = Rankdesclookup.IndexOf(c.ToString().ToLower())
         if idx < 0 then failwith (c.ToString() + " is not a valid rank")
-        else idx |> Rnk
+        else idx 
     
-    let RankToString(rank : Rank) = Rankdesclookup.Substring(int (rank), 1)
+    let RankToString(rank : Rank) = RANK_NAMES.[int(rank)]
     let IsInBounds(rank : Rank) = int (rank) >= 0 && int (rank) <= 7
-    let ToPosition (file : File) (rank : Rank) = (int (rank) * 8 + int (file)) |> Pos
+    let ToPosition (file : File) (rank : Rank) :Square = (int (rank) * 8 + int (file))
     
     let ToBitboard(rank : Rank) = 
-        match rank with
-        | Rank.Rank1 -> Bitboard.Rank1
-        | Rank.Rank2 -> Bitboard.Rank2
-        | Rank.Rank3 -> Bitboard.Rank3
-        | Rank.Rank4 -> Bitboard.Rank4
-        | Rank.Rank5 -> Bitboard.Rank5
-        | Rank.Rank6 -> Bitboard.Rank6
-        | Rank.Rank7 -> Bitboard.Rank7
-        | Rank.Rank8 -> Bitboard.Rank8
-        | _ -> Bitboard.Empty
+        if rank=Rank1 then Bitboard.Rank1
+        elif rank=Rank2 then Bitboard.Rank2
+        elif rank=Rank3 then Bitboard.Rank3
+        elif rank=Rank4 then Bitboard.Rank4
+        elif rank=Rank5 then Bitboard.Rank5
+        elif rank=Rank6 then Bitboard.Rank6
+        elif rank=Rank7 then Bitboard.Rank7
+        elif rank=Rank8 then Bitboard.Rank8
+        else Bitboard.Empty
