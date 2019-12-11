@@ -12,6 +12,7 @@
     <Compile Include="DateTagParser.fs" />
     <Compile Include="FenTagParser.fs" />
     <Compile Include="TagParsers.fs" />
+    <Compile Include="MoveParsers.fs" />
   </ItemGroup>
 
   <ItemGroup>

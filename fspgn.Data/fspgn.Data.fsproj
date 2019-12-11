@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
+    <Compile Include="PgnTextTypes.fs" />
     <Compile Include="Util.fs" />
     <Compile Include="Player.fs" />
     <Compile Include="PieceType.fs" />

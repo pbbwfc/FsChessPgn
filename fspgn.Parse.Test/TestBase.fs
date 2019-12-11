@@ -2,8 +2,6 @@
 
 open FParsec
 
-open Xunit.Sdk
-
 let parse p str =
     match run p str with
     | Success(result, _, _)   -> result
@@ -17,5 +15,5 @@ let tryParse p str =
 
 let shouldFail p str =
     match run p str with
-    | Success(result, _, _)   -> raise (XunitException "Expected parser did not fail")
+    | Success(result, _, _)   -> failwith "Expected parser did not fail"
     | Failure(errorMsg, _, _) -> ()
