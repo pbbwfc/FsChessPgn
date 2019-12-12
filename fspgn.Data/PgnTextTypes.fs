@@ -81,4 +81,38 @@ module PgnTextTypes =
         |NAGEntry of int
         |RAVEntry of MoveTextEntry list
     
- 
+    type pGameInfo = {Name:string;Value:string}
+
+    type pGame =
+        {
+            Event : string
+            Site : string
+            Year : int option
+            Month : int option
+            Day : int option
+            Round :string
+            WhitePlayer : string
+            BlackPlayer : string
+            Result : GameResult
+            BoardSetup : Fen option
+            AdditionalInfo : pGameInfo list
+            Tags : Map<string,string>
+            MoveText : MoveTextEntry list
+        }
+
+    let pGameEMP =
+        {
+            Event = ""
+            Site = ""
+            Year = None
+            Month = None
+            Day = None
+            Round = ""
+            WhitePlayer = ""
+            BlackPlayer = ""
+            Result = GameResult.Open
+            BoardSetup = None
+            AdditionalInfo = []
+            Tags = Map.empty
+            MoveText = []
+        }

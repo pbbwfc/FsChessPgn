@@ -78,8 +78,8 @@ type TagParserTests() =
         Assert.IsInstanceOfType(tag,typeof<PgnDateTag>) |> ignore
         Assert.AreEqual("Date", tag.Name)
         Assert.AreEqual(2013, (tag :?> PgnDateTag).Year.Value)
-        Assert.IsFalse((tag :?> PgnDateTag).Month.HasValue)
-        Assert.IsFalse((tag :?> PgnDateTag).Day.HasValue)
+        Assert.IsFalse((tag :?> PgnDateTag).Month.IsSome)
+        Assert.IsFalse((tag :?> PgnDateTag).Day.IsSome)
 
     [<TestMethod>]
     member this.pTag_should_create_a_PgnRoundTag_object_from_a_valid_tag() =

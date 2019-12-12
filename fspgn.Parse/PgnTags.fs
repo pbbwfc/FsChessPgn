@@ -29,9 +29,9 @@ let formatDate (year : int option, month : int option, day : int option) =
 type PgnDateTag(name: string, year: int option, month: int option, day: int option) =
     inherit PgnTag(name, formatDate(year, month, day))
 
-    member val Year: Nullable<Int32> = toNullable(year) with get, set
-    member val Month: Nullable<Int32> = toNullable(month) with get, set
-    member val Day: Nullable<Int32> = toNullable(day) with get, set
+    member val Year = year with get, set
+    member val Month = month with get, set
+    member val Day = day with get, set
 
 
 let formatResult(result: GameResult) =
