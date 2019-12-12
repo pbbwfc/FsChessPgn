@@ -1,4 +1,5 @@
-﻿namespace fspgn.Test
+﻿#nowarn "25"
+namespace fspgn.Test
 
 open fspgn.Data
 open fspgn.Data.PgnTextTypes
@@ -191,3 +192,4 @@ type MoveSeriesParserTest() =
         Assert.AreEqual(1, ml2.Length)
         let (HalfMoveEntry (_,_,mv)) = ml2.[0]
         Assert.AreEqual(parse pMove "Qa4", mv)
+        

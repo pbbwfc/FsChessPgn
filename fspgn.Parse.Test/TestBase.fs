@@ -7,7 +7,6 @@ let parse p str =
     | Success(result, _, _)   -> result
     | Failure(errorMsg, _, _) -> failwith errorMsg
 
-
 let tryParse p str =
     match run p str with
     | Success(result, _, _)   -> ()

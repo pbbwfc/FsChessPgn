@@ -1,4 +1,5 @@
-﻿namespace fspgn.Test
+﻿#nowarn "25"
+namespace fspgn.Test
 
 open fspgn.Data
 open fspgn.Data.PgnTextTypes

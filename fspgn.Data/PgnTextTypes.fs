@@ -5,11 +5,11 @@ open System
 module PgnTextTypes =
 
     type pMoveType =
-        | Simple = 0
-        | Capture = 1
-        | CaptureEnPassant = 2
-        | CastleKingSide = 3
-        | CastleQueenSide = 4
+        | Simple
+        | Capture
+        | CaptureEnPassant
+        | CastleKingSide
+        | CastleQueenSide
 
     type pMoveAnnotation =
         |MindBlowing
@@ -102,14 +102,14 @@ module PgnTextTypes =
 
     let pGameEMP =
         {
-            Event = ""
-            Site = ""
+            Event = "?"
+            Site = "?"
             Year = None
             Month = None
             Day = None
-            Round = ""
-            WhitePlayer = ""
-            BlackPlayer = ""
+            Round = "?"
+            WhitePlayer = "?"
+            BlackPlayer = "?"
             Result = GameResult.Open
             BoardSetup = None
             AdditionalInfo = []

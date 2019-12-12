@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="BoardSetupTest.fs" />
+    <Compile Include="FormatterTest.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
@@ -15,16 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="TestBase.fs" />
-    <Compile Include="TagParserTest.fs" />
-    <Compile Include="MoveParsersTest.fs" />
-    <Compile Include="MoveSieriesParserTests.fs" />
-    <Compile Include="GameParserTest.fs" />
-    <Compile Include="Program.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\fspgn.Parse\fspgn.Parse.fsproj" />
+    <ProjectReference Include="..\fspgn.Data\fspgn.Data.fsproj" />
   </ItemGroup>
 
 </Project>

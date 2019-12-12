@@ -108,6 +108,7 @@ module Types =
         A1; B1; C1; D1; E1; F1; G1; H1;
         |] 
     let SQUARE_NAMES = [|for r in RANK_NAMES do for f in FILE_NAMES -> f+r|]
+    let Sq(f:File,r:Rank) :Square = (int (r) * 8 + int (f))
     
     type Direction = 
         | DirN = -8
