@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Include="BoardSetupTest.fs" />
     <Compile Include="FormatterTest.fs" />
+    <Compile Include="MoveFormatterTest.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

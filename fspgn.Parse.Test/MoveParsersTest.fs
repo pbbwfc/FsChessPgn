@@ -346,7 +346,7 @@ type MoveParserTest() =
         Assert.AreEqual(pMoveType.Simple, move.Mtype);
         Assert.AreEqual(Rank.ToPosition FileC Rank8, move.TargetSquare);
         Assert.AreEqual(PieceType.Queen, move.PromotedPiece.Value);
-        Assert.IsTrue(move.IsCheck.Value);
+        Assert.IsTrue(move.IsCheck);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_castle_king_side() =
@@ -363,29 +363,29 @@ type MoveParserTest() =
         let move = parse pMove "Bb5+"
 
         Assert.AreEqual(pMoveType.Simple, move.Mtype)
-        Assert.IsTrue(move.IsCheck.Value)
+        Assert.IsTrue(move.IsCheck)
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_dbl_check_indicator() =
         let move = parse pMove "Bb5++"
 
         Assert.AreEqual(pMoveType.Simple, move.Mtype)
-        Assert.IsTrue(move.IsCheck.Value)
-        Assert.IsTrue(move.IsDoubleCheck.Value)
+        Assert.IsTrue(move.IsCheck)
+        Assert.IsTrue(move.IsDoubleCheck)
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_checkmate_indicator() =
         let move = parse pMove "Bb5#"
 
         Assert.AreEqual(pMoveType.Simple, move.Mtype)
-        Assert.IsTrue(move.IsCheckMate.Value)
+        Assert.IsTrue(move.IsCheckMate)
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_annotation() =
         let move = parse pMove "Bb5+!"
 
         Assert.AreEqual(pMoveType.Simple, move.Mtype)
-        Assert.IsTrue(move.IsCheck.Value)
+        Assert.IsTrue(move.IsCheck)
         Assert.AreEqual(pMoveAnnotation.Good, move.Annotation.Value)
 
     [<TestMethod>]

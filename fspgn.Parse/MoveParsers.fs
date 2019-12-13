@@ -167,9 +167,9 @@ let pMove =
             | None -> nmove
             | Some(i) ->
                 match i with
-                | "+"  | "†"  | "ch" -> {nmove with IsCheck=Some(true)}
-                | "++" | "††" | "dbl ch" -> {nmove with IsCheck=Some(true);IsDoubleCheck=Some(true)}
-                | "#"  | "‡" -> {nmove with IsCheckMate=Some(true)}
+                | "+"  | "†"  | "ch" -> {nmove with IsCheck=true}
+                | "++" | "††" | "dbl ch" -> {nmove with IsCheck=true;IsDoubleCheck=true}
+                | "#"  | "‡" -> {nmove with IsCheckMate=true}
                 | _ -> move
 
 

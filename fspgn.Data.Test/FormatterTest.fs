@@ -30,3 +30,8 @@ type FormatterTest()=
         Formatter.Format(_testGame, writer)
         let act = writer.ToString()
         Assert.AreEqual(TestGameString, act)
+
+    [<TestMethod>]
+    member this.Format_should_format_correctly() =
+        let act = Formatter.FormatStr(_testGame)
+        Assert.AreEqual(TestGameString, act)

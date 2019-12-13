@@ -15,13 +15,76 @@ module Formatter =
         |GameResult.Draw -> "½-½" 
         |_ -> "*" 
 
+    let GetPiece(pieceType: PieceType option) =
+        if pieceType.IsNone then ""
+        else 
+            match pieceType.Value with
+            |PieceType.Pawn -> ""
+            |PieceType.Knight -> "N"
+            |PieceType.Bishop -> "B"
+            |PieceType.Rook -> "R"
+            |PieceType.Queen -> "Q"
+            |PieceType.King -> "K"
+            |_ -> ""
+            
+
+
+
+    let GetMoveTarget(move:pMove) =
+        let piece = 
+            match move.Mtype with
+            |Simple -> "" 
+            |_ -> GetPiece(move.TargetPiece)
+        if move.TargetSquare <> OUTOFBOUNDS then
+            piece + SQUARE_NAMES.[move.TargetSquare]
+        elif move.TargetFile.IsSome then
+            piece + FILE_NAMES.[move.TargetFile.Value]
+        else ""
+
+    let GetMoveOrigin(move:pMove) =
+        let piece = GetPiece(move.Piece)
+        if move.OriginSquare <> OUTOFBOUNDS then
+            piece + SQUARE_NAMES.[move.OriginSquare]
+        else 
+            let origf = if move.OriginFile.IsSome then FILE_NAMES.[move.OriginFile.Value] else ""
+            let origr = if move.OriginRank.IsSome then RANK_NAMES.[move.OriginRank.Value] else ""
+            piece + origf + origr    
+    
     let FormatMove(mv:pMove, writer:TextWriter) =
         match mv.Mtype with
-        | Simple -> ()
-        | Capture -> ()
-        | CaptureEnPassant -> ()
-        | CastleKingSide -> ()
-        | CastleQueenSide -> ()
+        | Simple -> 
+            let origin = GetMoveOrigin(mv)
+            let target = GetMoveTarget(mv)
+            writer.Write(origin)
+            writer.Write(target)
+            if mv.PromotedPiece.IsSome then
+                writer.Write("=")
+                writer.Write(GetPiece(mv.PromotedPiece))
+        | Capture -> 
+            let origin = GetMoveOrigin(mv)
+            let target = GetMoveTarget(mv)
+            writer.Write(origin)
+            writer.Write("x")
+            writer.Write(target)
+            if mv.PromotedPiece.IsSome then
+                writer.Write("=")
+                writer.Write(GetPiece(mv.PromotedPiece))
+        | CaptureEnPassant ->
+            let origin = GetMoveOrigin(mv)
+            let target = GetMoveTarget(mv)
+            writer.Write(origin)
+            writer.Write("x")
+            writer.Write(target)
+            writer.Write("e.p.")
+        | CastleKingSide -> 
+            writer.Write("O-O")
+        | CastleQueenSide ->
+            writer.Write("O-O-O")
+
+    let FormatMoveStr(mv:pMove) =
+        let writer = new StringWriter()
+        FormatMove(mv,writer)
+        writer.ToString()
 
     let rec FormatMoveTextEntry(entry:MoveTextEntry, writer:TextWriter) =
         match entry with
@@ -82,5 +145,9 @@ module Formatter =
         writer.WriteLine();
         FormatMoveText(game.MoveText, writer)
 
+    let FormatStr(game:pGame) =
+        let writer = new StringWriter()
+        Format(game,writer)
+        writer.ToString()
 
 

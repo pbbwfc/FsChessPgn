@@ -49,12 +49,12 @@ module PgnTextTypes =
          OriginFile:File option
          OriginRank:Rank option
          PromotedPiece: PieceType option
-         IsCheck:bool option
-         IsDoubleCheck:bool option
-         IsCheckMate:bool option
+         IsCheck:bool
+         IsDoubleCheck:bool
+         IsCheckMate:bool
          Annotation:pMoveAnnotation option}
 
-    let pMoveCreateOrig(mt,tgp,tgs,tgf,pc,ors,orf,orr) =
+    let pMoveCreateAll(mt,tgp,tgs,tgf,pc,ors,orf,orr,pp,ic,id,im,an) =
         {Mtype=mt 
          TargetPiece=tgp
          TargetSquare=tgs
@@ -63,11 +63,13 @@ module PgnTextTypes =
          OriginSquare=ors
          OriginFile=orf
          OriginRank=orr
-         PromotedPiece=None
-         IsCheck=None
-         IsDoubleCheck=None
-         IsCheckMate=None
-         Annotation=None}
+         PromotedPiece=pp
+         IsCheck=ic
+         IsDoubleCheck=id
+         IsCheckMate=im
+         Annotation=an}
+
+    let pMoveCreateOrig(mt,tgp,tgs,tgf,pc,ors,orf,orr) = pMoveCreateAll(mt,tgp,tgs,tgf,pc,ors,orf,orr,None,false,false,false,None)
 
     let pMoveCreate(mt,tgp,tgs,tgf,pc) = pMoveCreateOrig(mt,tgp,tgs,tgf,pc,OUTOFBOUNDS,None,None)
 
