@@ -50,6 +50,43 @@ module Formatter =
             let origr = if move.OriginRank.IsSome then RANK_NAMES.[move.OriginRank.Value] else ""
             piece + origf + origr    
     
+    let GetCheckAndMateAnnotation(move:pMove) =
+        if move.IsCheckMate then "#"
+        elif move.IsDoubleCheck then "++"
+        elif move.IsCheck then "+"
+        else ""
+
+    let GetAnnotation(move:pMove) =
+        if move.Annotation.IsNone then ""
+        else
+            match move.Annotation.Value with
+            | MindBlowing -> "!!!"
+            | Brilliant -> "!!"
+            | Good -> "!"
+            | Interesting -> "!?"
+            | Dubious -> "?!"
+            | Mistake -> "?"
+            | Blunder -> "??"
+            | Abysmal -> "???"
+            | FascinatingButUnsound -> "!!?"
+            | Unclear -> "∞"
+            | WithCompensation -> "=/∞"
+            | EvenPosition -> "="
+            | SlightAdvantageWhite -> "+/="
+            | SlightAdvantageBlack -> "=/+"
+            | AdvantageWhite -> "+/−"
+            | AdvantageBlack -> "−/+"
+            | DecisiveAdvantageWhite -> "+−"
+            | DecisiveAdvantageBlack -> "-+"
+            | Space -> "○"
+            | Initiative -> "↑"
+            | Development -> "↑↑"
+            | Counterplay -> "⇄"
+            | Countering -> "∇"
+            | Idea -> "Δ"
+            | TheoreticalNovelty -> "N"
+            | UnknownAnnotation -> ""
+
     let FormatMove(mv:pMove, writer:TextWriter) =
         match mv.Mtype with
         | Simple -> 
@@ -60,6 +97,8 @@ module Formatter =
             if mv.PromotedPiece.IsSome then
                 writer.Write("=")
                 writer.Write(GetPiece(mv.PromotedPiece))
+            writer.Write(GetCheckAndMateAnnotation(mv))
+            writer.Write(GetAnnotation(mv))
         | Capture -> 
             let origin = GetMoveOrigin(mv)
             let target = GetMoveTarget(mv)
@@ -69,6 +108,8 @@ module Formatter =
             if mv.PromotedPiece.IsSome then
                 writer.Write("=")
                 writer.Write(GetPiece(mv.PromotedPiece))
+            writer.Write(GetCheckAndMateAnnotation(mv))
+            writer.Write(GetAnnotation(mv))
         | CaptureEnPassant ->
             let origin = GetMoveOrigin(mv)
             let target = GetMoveTarget(mv)
@@ -76,10 +117,16 @@ module Formatter =
             writer.Write("x")
             writer.Write(target)
             writer.Write("e.p.")
+            writer.Write(GetCheckAndMateAnnotation(mv))
+            writer.Write(GetAnnotation(mv))
         | CastleKingSide -> 
             writer.Write("O-O")
+            writer.Write(GetCheckAndMateAnnotation(mv))
+            writer.Write(GetAnnotation(mv))
         | CastleQueenSide ->
             writer.Write("O-O-O")
+            writer.Write(GetCheckAndMateAnnotation(mv))
+            writer.Write(GetAnnotation(mv))
 
     let FormatMoveStr(mv:pMove) =
         let writer = new StringWriter()

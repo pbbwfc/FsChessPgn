@@ -132,3 +132,24 @@ type MoveFormatterTest()=
         let str = Formatter.FormatMoveStr(move)
 
         Assert.AreEqual("Nb7xc5+", str)
+
+    [<TestMethod>]
+    member this.Format_should_format_any_annotation() =
+        let move = pMoveCreateAll(pMoveType.Capture,None,Sq(FileB,Rank8),None,PieceType.Rook|>Some,Sq(FileB,Rank1),None,None,None,false,false,true,pMoveAnnotation.Brilliant|>Some)
+        let str = Formatter.FormatMoveStr(move)
+
+        Assert.AreEqual("Rb1xb8#!!", str)
+
+    [<TestMethod>]
+    member this.Format_should_ommit_redudant_piece_definition___N7c5_and_not_N7Nc5() =
+        let move = pMoveCreateOrig(pMoveType.Simple,PieceType.Knight|>Some,Sq(FileC,Rank5),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,Some(Rank7))
+        let str = Formatter.FormatMoveStr(move)
+
+        Assert.AreEqual("N7c5", str)
+
+    [<TestMethod>]
+    member this.Format_should_include_captured_piece_even_if_its_the_same() =
+        let move = pMoveCreateOrig(pMoveType.Capture,PieceType.Knight|>Some,Sq(FileC,Rank5),None,PieceType.Knight|>Some,Sq(FileB,Rank7),None,None)
+        let str = Formatter.FormatMoveStr(move)
+
+        Assert.AreEqual("Nb7xNc5", str)
