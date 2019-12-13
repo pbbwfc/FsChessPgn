@@ -1,6 +1,5 @@
 ﻿namespace fspgn.Test
 
-open System
 open System.IO
 open fspgn.Data
 open fspgn.Data.PgnTextTypes

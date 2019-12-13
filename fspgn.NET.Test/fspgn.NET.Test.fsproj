@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+    <GenerateProgramFile>false</GenerateProgramFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="TestExamples\empty-file.pgn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestExamples\RealGames\chess-informant-sample.pgn" />
+    <None Include="TestExamples\RealGames\demoGames.pgn" />
+    <None Include="TestExamples\RealGames\lon09r5.pgn" />
+    <None Include="TestExamples\RealGames\tilb98r2.pgn" />
+    <None Include="TestExamples\simple-game.pgn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestExamples\time-annotated-games.pgn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Compile Include="FileTestCases.fs" />
+    <Compile Include="ParserTest.fs" />
+    <Compile Include="PgnWriterTest.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+    <PackageReference Include="coverlet.collector" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\fspgn.NET\fspgn.NET.fsproj" />
+  </ItemGroup>
+
+</Project>

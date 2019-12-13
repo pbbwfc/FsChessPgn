@@ -27,9 +27,6 @@ module Formatter =
             |PieceType.King -> "K"
             |_ -> ""
             
-
-
-
     let GetMoveTarget(move:pMove) =
         let piece = 
             match move.Mtype with
@@ -137,14 +134,14 @@ module Formatter =
         match entry with
         |MovePairEntry(mn,mv1,mv2) ->
             if mn.IsSome then
-                writer.Write(mn);
+                writer.Write(mn.Value);
                 writer.Write(". ");
             FormatMove(mv1, writer)
             writer.Write(" ");
             FormatMove(mv2, writer)
         |HalfMoveEntry(mn,ic,mv) -> 
             if mn.IsSome then
-                writer.Write(mn)
+                writer.Write(mn.Value)
                 writer.Write(if ic then "... " else ". ")
             FormatMove(mv, writer)
         |CommentEntry(str) -> writer.Write("{" + str + "}")
@@ -162,6 +159,16 @@ module Formatter =
 
         ml|>List.iteri doent
     
+    let FormatMoveTextEntryStr(entry:MoveTextEntry) =
+        let writer = new StringWriter()
+        FormatMoveTextEntry(entry,writer)
+        writer.ToString()
+
+    let FormatMoveTextStr(ml:MoveTextEntry list) =
+        let writer = new StringWriter()
+        FormatMoveText(ml,writer)
+        writer.ToString()
+
     let FormatTag(name:string, value:string, writer:TextWriter) =
         writer.Write("[")
         writer.Write(name + " \"")

@@ -11,6 +11,8 @@
     <Compile Include="BoardSetupTest.fs" />
     <Compile Include="FormatterTest.fs" />
     <Compile Include="MoveFormatterTest.fs" />
+    <Compile Include="MoveTextEntryListTest.fs" />
+    <Compile Include="MoveTextFormatterTest.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -23,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\fspgn.Data\fspgn.Data.fsproj" />
+    <ProjectReference Include="..\fspgn.Parse\fspgn.Parse.fsproj" />
   </ItemGroup>
 
 </Project>
