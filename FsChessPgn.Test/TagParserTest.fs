@@ -1,9 +1,9 @@
-﻿namespace fspgn.Test
+﻿namespace FsChessPgn.Test
 
-open fspgn.Data
-open fspgn.PgnParsers.PgnTags
-open fspgn.PgnParsers.Tag
-open fspgn.Test.TestBase
+open FsChessPgn.Data
+open FsChessPgn.PgnParsers.PgnTags
+open FsChessPgn.PgnParsers.Tag
+open FsChessPgn.Test.TestBase
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 

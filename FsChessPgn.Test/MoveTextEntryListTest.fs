@@ -1,8 +1,8 @@
-﻿namespace fspgn.Test
+﻿namespace FsChessPgn.Test
 
-open fspgn.Data
-open fspgn.Data.PgnTextTypes
-open fspgn.PgnParsers.Game
+open FsChessPgn.Data
+open FsChessPgn.Data.PgnTextTypes
+open FsChessPgn.PgnParsers.Game
 open FParsec
 
 open Microsoft.VisualStudio.TestTools.UnitTesting

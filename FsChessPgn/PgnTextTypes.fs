@@ -1,4 +1,4 @@
-﻿namespace fspgn.Data
+﻿namespace FsChessPgn.Data
 
 open System
 

@@ -1,11 +1,11 @@
 ﻿#nowarn "25"
-namespace fspgn.Test
+namespace FsChessPgn.Test
 
-open fspgn.Data
-open fspgn.Data.PgnTextTypes
-open fspgn.PgnParsers.Move
-open fspgn.PgnParsers.MoveSeries
-open fspgn.Test.TestBase
+open FsChessPgn.Data
+open FsChessPgn.Data.PgnTextTypes
+open FsChessPgn.PgnParsers.Move
+open FsChessPgn.PgnParsers.MoveSeries
+open FsChessPgn.Test.TestBase
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 

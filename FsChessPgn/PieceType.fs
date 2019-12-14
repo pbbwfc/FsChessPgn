@@ -1,4 +1,4 @@
-﻿namespace fspgn.Data
+﻿namespace FsChessPgn.Data
 
 module PieceType = 
     let LookupArrayLength = 7

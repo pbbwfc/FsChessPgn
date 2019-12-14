@@ -1,9 +1,9 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.BasicChess
+module FsChessPgn.PgnParsers.BasicChess
 
 open System
 open FParsec
-open fspgn.Data
+open FsChessPgn.Data
 
 
 

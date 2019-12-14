@@ -1,9 +1,9 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.Tag
+module FsChessPgn.PgnParsers.Tag
 
 open System
 open FParsec
-open fspgn.Data
+open FsChessPgn.Data
 
 let sevenTagRosterTagNames= ["Event"; "Site"; "Date"; "Round"; "White"; "Black"; "Result"];
 let suplementTagNames =

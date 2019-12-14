@@ -1,4 +1,4 @@
-﻿namespace fspgn.Data
+﻿namespace FsChessPgn.Data
 
 module Player = 
     let AllPlayers = [| Player.White; Player.Black |]

@@ -1,7 +1,7 @@
-namespace fspgn.Test
+namespace FsChessPgn.Test
 
 open System
-open fspgn.Data
+open FsChessPgn.Data
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 

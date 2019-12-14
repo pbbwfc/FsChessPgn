@@ -1,5 +1,5 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.Bootstrap
+module FsChessPgn.PgnParsers.Bootstrap
 
 open System
 

@@ -1,10 +1,10 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.Move
+module FsChessPgn.PgnParsers.Move
 
 open System
 open FParsec
-open fspgn.Data
-open fspgn.Data.PgnTextTypes
+open FsChessPgn.Data
+open FsChessPgn.Data.PgnTextTypes
 
 type MoveInfo(piece, file, rank) =
     member val Piece = piece with get, set

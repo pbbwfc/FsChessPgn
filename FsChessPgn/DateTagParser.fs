@@ -1,5 +1,5 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.DateTagParser
+module FsChessPgn.PgnParsers.DateTagParser
 
 open FParsec
 

@@ -1,5 +1,5 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.BasicCommons
+module FsChessPgn.PgnParsers.BasicCommons
 
 open FParsec
 

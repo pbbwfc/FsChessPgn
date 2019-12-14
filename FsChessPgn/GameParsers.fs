@@ -1,9 +1,9 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.Game
+module FsChessPgn.PgnParsers.Game
 
 open FParsec
-open fspgn.Data
-open fspgn.Data.PgnTextTypes
+open FsChessPgn.Data
+open FsChessPgn.Data.PgnTextTypes
 
 let setTag(igame : pGame, tag : PgnTag) =
     let game = {igame with Tags = igame.Tags.Add(tag.Name, tag.Value)}

@@ -1,8 +1,8 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.PgnTags
+module FsChessPgn.PgnParsers.PgnTags
 
 open System
-open fspgn.Data
+open FsChessPgn.Data
 
 type PgnTag(name: string, value: string) =
     member val Name = name with get, set

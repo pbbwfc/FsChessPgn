@@ -1,8 +1,8 @@
-﻿namespace fspgn.NET
+﻿namespace FsChessPgn.NET
 
 open System.IO
-open fspgn.Data.PgnTextTypes
-open fspgn.Data
+open FsChessPgn.Data.PgnTextTypes
+open FsChessPgn.Data
 
 module PgnWriter =
 

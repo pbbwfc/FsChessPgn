@@ -1,7 +1,7 @@
-﻿namespace fspgn.NET
+﻿namespace FsChessPgn.NET
 
 open System.IO
-open fspgn.PgnParsers
+open FsChessPgn.PgnParsers
 
 module PgnReader =
 

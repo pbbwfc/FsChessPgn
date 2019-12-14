@@ -1,9 +1,9 @@
-﻿namespace fspgn.Test
+﻿namespace FsChessPgn.Test
 
 open System
 open System.IO
-open fspgn.Data
-open fspgn.Data.PgnTextTypes
+open FsChessPgn.Data
+open FsChessPgn.Data.PgnTextTypes
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 

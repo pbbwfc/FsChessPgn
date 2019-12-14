@@ -1,8 +1,8 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.FenTagParser
+module FsChessPgn.PgnParsers.FenTagParser
 
 open FParsec
-open fspgn.Data
+open FsChessPgn.Data
 open System.Linq
 
 let pFenPieces =

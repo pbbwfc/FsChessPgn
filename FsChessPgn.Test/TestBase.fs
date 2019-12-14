@@ -1,4 +1,4 @@
-﻿module fspgn.Test.TestBase
+﻿module FsChessPgn.Test.TestBase
 
 open FParsec
 

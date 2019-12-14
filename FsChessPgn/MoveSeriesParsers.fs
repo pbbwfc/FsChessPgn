@@ -1,10 +1,10 @@
 ﻿[<AutoOpen>]
-module fspgn.PgnParsers.MoveSeries
+module FsChessPgn.PgnParsers.MoveSeries
 
 open System.Collections.Generic
 open FParsec
-open fspgn.Data
-open fspgn.Data.PgnTextTypes
+open FsChessPgn.Data
+open FsChessPgn.Data.PgnTextTypes
 
 let pPeriods =
     (str ".." .>> manyChars (pchar '.') >>% true) //two or more dots => Continued move pair

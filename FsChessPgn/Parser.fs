@@ -1,9 +1,9 @@
-﻿namespace fspgn.PgnParsers
+﻿namespace FsChessPgn.PgnParsers
 
 open FParsec
 open System.IO
-//open fspgn.Exceptions
-open fspgn.PgnParsers.Game
+//open FsChessPgn.Exceptions
+open FsChessPgn.PgnParsers.Game
 
 type Parser() =
     member this.ReadFromFile(file:string) =
