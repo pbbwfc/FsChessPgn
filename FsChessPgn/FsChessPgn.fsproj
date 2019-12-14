@@ -5,16 +5,35 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Ref.fs" />
     <Compile Include="Types.fs" />
-    <Compile Include="Pos.fs" />
-    <Compile Include="FastPgn.fs" />
-    <Compile Include="PGN.fs" />
-    <Compile Include="chess.fs" />
+    <Compile Include="PgnTextTypes.fs" />
+    <Compile Include="Util.fs" />
+    <Compile Include="Player.fs" />
+    <Compile Include="PieceType.fs" />
+    <Compile Include="Piece.fs" />
+    <Compile Include="Rank.fs" />
+    <Compile Include="File.fs" />
+    <Compile Include="Square.fs" />
+    <Compile Include="FEN.fs" />
+    <Compile Include="Formatter.fs" />
+    <Compile Include="Bootstrap.fs" />
+    <Compile Include="BasicParsers.fs" />
+    <Compile Include="BasicChessParsers.fs" />
+    <Compile Include="PgnTags.fs" />
+    <Compile Include="DateTagParser.fs" />
+    <Compile Include="FenTagParser.fs" />
+    <Compile Include="TagParsers.fs" />
+    <Compile Include="MoveParsers.fs" />
+    <Compile Include="MoveSeriesParsers.fs" />
+    <Compile Include="GameParsers.fs" />
+    <Compile Include="Parser.fs" />
+    <Compile Include="PgnReader.fs" />
+    <Compile Include="PgnWriter.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Script1.fsx" />
+    <PackageReference Include="FParsec" Version="1.1.0-RC" />
+    <PackageReference Include="NLog" Version="4.6.8" />
   </ItemGroup>
 
 </Project>

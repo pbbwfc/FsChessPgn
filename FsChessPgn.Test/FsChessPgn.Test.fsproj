@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -29,12 +29,24 @@
     <None Include="TestExamples\time-annotated-games.pgn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="BoardSetupTest.fs" />
+    <Compile Include="FormatterTest.fs" />
+    <Compile Include="MoveFormatterTest.fs" />
+    <Compile Include="MoveTextEntryListTest.fs" />
+    <Compile Include="MoveTextFormatterTest.fs" />
+    <Compile Include="TestBase.fs" />
+    <Compile Include="GameParserTest.fs" />
+    <Compile Include="MoveParsersTest.fs" />
+    <Compile Include="MoveSieriesParserTests.fs" />
+    <Compile Include="TagParserTest.fs" />
     <Compile Include="FileTestCases.fs" />
     <Compile Include="ParserTest.fs" />
     <Compile Include="PgnWriterTest.fs" />
     <Compile Include="RealFileTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
+
+  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
@@ -44,7 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\fspgn.NET\fspgn.NET.fsproj" />
+    <ProjectReference Include="..\FsChessPgn\FsChessPgn.fsproj" />
   </ItemGroup>
 
 </Project>
