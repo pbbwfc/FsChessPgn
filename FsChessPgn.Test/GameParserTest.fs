@@ -63,8 +63,8 @@ type GameParserTest() =
     member this.pGame_should_accept_a_standard_pgn_game() =
         let game= parse pGame testGame1
         Assert.AreEqual("Tarrasch, Siegbert", game.WhitePlayer)
-        Assert.AreEqual(25, game.MoveText.Length) //24 move pairs and finish tag
-        let (GameEndEntry gr) = game.MoveText.[24]
+        Assert.AreEqual(48, game.MoveText.Length) //24 move pairs and finish tag
+        let (GameEndEntry gr) = game.MoveText.[47]
 
         Assert.AreEqual(GameResult.WhiteWins, gr)
         Assert.AreEqual(null, game.BoardSetup)
@@ -133,7 +133,7 @@ type GameParserTest() =
     member this.pGame_should_set_the_move_text() =
         let game= parse pGame testGame2
 
-        Assert.AreEqual(39, game.MoveText.Length)
+        Assert.AreEqual(77, game.MoveText.Length)
 
      // Expect exception
      [<TestMethod; ExpectedException(typeof<System.Exception>)>]

@@ -30,9 +30,11 @@ type MoveTextEntryListTest()=
         let mtel =
             [CommentEntry("foo");
              NAGEntry(1);
-             RAVEntry([MovePairEntry(None,mv,mv)]);
-             MovePairEntry(None,mv,mv);
-             MovePairEntry(None,mv,mv);
+             RAVEntry([HalfMoveEntry(None,false,mv); HalfMoveEntry(None,false,mv)]);
+             HalfMoveEntry(None,false,mv);
+             HalfMoveEntry(None,false,mv);
+             HalfMoveEntry(None,false,mv);
+             HalfMoveEntry(None,false,mv);
              GameEndEntry(GameResult.Draw)]
 
         Assert.AreEqual(2, mtel|>FullMoveCount)

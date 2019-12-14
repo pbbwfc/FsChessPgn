@@ -16,22 +16,27 @@ type MoveTextFormatterTest()=
     member this.Format_should_accept_TextWriter() =
         let writer = new StringWriter()
         writer.Write("Foo ")
-        let entry = MovePairEntry(None,_move1,_move2)
+        let entry = HalfMoveEntry(None,false,_move1)
+        Formatter.FormatMoveTextEntry(entry, writer)
+        writer.Write(" ")
+        let entry = HalfMoveEntry(None,false,_move2)
         Formatter.FormatMoveTextEntry(entry, writer)
 
         Assert.AreEqual("Foo exd5 Nd4", writer.ToString())
 
     [<TestMethod>]
     member this.Format_should_format_move_pair() =
-        let entry = MovePairEntry(None,_move1,_move2)
-        let act = Formatter.FormatMoveTextEntryStr (entry)
+        let entry1 = HalfMoveEntry(None,false,_move1)
+        let entry2 = HalfMoveEntry(None,false,_move2)
+        let act = Formatter.FormatMoveTextEntryStr(entry1) + " " + Formatter.FormatMoveTextEntryStr(entry2)
 
         Assert.AreEqual("exd5 Nd4", act)
 
     [<TestMethod>]
     member this.Format_should_format_move_pair_with_number() =
-        let entry = MovePairEntry(Some(6),_move1,_move2)
-        let act = Formatter.FormatMoveTextEntryStr (entry)
+        let entry1 = HalfMoveEntry(Some(6),false,_move1)
+        let entry2 = HalfMoveEntry(None,false,_move2)
+        let act = Formatter.FormatMoveTextEntryStr(entry1) + " " + Formatter.FormatMoveTextEntryStr(entry2)
 
         Assert.AreEqual("6. exd5 Nd4", act)
 
@@ -77,11 +82,12 @@ type MoveTextFormatterTest()=
         let rav2 = HalfMoveEntry(Some(37),false,pMoveCreateAll(pMoveType.Simple,None,Sq(FileE, Rank3),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,pMoveAnnotation.Blunder|>Some))
         let entry3 = RAVEntry([rav1;rav2])
         let entry4 = HalfMoveEntry(Some(37),true,pMoveCreate(pMoveType.Simple,None,Sq(FileD, Rank8),None,PieceType.Rook|>Some))
-        let entry5 = MovePairEntry(Some(38),pMoveCreate(pMoveType.Simple,None,Sq(FileH, Rank4),None,PieceType.Pawn|>Some),pMoveCreate(pMoveType.Simple,None,Sq(FileD, Rank5),None,PieceType.Rook|>Some))
+        let entry5a = HalfMoveEntry(Some(38),false,pMoveCreate(pMoveType.Simple,None,Sq(FileH, Rank4),None,PieceType.Pawn|>Some))
+        let entry5b = HalfMoveEntry(None,false,pMoveCreate(pMoveType.Simple,None,Sq(FileD, Rank5),None,PieceType.Rook|>Some))
         let entry6 = GameEndEntry(GameResult.WhiteWins)
         let entry7 = CommentEntry("game ends in win, whooot")
 
-        let ml = [entry1;entry2;entry3;entry4;entry5;entry6;entry7]
+        let ml = [entry1;entry2;entry3;entry4;entry5a;entry5b;entry6;entry7]
         Assert.AreEqual("37. Nxe5! $13 ({comment} 37. Ne3??) 37... Rd8 38. h4 Rd5 1-0 {game ends in win, whooot}", Formatter.FormatMoveTextStr(ml))
 
     [<TestMethod>]

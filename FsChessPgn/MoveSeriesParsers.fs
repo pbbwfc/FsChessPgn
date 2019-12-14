@@ -16,12 +16,6 @@ let pMoveNumberIndicator =
     <!> "pMoveNumberIndicator"
     <?> "Move number indicator (e.g. 5. or 13...)"
 
-let pFullMoveTextEntry =
-    pMoveNumberIndicator .>> ws .>>. pMove .>> ws1 .>>. pMove
-    |>> fun (((moveNum, contd), moveWhite), moveBlack) ->
-            MovePairEntry(moveNum, moveWhite, moveBlack )
-    <!!> ("pFullMoveTextEntry", 3)
-
 let pSplitMoveTextEntry =
     pMoveNumberIndicator .>> ws .>>. pMove
     |>> fun ((moveNum, contd), move) -> HalfMoveEntry(moveNum, contd, move)
@@ -64,7 +58,6 @@ let pMoveSeriesEntry=
      pCommentary
     <|> pNAG
     <|> pRAV
-    <|> attempt(pFullMoveTextEntry)
     <|> attempt(pSplitMoveTextEntry)
     <|> attempt(pEndOfGame)
     <!!> ("pMoveSeriesEntry", 4)

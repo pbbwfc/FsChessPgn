@@ -50,7 +50,3 @@ type Debug() =
 
 #endif
 
-let toNullable =
-    function
-    | None -> Nullable()
-    | Some x -> Nullable(x)

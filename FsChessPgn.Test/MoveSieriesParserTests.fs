@@ -30,21 +30,6 @@ type MoveSeriesParserTest() =
         tryParse pMoveNumberIndicator "7 …"
 
     [<TestMethod>]
-    member this.pMoveSeriesEntry_should_accept_move_pair() =
-        tryParse pMoveSeriesEntry "1. e2e4 Nb8c6"
-        tryParse pMoveSeriesEntry "1 .   e2e4   Nb8c6"
-
-    [<TestMethod>]
-    member this.pMoveSeriesEntry_should_accept_a_full_move_pair() =
-        let (MovePairEntry (mn, wh, bl)) = (parse pMoveSeriesEntry "1. e2e4 Nb8c6") 
-        let moveWhite = parse pMove "e2e4"
-        let moveBlack = parse pMove "Nb8c6"
-
-        Assert.AreEqual(moveWhite, wh)
-        Assert.AreEqual(moveBlack, bl)
-        Assert.AreEqual(1, mn.Value)
-
-    [<TestMethod>]
     member this.pMoveSeriesEntry_should_accept_a_split_move_white() =
         let (HalfMoveEntry (mn,_,mv)) = (parse pMoveSeriesEntry "1. e2e4")
         let moveWhite = parse pMove "e2e4"
@@ -74,13 +59,13 @@ type MoveSeriesParserTest() =
     member this.pMoveSeries_should_accept_a_moveSeries() =
         let moveSeries = parse pMoveSeries "1. e4 c5 2. Nf3 d6 3. Bb5+ Bd7"
 
-        Assert.AreEqual(3, moveSeries.Length)
+        Assert.AreEqual(6, moveSeries.Length)
 
     [<TestMethod>]
     member this.pMoveSeries_should_accept_a_moveSeries_with_split_moves() =
         let moveSeries = parse pMoveSeries "1. e4 c5 2. Nf3 \n 2... d6 3. Bb5+ Bd7"
 
-        Assert.AreEqual(4, moveSeries.Length)
+        Assert.AreEqual(6, moveSeries.Length)
 
     [<TestMethod>]
     member this.pMoveEntry_should_accept_comments_in_braces() =
@@ -93,9 +78,9 @@ type MoveSeriesParserTest() =
         let moveSeries = parse pMoveSeries "1. e4 e5 2. Nf3 Nc6 3. Bb5 ;This opening is called the Ruy Lopez.
         3... a6"
 
-        Assert.AreEqual(5, moveSeries.Length)
+        Assert.AreEqual(7, moveSeries.Length)
 
-        let (CommentEntry str) = (moveSeries.Item(3)) 
+        let (CommentEntry str) = (moveSeries.Item(5)) 
         Assert.AreEqual("This opening is called the Ruy Lopez.", str)
 
     [<TestMethod>]
@@ -104,10 +89,10 @@ type MoveSeriesParserTest() =
         ;Another comment
         3... a6"
 
-        Assert.AreEqual(6, moveSeries.Length)
+        Assert.AreEqual(8, moveSeries.Length)
 
-        let (CommentEntry str1) = (moveSeries.Item(3))
-        let (CommentEntry str2) = (moveSeries.Item(4))
+        let (CommentEntry str1) = (moveSeries.Item(5))
+        let (CommentEntry str2) = (moveSeries.Item(6))
         Assert.AreEqual("This opening is called the Ruy Lopez.", str1)
         Assert.AreEqual("Another comment", str2)
 
@@ -162,8 +147,8 @@ type MoveSeriesParserTest() =
     member this.pMoveSeries_should_accept_NAGs() =
         let entries = parse pMoveSeries "1. e4 c5 $6 "
 
-        Assert.AreEqual(2, entries.Length)
-        let (NAGEntry cd) = entries.[1]
+        Assert.AreEqual(3, entries.Length)
+        let (NAGEntry cd) = entries.[2]
         Assert.AreEqual(6, cd)
 
     [<TestMethod>]
@@ -172,12 +157,12 @@ type MoveSeriesParserTest() =
 
         Assert.AreEqual(4, entries.Length)
         let (RAVEntry ml) = entries.[2]
-        Assert.AreEqual(3, ml.Length)
-        let (MovePairEntry (_, wh0, _)) = ml.[0] 
-        let (MovePairEntry (_, wh1, _)) = ml.[1]
-        let (CommentEntry str) = ml.[2]
-        Assert.AreEqual(parse pMove "Bd3", wh0)
-        Assert.AreEqual(parse pMove "exd4", wh1)
+        Assert.AreEqual(5, ml.Length)
+        let (HalfMoveEntry (_, _, mv0)) = ml.[0] 
+        let (HalfMoveEntry (_, _, mv1)) = ml.[2]
+        let (CommentEntry str) = ml.[4]
+        Assert.AreEqual(parse pMove "Bd3", mv0)
+        Assert.AreEqual(parse pMove "exd4", mv1)
         Assert.AreEqual(" - B14 ", str)
 
     [<TestMethod>]
@@ -186,9 +171,9 @@ type MoveSeriesParserTest() =
 
         Assert.AreEqual(3, entries.Length)
         let (RAVEntry ml) = entries.[1]
-        Assert.AreEqual(3, ml.Length)
+        Assert.AreEqual(5, ml.Length)
 
-        let (RAVEntry ml2) = ml.[2]
+        let (RAVEntry ml2) = ml.[4]
         Assert.AreEqual(1, ml2.Length)
         let (HalfMoveEntry (_,_,mv)) = ml2.[0]
         Assert.AreEqual(parse pMove "Qa4", mv)

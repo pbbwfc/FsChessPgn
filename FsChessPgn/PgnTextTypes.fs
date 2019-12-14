@@ -74,7 +74,6 @@ module PgnTextTypes =
     let pMoveCreateCastle(mt) = pMoveCreateOrig(mt,None,OUTOFBOUNDS,None,None,OUTOFBOUNDS,None,None)
 
     type MoveTextEntry =
-        |MovePairEntry of int option * pMove * pMove
         |HalfMoveEntry of int option * bool * pMove
         |CommentEntry of string
         |GameEndEntry of GameResult
@@ -120,7 +119,6 @@ module PgnTextTypes =
     let MoveCount(mtel:MoveTextEntry list) =
         let mc(mte:MoveTextEntry) =
             match mte with
-            |MovePairEntry(_) -> 2
             |HalfMoveEntry(_) -> 1
             |_ -> 0
         mtel|>List.map mc|>List.reduce(+)
@@ -130,7 +128,6 @@ module PgnTextTypes =
     let GetMoves(mtel:MoveTextEntry list) =
         let gm(mte:MoveTextEntry) =
             match mte with
-            |MovePairEntry(_,mv1,mv2) -> [mv1;mv2]
             |HalfMoveEntry(_,_,mv) -> [mv]
             |_ -> []
         mtel|>List.map gm|>List.concat
