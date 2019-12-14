@@ -14,7 +14,13 @@
     <Compile Include="Rank.fs" />
     <Compile Include="File.fs" />
     <Compile Include="Square.fs" />
+    <Compile Include="Bitboard.fs" />
+    <Compile Include="Direction.fs" />
+    <Compile Include="Attacks.fs" />
+    <Compile Include="Board.fs" />
     <Compile Include="FEN.fs" />
+    <Compile Include="MoveGenerate.fs" />
+    <Compile Include="MoveUtil.fs" />
     <Compile Include="Formatter.fs" />
     <Compile Include="Bootstrap.fs" />
     <Compile Include="BasicParsers.fs" />
