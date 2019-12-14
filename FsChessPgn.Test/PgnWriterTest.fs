@@ -1,6 +1,5 @@
 namespace FsChessPgn.Test
 
-open System
 open System.IO
 open FsChessPgn.NET
 open FsChessPgn.Data

@@ -1,7 +1,6 @@
 ﻿[<AutoOpen>]
 module FsChessPgn.PgnParsers.Tag
 
-open System
 open FParsec
 open FsChessPgn.Data
 

@@ -1,7 +1,6 @@
 ﻿[<AutoOpen>]
 module FsChessPgn.PgnParsers.MoveSeries
 
-open System.Collections.Generic
 open FParsec
 open FsChessPgn.Data
 open FsChessPgn.Data.PgnTextTypes

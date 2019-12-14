@@ -1,7 +1,5 @@
 ﻿namespace FsChessPgn.Data
 
-open System
-
 module PgnTextTypes =
 
     type pMoveType =

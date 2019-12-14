@@ -1,7 +1,5 @@
 ﻿namespace FsChessPgn.Data
 
-open System
-
 module Piece = 
     let LookupArrayLength = 15
     let AllPieces = 

@@ -2,7 +2,6 @@
 
 open FParsec
 open System.IO
-//open FsChessPgn.Exceptions
 open FsChessPgn.PgnParsers.Game
 
 type Parser() =

@@ -1,6 +1,5 @@
 namespace FsChessPgn.Test
 
-open System
 open FsChessPgn.Data
 
 open Microsoft.VisualStudio.TestTools.UnitTesting

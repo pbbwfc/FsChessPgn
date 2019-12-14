@@ -2,7 +2,6 @@
 module FsChessPgn.PgnParsers.Game
 
 open FParsec
-open FsChessPgn.Data
 open FsChessPgn.Data.PgnTextTypes
 
 let setTag(igame : pGame, tag : PgnTag) =

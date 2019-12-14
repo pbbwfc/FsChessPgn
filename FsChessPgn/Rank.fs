@@ -1,7 +1,5 @@
 ﻿namespace FsChessPgn.Data
 
-open System
-
 module Rank = 
     
     let Parse(c : char) :Rank = 

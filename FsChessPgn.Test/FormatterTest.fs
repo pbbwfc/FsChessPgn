@@ -1,6 +1,5 @@
 ﻿namespace FsChessPgn.Test
 
-open System
 open System.IO
 open FsChessPgn.Data
 open FsChessPgn.Data.PgnTextTypes

@@ -1,7 +1,5 @@
 ﻿namespace FsChessPgn.Data
 
-open System
-
 module File = 
     
     let Parse(c : char):File = 

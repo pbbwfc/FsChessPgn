@@ -1,7 +1,5 @@
 ﻿namespace FsChessPgn.Data
 
-open System
-
 [<AutoOpen>]
 module Util =
     let Dirn i = enum<Direction> (i)

@@ -1,9 +1,7 @@
 namespace FsChessPgn.Test
 
-open System
 open System.IO
 open FsChessPgn.NET
-open FsChessPgn.Data.PgnTextTypes
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open System.Text

@@ -1,7 +1,5 @@
 ﻿namespace FsChessPgn.Data
 
-open System
-
 module Square = 
     
     let Parse(s : string) = 
