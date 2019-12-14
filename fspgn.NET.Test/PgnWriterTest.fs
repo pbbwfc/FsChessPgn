@@ -31,3 +31,14 @@ type PgnWriterTest () =
 
         Assert.AreEqual(TestGameString, actual)
 
+    [<TestMethod>]
+    member this.parser_should_read_written_game_correctly() =
+        let stream = new MemoryStream()
+        let db = [_testGame]
+        PgnWriter.WriteStream(stream,db)
+        let writtenResult = Encoding.UTF8.GetString(stream.ToArray())
+        let actualDb = PgnReader.ReadFromString(writtenResult)
+        let actual = PgnWriter.WriteString(actualDb)
+
+        Assert.AreEqual(TestGameString, actual)
+

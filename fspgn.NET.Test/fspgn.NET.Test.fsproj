@@ -11,10 +11,18 @@
     <None Include="TestExamples\empty-file.pgn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestExamples\RealGames\chess-informant-sample.pgn" />
-    <None Include="TestExamples\RealGames\demoGames.pgn" />
-    <None Include="TestExamples\RealGames\lon09r5.pgn" />
-    <None Include="TestExamples\RealGames\tilb98r2.pgn" />
+    <None Include="TestExamples\RealGames\chess-informant-sample.pgn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestExamples\RealGames\demoGames.pgn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestExamples\RealGames\lon09r5.pgn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestExamples\RealGames\tilb98r2.pgn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestExamples\simple-game.pgn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -24,6 +32,7 @@
     <Compile Include="FileTestCases.fs" />
     <Compile Include="ParserTest.fs" />
     <Compile Include="PgnWriterTest.fs" />
+    <Compile Include="RealFileTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
