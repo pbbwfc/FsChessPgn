@@ -31,12 +31,10 @@ module Board =
         move|>MovingPieceType = PieceType.Pawn && Math.Abs(int (move|>From) - int (move|>To)) = 16
     
     let Create() = 
-        { PieceAt = Array.create 65 Piece.EMPTY
-          WtPcCnt = Array.create 7 0
-          BkPcCnt = Array.create 7 0
+        { PieceAt = Array.create 64 Piece.EMPTY|>List.ofArray
           WtKingPos = OUTOFBOUNDS
           BkKingPos = OUTOFBOUNDS
-          PieceTypes = Array.create PieceType.LookupArrayLength Bitboard.Empty
+          PieceTypes = Array.create PieceType.LookupArrayLength Bitboard.Empty|>List.ofArray
           WtPrBds = Bitboard.Empty
           BkPrBds = Bitboard.Empty
           PieceLocationsAll = Bitboard.Empty
@@ -53,9 +51,9 @@ module Board =
         let piece = bd.PieceAt.[int (mfrom)]
         let player = piece|>Piece.PieceToPlayer
         let pieceType = piece|>Piece.ToPieceType
-        let pieceat = bd.PieceAt|>Array.mapi(fun i p -> if i=int(mto) then piece elif i = int(mfrom) then Piece.EMPTY else p)
+        let pieceat = bd.PieceAt|>List.mapi(fun i p -> if i=int(mto) then piece elif i = int(mfrom) then Piece.EMPTY else p)
         let posBits = (mfrom |> Square.ToBitboard) ||| (mto |> Square.ToBitboard)
-        let piecetypes = bd.PieceTypes|>Array.mapi(fun i p -> if i=int(pieceType) then p ^^^ posBits else p)
+        let piecetypes = bd.PieceTypes|>List.mapi(fun i p -> if i=int(pieceType) then p ^^^ posBits else p)
         let wtprbds = if player=Player.White then bd.WtPrBds ^^^ posBits else bd.WtPrBds
         let bkprbds = if player=Player.Black then bd.BkPrBds ^^^ posBits else bd.BkPrBds
         let pieceLocationsAll = bd.PieceLocationsAll ^^^ posBits
@@ -74,29 +72,14 @@ module Board =
         let pieceType = piece |> Piece.ToPieceType
         
         let pieceat = 
-            bd.PieceAt |> Array.mapi (fun i p -> 
+            bd.PieceAt |> List.mapi (fun i p -> 
                               if i = int (pos) then piece
-                              else p)
-        
-        
-        let countOthers = 
-            if player = Player.White then bd.WtPcCnt.[int (pieceType)]
-            else bd.BkPcCnt.[int (pieceType)]
-        
-        let wtpccnt = 
-            bd.WtPcCnt |> Array.mapi (fun i p -> 
-                              if player = Player.White && i = int (pieceType) then countOthers + 1
-                              else p)
-        
-        let bkpccnt = 
-            bd.BkPcCnt |> Array.mapi (fun i p -> 
-                              if player = Player.Black && i = int (pieceType) then countOthers + 1
                               else p)
         
         let posBits = pos |> Square.ToBitboard
         
         let piecetypes = 
-            bd.PieceTypes |> Array.mapi (fun i p -> 
+            bd.PieceTypes |> List.mapi (fun i p -> 
                                  if i = int (piece |> Piece.ToPieceType) then p ||| posBits
                                  else p)
         
@@ -106,8 +89,6 @@ module Board =
         let wtkingpos = if pieceType = PieceType.King && player=Player.White then pos else bd.WtKingPos
         let bkkingpos = if pieceType = PieceType.King && player=Player.Black then pos else bd.BkKingPos
         { bd with PieceAt = pieceat
-                  WtPcCnt = wtpccnt
-                  BkPcCnt = bkpccnt
                   PieceTypes = piecetypes
                   PieceLocationsAll = piecelocationsall
                   WtPrBds = wtprbds
@@ -121,36 +102,19 @@ module Board =
         let pieceType = piece |> Piece.ToPieceType
         
         let pieceat = 
-            bd.PieceAt |> Array.mapi (fun i p -> 
+            bd.PieceAt |> List.mapi (fun i p -> 
                               if i = int (pos) then Piece.EMPTY
                               else p)
-        
-        let countOthers = 
-            if player = Player.White then bd.WtPcCnt.[int (pieceType)] - 1
-            else bd.BkPcCnt.[int (pieceType)] - 1
-        
-        let wtpccnt = 
-            bd.WtPcCnt |> Array.mapi (fun i p -> 
-                              if player = Player.White && i = int (pieceType) then countOthers
-                              else p)
-        
-        let bkpccnt = 
-            bd.BkPcCnt |> Array.mapi (fun i p -> 
-                              if player = Player.Black && i = int (pieceType) then countOthers
-                              else p)
-        
         let notPosBits = ~~~(pos |> Square.ToBitboard)
         
         let piecetypes = 
-            bd.PieceTypes |> Array.mapi (fun i p -> 
+            bd.PieceTypes |> List.mapi (fun i p -> 
                                  if i = int (pieceType) then p &&& notPosBits
                                  else p)
         let wtprbds = if player=Player.White then bd.WtPrBds &&& notPosBits else bd.WtPrBds
         let bkprbds = if player=Player.Black then bd.BkPrBds &&& notPosBits else bd.BkPrBds
         let piecelocationsall = bd.PieceLocationsAll &&& notPosBits
         { bd with PieceAt = pieceat
-                  WtPcCnt = wtpccnt
-                  BkPcCnt = bkpccnt
                   PieceTypes = piecetypes
                   WtPrBds = wtprbds
                   BkPrBds = bkprbds
@@ -281,12 +245,10 @@ module Board =
         getpospc 1 (from|>Square.PositionInDirection(dir)) Piece.EMPTY
     
     let initPieceAtArray (bd : Brd) = 
-        { bd with PieceAt = bd.PieceAt |> Array.map (fun p -> Piece.EMPTY)
-                  WtPcCnt = bd.WtPcCnt|> Array.map (fun p -> 0)
-                  BkPcCnt = bd.BkPcCnt|> Array.map (fun p -> 0)
+        { bd with PieceAt = bd.PieceAt |> List.map (fun p -> Piece.EMPTY)
                   WtKingPos = OUTOFBOUNDS
                   BkKingPos = OUTOFBOUNDS
-                  PieceTypes = bd.PieceTypes |> Array.map (fun p -> Bitboard.Empty)
+                  PieceTypes = bd.PieceTypes |> List.map (fun p -> Bitboard.Empty)
                   WtPrBds = Bitboard.Empty
                   BkPrBds = Bitboard.Empty
                   PieceLocationsAll = Bitboard.Empty
@@ -301,7 +263,7 @@ module Board =
                 if pc = Piece.EMPTY then rempc posl.Tail ibd
                 else rempc posl.Tail (ibd |> PieceRemove pos)
         
-        let bd = rempc (SQUARES|>List.ofArray) bd
+        let bd = rempc SQUARES bd
         let bd = bd |> initPieceAtArray
         
         let rec addpc posl ibd = 
@@ -312,7 +274,7 @@ module Board =
                 if pc = Piece.EMPTY then addpc posl.Tail ibd
                 else addpc posl.Tail (ibd |> PieceAdd pos pc)
         
-        let bd = addpc (SQUARES|>List.ofArray) bd
+        let bd = addpc SQUARES bd
         { bd with CastleRights = 
                       Cf0 ||| (if fen.CastleWS then CstlFlgs.WhiteShort
                                else Cf0) ||| (if fen.CastleWL then CstlFlgs.WhiteLong
@@ -330,14 +292,6 @@ module Board =
 
     let Create2 fen = 
         let bd = Create()
-        let bd = bd |> initPieceAtArray
         let bd = bd |> FENCurrent fen
         bd
     
-    let Create3 fen prevMoves = 
-        let rec getbd mvl ibd = 
-            if List.isEmpty mvl then ibd
-            else getbd mvl.Tail (ibd |> MoveApply mvl.Head)
-        getbd prevMoves (Create2 fen)
-
-

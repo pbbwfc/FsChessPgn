@@ -226,7 +226,7 @@ module Attacks =
                    |> Square.PositionInDirection(d)
                    |> Square.ToBitboard)
             |> Seq.reduce (|||)
-        SQUARES |> Array.map getkn
+        SQUARES |> List.map getkn
 
     let AttacksK = 
         let getk sq = 
@@ -236,7 +236,7 @@ module Attacks =
                    |> Square.PositionInDirection(d)
                    |> Square.ToBitboard)
             |> Seq.reduce (|||)
-        SQUARES |> Array.map getk
+        SQUARES |> List.map getk
 
     let AttacksP, AttacksPF = 
         let getp pr sq = 
@@ -250,8 +250,8 @@ module Attacks =
     
         let getps pr = 
             SQUARES
-            |> Array.map (getp pr)
-            |> Array.unzip
+            |> List.map (getp pr)
+            |> List.unzip
     
         Player.AllPlayers
         |> Array.map getps
@@ -270,8 +270,8 @@ module Attacks =
                 lu.[int (index)] <- attacks //OK
             lu, shift, mask
         SQUARES
-        |> Array.map getlsm
-        |> Array.unzip3
+        |> List.map getlsm
+        |> List.unzip3
 
     let LookupR, ShiftR, MaskR = 
         let getlsm sq = 
@@ -286,8 +286,8 @@ module Attacks =
                 lu.[int (index)] <- attacks //OK
             lu, shift, mask
         SQUARES
-        |> Array.map getlsm
-        |> Array.unzip3
+        |> List.map getlsm
+        |> List.unzip3
 
     let KnightAttacks(from : Square) = AttacksKn.[int (from)]
     let KingAttacks(from : Square) = AttacksK.[int (from)]

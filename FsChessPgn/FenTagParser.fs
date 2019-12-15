@@ -65,7 +65,7 @@ let pFenTagValue =
     .>> pchar '"'
     |>> fun (((((pieces, whiteMove), castlingInfo), enPassantSquare), halfMoves), fullMoves) ->
             let boardSetup= 
-                { Pieceat = pieces|>List.toArray
+                { Pieceat = pieces
                   Whosturn = if whiteMove then Player.White else Player.Black
                   CastleWS = castlingInfo.[0]
                   CastleWL = castlingInfo.[1]

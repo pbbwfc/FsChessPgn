@@ -3,28 +3,7 @@
 open System.Text
 open System.Text.RegularExpressions
 
-type PosPcDict = System.Collections.Generic.Dictionary<Square, Piece>
-
 module FEN = 
-    let Create(pieces : PosPcDict, whosTurn, castleWS, castleWL, castleBS, castleBL, enpassant, fiftyMove, fullMove) = 
-        let pieceat = SQUARES|>Array.map(fun p -> pieces.[p])
-        { Pieceat = pieceat
-          Whosturn = whosTurn
-          CastleWS = castleWS
-          CastleWL = castleWL
-          CastleBS = castleBS
-          CastleBL = castleBL
-          Enpassant = enpassant
-          Fiftymove = fiftyMove
-          Fullmove = fullMove }
-    
-    let Reverse(fen : Fen) = 
-        let pieces = new PosPcDict()
-        for pos in SQUARES do
-            pieces.[pos] <- fen.Pieceat.[int (pos |> Square.Reverse)] |> Piece.ToOppositePlayer//OK
-        Create(pieces, fen.Whosturn |> Player.PlayerOther, fen.CastleBS, fen.CastleBL, fen.CastleWS, fen.CastleWL, 
-               (if fen.Enpassant |> Square.IsInBounds then fen.Enpassant |> Square.Reverse
-                else OUTOFBOUNDS), fen.Fiftymove, fen.Fullmove)
     
     let ToStr(fen : Fen) = 
         let sb = new StringBuilder(50)
@@ -59,7 +38,7 @@ module FEN =
         sb.ToString()
     
     let FromBd(bd : Brd) = 
-        { Pieceat = bd.PieceAt|>Array.copy
+        { Pieceat = bd.PieceAt
           Whosturn = bd.WhosTurn
           CastleWS = int (bd.CastleRights &&& CstlFlgs.WhiteShort) <> 0
           CastleWL = int (bd.CastleRights &&& CstlFlgs.WhiteLong) <> 0
@@ -91,7 +70,7 @@ module FEN =
         if matches.Count = 0 then failwith "No valid fen found"
         if matches.Count > 1 then failwith "Multiple FENs in string"
         let matchr = matches.[0]
-        let sRanks = RANKS|>Array.map(fun r -> matchr.Groups.["R" + (r |> Rank.RankToString)].Value)|>Array.rev
+        let sRanks = RANKS|>List.map(fun r -> matchr.Groups.["R" + (r |> Rank.RankToString)].Value)|>List.rev
         let sPlayer = matchr.Groups.["Player"].Value
         let sCastle = matchr.Groups.["Castle"].Value
         let sEnpassant = matchr.Groups.["Enpassant"].Value
@@ -131,7 +110,7 @@ module FEN =
             if sFullMove <> "-" then System.Int32.Parse(sFullMove)
             else 0
         
-        { Pieceat = pieceat
+        { Pieceat = pieceat|>List.ofArray
           Whosturn = whosTurn
           CastleWS = castleWS
           CastleWL = castleWL

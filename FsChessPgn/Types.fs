@@ -44,14 +44,14 @@ module Types =
     
     type File = int
     let FileA, FileB, FileC, FileD, FileE, FileF, FileG, FileH :File * File * File * File * File * File * File * File = 0,1,2,3,4,5,6,7
-    let FILES = [| FileA; FileB; FileC; FileD; FileE; FileF; FileG; FileH |]
-    let FILE_NAMES = [|"a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"|]
+    let FILES = [ FileA; FileB; FileC; FileD; FileE; FileF; FileG; FileH ]
+    let FILE_NAMES = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"]
     let FILE_EMPTY :File = 8
 
     type Rank = int
     let Rank8, Rank7, Rank6, Rank5, Rank4, Rank3, Rank2, Rank1 :Rank * Rank * Rank * Rank * Rank * Rank * Rank * Rank = 0,1,2,3,4,5,6,7
-    let RANKS = [|Rank8; Rank7; Rank6; Rank5; Rank4; Rank3; Rank2; Rank1|]
-    let RANK_NAMES = [|"8"; "7"; "6"; "5"; "4"; "3"; "2"; "1"|]
+    let RANKS = [Rank8; Rank7; Rank6; Rank5; Rank4; Rank3; Rank2; Rank1]
+    let RANK_NAMES = ["8"; "7"; "6"; "5"; "4"; "3"; "2"; "1"]
     let RANK_EMPTY :Rank = 8
 
     type Square = int
@@ -64,7 +64,7 @@ module Types =
     let A7, B7, C7, D7, E7, F7, G7, H7 = A6-8, B6-8, C6-8, D6-8, E6-8, F6-8, G6-8, H6-8 
     let A8, B8, C8, D8, E8, F8, G8, H8 = A7-8, B7-8, C7-8, D7-8, E7-8, F7-8, G7-8, H7-8
     let OUTOFBOUNDS:Square = 64
-    let SQUARES = [|
+    let SQUARES = [
         A8; B8; C8; D8; E8; F8; G8; H8
         A7; B7; C7; D7; E7; F7; G7; H7;
         A6; B6; C6; D6; E6; F6; G6; H6;
@@ -73,8 +73,8 @@ module Types =
         A3; B3; C3; D3; E3; F3; G3; H3;
         A2; B2; C2; D2; E2; F2; G2; H2;
         A1; B1; C1; D1; E1; F1; G1; H1;
-        |] 
-    let SQUARE_NAMES = [|for r in RANK_NAMES do for f in FILE_NAMES -> f+r|]
+        ] 
+    let SQUARE_NAMES = [for r in RANK_NAMES do for f in FILE_NAMES -> f+r]
     let Sq(f:File,r:Rank) :Square = (int (r) * 8 + int (f))
     
     type Direction = 
@@ -96,7 +96,7 @@ module Types =
         | DirNNW = -17
     
     type Fen = 
-        { Pieceat : Piece []
+        { Pieceat : Piece list
           Whosturn : Player
           CastleWS : bool
           CastleWL : bool
@@ -293,12 +293,10 @@ module Types =
         }
 
     type Brd = 
-        { PieceAt : Piece []
-          WtPcCnt : int []
-          BkPcCnt : int []
+        { PieceAt : Piece list
           WtKingPos : Square
           BkKingPos : Square
-          PieceTypes : Bitboard []
+          PieceTypes : Bitboard list
           WtPrBds : Bitboard
           BkPrBds : Bitboard
           PieceLocationsAll : Bitboard
@@ -310,3 +308,4 @@ module Types =
           Fullmove : int
           MovesSinceNull : int
           }
+

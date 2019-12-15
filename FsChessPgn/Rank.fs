@@ -3,13 +3,13 @@
 module Rank = 
     
     let Parse(c : char) :Rank = 
-        let Rankdesclookup = RANK_NAMES|>Array.reduce(+)
+        let Rankdesclookup = RANK_NAMES|>List.reduce(+)
         let idx = Rankdesclookup.IndexOf(c.ToString().ToLower())
         if idx < 0 then failwith (c.ToString() + " is not a valid rank")
         else idx 
     
-    let RankToString(rank : Rank) = RANK_NAMES.[int(rank)]
-    let IsInBounds(rank : Rank) = int (rank) >= 0 && int (rank) <= 7
+    let RankToString(rank : Rank) = RANK_NAMES.[rank]
+    let IsInBounds(rank : Rank) = rank >= 0 && rank <= 7
     
     let ToBitboard(rank : Rank) = 
         if rank=Rank1 then Bitboard.Rank1
