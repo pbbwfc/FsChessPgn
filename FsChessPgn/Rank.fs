@@ -10,7 +10,6 @@ module Rank =
     
     let RankToString(rank : Rank) = RANK_NAMES.[int(rank)]
     let IsInBounds(rank : Rank) = int (rank) >= 0 && int (rank) <= 7
-    let ToPosition (file : File) (rank : Rank) :Square = (int (rank) * 8 + int (file))
     
     let ToBitboard(rank : Rank) = 
         if rank=Rank1 then Bitboard.Rank1

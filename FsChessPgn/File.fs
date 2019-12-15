@@ -10,6 +10,3 @@ module File =
     
     let FileToString(file : File) = FILE_NAMES.[int(file)]
     let IsInBounds(file : File) = int (file) >= 0 && int (file) <= 7
-    let ToPosition (rank : Rank) (file : File) :Square = (int (rank) * 8 + int (file))
-    
-    let ToBitboard(file : File) = FileBits.[int(file)]

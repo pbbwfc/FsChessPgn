@@ -199,8 +199,6 @@ module Types =
         | Empty = 0UL
         | Full = 18446744073709551615UL
 
-    let FileBits = [|Bitboard.FileA;Bitboard.FileB;Bitboard.FileC;Bitboard.FileD;Bitboard.FileE;Bitboard.FileF;Bitboard.FileG;Bitboard.FileH|]
-
     type MoveType =
         | Simple
         | Capture

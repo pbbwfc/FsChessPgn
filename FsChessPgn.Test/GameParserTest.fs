@@ -144,9 +144,9 @@ type GameParserTest() =
         let game= parse pGame testGame3
         let setup= game.BoardSetup.Value //[FEN \"4k3/8/8/8/8/8/4P3/4K3 w - - 5 39\"]"
 
-        Assert.AreEqual(Piece.BKing, setup.Pieceat.[(Rank.ToPosition FileE Rank8)|>int])
-        Assert.AreEqual(Piece.WPawn, setup.Pieceat.[(Rank.ToPosition FileE Rank2)|>int])
-        Assert.AreEqual(Piece.WKing, setup.Pieceat.[(Rank.ToPosition FileE Rank1)|>int])
+        Assert.AreEqual(Piece.BKing, setup.Pieceat.[Sq(FileE,Rank8)|>int])
+        Assert.AreEqual(Piece.WPawn, setup.Pieceat.[Sq(FileE,Rank2)|>int])
+        Assert.AreEqual(Piece.WKing, setup.Pieceat.[Sq(FileE,Rank1)|>int])
 
         Assert.AreEqual(Player.White, setup.Whosturn)
 

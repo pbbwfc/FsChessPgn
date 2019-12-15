@@ -117,11 +117,11 @@ type TagParserTests() =
 
         let setup= (tag :?> FenTag).Setup
 
-        Assert.AreEqual(Piece.BRook, setup.Pieceat.[(Rank.ToPosition FileA Rank8)|>int])
-        Assert.AreEqual(Piece.WKnight, setup.Pieceat.[(Rank.ToPosition FileB Rank1)|>int])
-        Assert.AreEqual(Piece.BBishop, setup.Pieceat.[(Rank.ToPosition FileC Rank8)|>int])
-        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[(Rank.ToPosition FileC Rank3)|>int])
-        Assert.AreEqual(Piece.WKing, setup.Pieceat.[(Rank.ToPosition FileE Rank1)|>int])
+        Assert.AreEqual(Piece.BRook, setup.Pieceat.[Sq(FileA,Rank8)|>int])
+        Assert.AreEqual(Piece.WKnight, setup.Pieceat.[Sq(FileB,Rank1)|>int])
+        Assert.AreEqual(Piece.BBishop, setup.Pieceat.[Sq(FileC,Rank8)|>int])
+        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[Sq(FileC,Rank3)|>int])
+        Assert.AreEqual(Piece.WKing, setup.Pieceat.[Sq(FileE,Rank1)|>int])
 
         Assert.AreEqual(Player.White, setup.Whosturn)
 
@@ -143,12 +143,12 @@ type TagParserTests() =
 
         let setup= (tag :?> FenTag).Setup
 
-        Assert.AreEqual(Piece.BRook, setup.Pieceat.[(Rank.ToPosition FileA Rank8)|>int])
-        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[(Rank.ToPosition FileB Rank7)|>int])
-        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[(Rank.ToPosition FileC Rank5)|>int])
-        Assert.AreEqual(Piece.WPawn, setup.Pieceat.[(Rank.ToPosition FileE Rank4)|>int])
-        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[(Rank.ToPosition FileE Rank2)|>int])
-        Assert.AreEqual(Piece.WKing, setup.Pieceat.[(Rank.ToPosition FileE Rank1)|>int])
+        Assert.AreEqual(Piece.BRook, setup.Pieceat.[Sq(FileA,Rank8)|>int])
+        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[Sq(FileB,Rank7)|>int])
+        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[Sq(FileC,Rank5)|>int])
+        Assert.AreEqual(Piece.WPawn, setup.Pieceat.[Sq(FileE,Rank4)|>int])
+        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[Sq(FileE,Rank2)|>int])
+        Assert.AreEqual(Piece.WKing, setup.Pieceat.[Sq(FileE,Rank1)|>int])
 
         Assert.AreEqual(Player.Black, setup.Whosturn)
 

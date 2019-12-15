@@ -11,7 +11,7 @@ type MoveInfo(piece, file, rank) =
 
 let getSquare(moveInfo : MoveInfo) =
     match moveInfo.File, moveInfo.Rank with
-    | (x:File option, y:Rank option) when x.IsSome && y.IsSome -> (y.Value |> Rank.ToPosition x.Value)
+    | (x:File option, y:Rank option) when x.IsSome && y.IsSome -> Sq(x.Value,y.Value)
     | _, _ -> OUTOFBOUNDS
 
 let getMove(originInfo: MoveInfo option, targetInfo: MoveInfo, moveType: MoveType) =

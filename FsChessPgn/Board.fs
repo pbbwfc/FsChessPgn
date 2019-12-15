@@ -396,7 +396,7 @@ module Board =
         
         let bd = 
             if move |> IsEnPassant then 
-                bd |> PieceRemove((mto|>Square.ToFile)|>File.ToPosition(move|>MovingPlayer|>Player.MyRank(Rank5)))
+                bd |> PieceRemove(Sq(mto|>Square.ToFile,move|>MovingPlayer|>Player.MyRank(Rank5)))
             else bd
         
         let bd = 
@@ -463,7 +463,7 @@ module Board =
                 let tofile = moveUndoing|>To|>Square.ToFile
                 let enpassantRank = moveUndoing|>MovingPlayer|>Player.MyRank(Rank5)
                 bd 
-                |> PieceAdd (tofile|>File.ToPosition(enpassantRank)) 
+                |> PieceAdd (Sq(tofile,enpassantRank)) 
                        (PieceType.Pawn|>PieceType.ForPlayer(moveUndoing|>MovingPlayer|>Player.PlayerOther))
             else bd
         

@@ -53,7 +53,7 @@ let pFenCastlingInfo =
 
 let pFenEnPassantSquare =
     attempt(pchar '-' >>% OUTOFBOUNDS)
-    <|> (pFile .>>. pRank |>> fun (f, r) -> Rank.ToPosition f r)
+    <|> (pFile .>>. pRank |>> fun (f, r) -> Sq(f,r))
 
 let pFenTagValue =
     pchar '"' >>. pPiecePositions .>> ws

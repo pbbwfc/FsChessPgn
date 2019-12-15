@@ -7,7 +7,7 @@ module Square =
         else 
             let file = File.Parse(s.[0])
             let rank = Rank.Parse(s.[1])
-            file |> File.ToPosition(rank)
+            Sq(file,rank)
     
     let IsInBounds(pos : Square) = int (pos) >= 0 && int (pos) <= 63
     let ToRank(pos : Square) :Rank = (int (pos) / 8)
@@ -100,7 +100,7 @@ module Square =
                 | Direction.DirNNW -> r -! 2, f -- 1
                 | _ -> RANK_EMPTY, FILE_EMPTY
             if nr = RANK_EMPTY && nf = FILE_EMPTY then OUTOFBOUNDS
-            elif (nr |> Rank.IsInBounds) && (nf |> File.IsInBounds) then nr |> Rank.ToPosition(nf)
+            elif (nr |> Rank.IsInBounds) && (nf |> File.IsInBounds) then Sq(nf,nr)
             else OUTOFBOUNDS
     
     let Reverse(pos : Square) = 
@@ -117,7 +117,7 @@ module Square =
             elif r=Rank7 then Rank2
             elif r=Rank8 then Rank1
             else RANK_EMPTY
-        f |> File.ToPosition(newrank)
+        Sq(f,newrank)
     
     let ToBitboard(pos : Square) = 
         if pos |> IsInBounds then (1UL <<< int (pos)) |> BitB
