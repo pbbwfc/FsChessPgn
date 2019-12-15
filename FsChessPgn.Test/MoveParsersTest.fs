@@ -1,7 +1,6 @@
 ﻿namespace FsChessPgn.Test
 
 open FsChessPgn.Data
-open FsChessPgn.Data.PgnTextTypes
 open FsChessPgn.PgnParsers.Move
 open FsChessPgn.Test.TestBase
 
@@ -129,7 +128,7 @@ type MoveParserTest() =
     member this.pCapturing_move_should_parse_normal_move_correctly() =
         let move = parse pCapturingMove "Qd5xBh5"
         Assert.AreEqual(PieceType.Queen, move.Piece.Value)
-        Assert.AreEqual(pMoveType.Capture, move.Mtype)
+        Assert.AreEqual(MoveType.Capture, move.Mtype)
         Assert.AreEqual(PieceType.Bishop, move.TargetPiece.Value)
         Assert.AreEqual(Rank.ToPosition FileD Rank5, move.OriginSquare)
         Assert.AreEqual(Rank.ToPosition FileH Rank5, move.TargetSquare)
@@ -138,7 +137,7 @@ type MoveParserTest() =
     member this.pCapturing_move_should_parse_move_correctly_with_origin_piece() =
         let move = parse pCapturingMove "QxBh5"
         Assert.AreEqual(PieceType.Queen, move.Piece.Value)
-        Assert.AreEqual(pMoveType.Capture, move.Mtype)
+        Assert.AreEqual(MoveType.Capture, move.Mtype)
         Assert.AreEqual(PieceType.Bishop, move.TargetPiece.Value)
         Assert.AreEqual(OUTOFBOUNDS, move.OriginSquare)
         Assert.AreEqual(Rank.ToPosition FileH Rank5, move.TargetSquare)
@@ -147,7 +146,7 @@ type MoveParserTest() =
     member this.pCapturing_move_should_parse_move_correctly_with_originSuare() =
         let move = parse pCapturingMove "a1xBh8"
         Assert.AreEqual(PieceType.Pawn, move.Piece.Value)
-        Assert.AreEqual(pMoveType.Capture, move.Mtype)
+        Assert.AreEqual(MoveType.Capture, move.Mtype)
         Assert.AreEqual(PieceType.Bishop, move.TargetPiece.Value)
         Assert.AreEqual(Rank.ToPosition FileA Rank1, move.OriginSquare)
         Assert.AreEqual(Rank.ToPosition FileH Rank8, move.TargetSquare)
@@ -167,13 +166,13 @@ type MoveParserTest() =
     member this.pBasicMove_should_correctly_parse_simple_target_move() =
         let move = parse pBasicMove "Rc5"
         Assert.AreEqual(PieceType.Rook, move.Piece.Value)
-        Assert.AreEqual(pMoveType.Simple, move.Mtype)
+        Assert.AreEqual(MoveType.Simple, move.Mtype)
         Assert.AreEqual(Rank.ToPosition FileC Rank5, move.TargetSquare)
 
     [<TestMethod>]
     member this.pBasicMove_should_correctly_parse_pawnMove() =
         let move = parse pBasicMove "d4d5"
-        Assert.AreEqual(pMoveType.Simple, move.Mtype)
+        Assert.AreEqual(MoveType.Simple, move.Mtype)
         Assert.AreEqual(Rank.ToPosition FileD Rank4, move.OriginSquare)
         Assert.AreEqual(Rank.ToPosition FileD Rank5, move.TargetSquare)
 
@@ -224,7 +223,7 @@ type MoveParserTest() =
     [<TestMethod>]
     member this.pCastle_should_correctly_parse_castling_move() =
         let move = parse pCastle "0-0-0"
-        Assert.AreEqual(pMoveType.CastleQueenSide, move.Mtype)
+        Assert.AreEqual(MoveType.CastleQueenSide, move.Mtype)
 
     [<TestMethod>]
     member this.pMove_should_accept_all_kinds_of_moves() =
@@ -260,28 +259,28 @@ type MoveParserTest() =
     [<TestMethod>]
     member this.pMove_should_correctly_parse_simple_move() =
         let move = parse pMove "Rc5"
-        Assert.AreEqual(pMoveType.Simple, move.Mtype);
+        Assert.AreEqual(MoveType.Simple, move.Mtype);
         Assert.AreEqual(PieceType.Rook, move.Piece.Value);
         Assert.AreEqual(Rank.ToPosition FileC Rank5, move.TargetSquare);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_pawn_move() =
         let move = parse pMove "e2e4"
-        Assert.AreEqual(pMoveType.Simple, move.Mtype);
+        Assert.AreEqual(MoveType.Simple, move.Mtype);
         Assert.AreEqual(Rank.ToPosition FileE Rank2, move.OriginSquare);
         Assert.AreEqual(Rank.ToPosition FileE Rank4, move.TargetSquare);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_simple_move_with_different_case() =
         let move = parse pMove "QF1"
-        Assert.AreEqual(pMoveType.Simple, move.Mtype);
+        Assert.AreEqual(MoveType.Simple, move.Mtype);
         Assert.AreEqual(PieceType.Queen, move.Piece.Value);
         Assert.AreEqual(Rank.ToPosition FileF Rank1, move.TargetSquare);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_capturing_move() =
         let move = parse pMove "c5xQD5"
-        Assert.AreEqual(pMoveType.Capture, move.Mtype);
+        Assert.AreEqual(MoveType.Capture, move.Mtype);
         Assert.AreEqual(PieceType.Queen, move.TargetPiece.Value);
         Assert.AreEqual(Rank.ToPosition FileD Rank5, move.TargetSquare);
         Assert.AreEqual(Rank.ToPosition FileC Rank5, move.OriginSquare);
@@ -289,7 +288,7 @@ type MoveParserTest() =
     [<TestMethod>]
     member this.pMove_should_correctly_parse_capturing_move_with_colon_sign() =
         let move = parse pMove "Qc5:Bd5"
-        Assert.AreEqual(pMoveType.Capture, move.Mtype);
+        Assert.AreEqual(MoveType.Capture, move.Mtype);
         Assert.AreEqual(PieceType.Queen, move.Piece.Value);
         Assert.AreEqual(PieceType.Bishop, move.TargetPiece.Value);
         Assert.AreEqual(Rank.ToPosition FileD Rank5, move.TargetSquare);
@@ -298,7 +297,7 @@ type MoveParserTest() =
     [<TestMethod>]
     member this.pMove_should_correctly_parse_capturing_move_with_origin_file_and_no_target_piece() =
         let move = parse pMove "bxc6"
-        Assert.AreEqual(pMoveType.Capture, move.Mtype);
+        Assert.AreEqual(MoveType.Capture, move.Mtype);
         Assert.AreEqual(PieceType.Pawn, move.Piece.Value);
         Assert.AreEqual(Rank.ToPosition FileC Rank6, move.TargetSquare);
         Assert.AreEqual(FileB, move.OriginFile.Value);
@@ -307,20 +306,20 @@ type MoveParserTest() =
     [<TestMethod>]
     member this.pMove_should_correctly_parse_en_passant() =
         let move = parse pMove "cxd5e.p."
-        Assert.AreEqual(pMoveType.CaptureEnPassant, move.Mtype);
+        Assert.AreEqual(MoveType.CaptureEnPassant, move.Mtype);
         Assert.AreEqual(Rank.ToPosition FileD Rank5, move.TargetSquare);
         Assert.AreEqual(FileC, move.OriginFile.Value);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_simple_pawn_move() =
         let move = parse pMove "d5"
-        Assert.AreEqual(pMoveType.Simple, move.Mtype);
+        Assert.AreEqual(MoveType.Simple, move.Mtype);
         Assert.AreEqual(Rank.ToPosition FileD Rank5, move.TargetSquare);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_disambigued_move() =
         let move = parse pMove "N5f3"
-        Assert.AreEqual(pMoveType.Simple, move.Mtype);
+        Assert.AreEqual(MoveType.Simple, move.Mtype);
         Assert.AreEqual(PieceType.Knight, move.Piece.Value);
         Assert.AreEqual(Rank.ToPosition FileF Rank3, move.TargetSquare);
         Assert.AreEqual(Rank5, move.OriginRank.Value);
@@ -328,14 +327,14 @@ type MoveParserTest() =
     [<TestMethod>]
     member this.pMove_should_correctly_parse_promotion_move() =
         let move = parse pMove "c8(Q)"
-        Assert.AreEqual(pMoveType.Simple, move.Mtype);
+        Assert.AreEqual(MoveType.Simple, move.Mtype);
         Assert.AreEqual(Rank.ToPosition FileC Rank8, move.TargetSquare);
         Assert.AreEqual(PieceType.Queen, move.PromotedPiece.Value);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_capturing_promotion_move() =
         let move = parse pMove "d7xc8(Q)"
-        Assert.AreEqual(pMoveType.Capture, move.Mtype);
+        Assert.AreEqual(MoveType.Capture, move.Mtype);
         Assert.AreEqual(Rank.ToPosition FileC Rank8, move.TargetSquare);
         Assert.AreEqual(Rank.ToPosition FileD Rank7, move.OriginSquare);
         Assert.AreEqual(PieceType.Queen, move.PromotedPiece.Value);
@@ -343,7 +342,7 @@ type MoveParserTest() =
     [<TestMethod>]
     member this.pMove_should_correctly_parse_promotion_move_wiht_check() =
         let move = parse pMove "c8=Q+"
-        Assert.AreEqual(pMoveType.Simple, move.Mtype);
+        Assert.AreEqual(MoveType.Simple, move.Mtype);
         Assert.AreEqual(Rank.ToPosition FileC Rank8, move.TargetSquare);
         Assert.AreEqual(PieceType.Queen, move.PromotedPiece.Value);
         Assert.IsTrue(move.IsCheck);
@@ -351,25 +350,25 @@ type MoveParserTest() =
     [<TestMethod>]
     member this.pMove_should_correctly_parse_castle_king_side() =
         let move = parse pMove "O-O"
-        Assert.AreEqual(pMoveType.CastleKingSide, move.Mtype);
+        Assert.AreEqual(MoveType.CastleKingSide, move.Mtype);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_castle_queen_side() =
         let move = parse pMove "0-0-0"
-        Assert.AreEqual(pMoveType.CastleQueenSide, move.Mtype);
+        Assert.AreEqual(MoveType.CastleQueenSide, move.Mtype);
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_check_indicator() =
         let move = parse pMove "Bb5+"
 
-        Assert.AreEqual(pMoveType.Simple, move.Mtype)
+        Assert.AreEqual(MoveType.Simple, move.Mtype)
         Assert.IsTrue(move.IsCheck)
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_dbl_check_indicator() =
         let move = parse pMove "Bb5++"
 
-        Assert.AreEqual(pMoveType.Simple, move.Mtype)
+        Assert.AreEqual(MoveType.Simple, move.Mtype)
         Assert.IsTrue(move.IsCheck)
         Assert.IsTrue(move.IsDoubleCheck)
 
@@ -377,40 +376,40 @@ type MoveParserTest() =
     member this.pMove_should_correctly_parse_checkmate_indicator() =
         let move = parse pMove "Bb5#"
 
-        Assert.AreEqual(pMoveType.Simple, move.Mtype)
+        Assert.AreEqual(MoveType.Simple, move.Mtype)
         Assert.IsTrue(move.IsCheckMate)
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_annotation() =
         let move = parse pMove "Bb5+!"
 
-        Assert.AreEqual(pMoveType.Simple, move.Mtype)
+        Assert.AreEqual(MoveType.Simple, move.Mtype)
         Assert.IsTrue(move.IsCheck)
-        Assert.AreEqual(pMoveAnnotation.Good, move.Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Good, move.Annotation.Value)
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_differentAnnotations() =
-        Assert.AreEqual(pMoveAnnotation.MindBlowing, (parse pMove "Bb5!!!").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Brilliant, (parse pMove "Bb5!!").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Good, (parse pMove "Bb5!").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Interesting, (parse pMove "Bb5!?").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Dubious, (parse pMove "Bb5?!").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Mistake, (parse pMove "Bb5?").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Blunder, (parse pMove "Bb5??").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Abysmal, (parse pMove "Bb5???").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.FascinatingButUnsound, (parse pMove "Bb5!?!").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Unclear, (parse pMove "Bb5∞").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.WithCompensation, (parse pMove "Bb5=/∞").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.EvenPosition, (parse pMove "Bb5=").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.SlightAdvantageWhite, (parse pMove "Bb5+/=").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.SlightAdvantageBlack, (parse pMove "Bb5=/+").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.AdvantageWhite, (parse pMove "Bb5+/-").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.AdvantageBlack, (parse pMove "Bb5-/+").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.DecisiveAdvantageWhite, (parse pMove "Bb5+-").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Space, (parse pMove "Bb5○").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Initiative, (parse pMove "Bb5↑").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Development, (parse pMove "Bb5↑↑").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Counterplay, (parse pMove "Bb5⇄").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Countering, (parse pMove "Bb5∇").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.Idea, (parse pMove "Bb5Δ").Annotation.Value)
-        Assert.AreEqual(pMoveAnnotation.TheoreticalNovelty, (parse pMove "Bb5N").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.MindBlowing, (parse pMove "Bb5!!!").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Brilliant, (parse pMove "Bb5!!").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Good, (parse pMove "Bb5!").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Interesting, (parse pMove "Bb5!?").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Dubious, (parse pMove "Bb5?!").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Mistake, (parse pMove "Bb5?").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Blunder, (parse pMove "Bb5??").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Abysmal, (parse pMove "Bb5???").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.FascinatingButUnsound, (parse pMove "Bb5!?!").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Unclear, (parse pMove "Bb5∞").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.WithCompensation, (parse pMove "Bb5=/∞").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.EvenPosition, (parse pMove "Bb5=").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.SlightAdvantageWhite, (parse pMove "Bb5+/=").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.SlightAdvantageBlack, (parse pMove "Bb5=/+").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.AdvantageWhite, (parse pMove "Bb5+/-").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.AdvantageBlack, (parse pMove "Bb5-/+").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.DecisiveAdvantageWhite, (parse pMove "Bb5+-").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Space, (parse pMove "Bb5○").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Initiative, (parse pMove "Bb5↑").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Development, (parse pMove "Bb5↑↑").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Counterplay, (parse pMove "Bb5⇄").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Countering, (parse pMove "Bb5∇").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.Idea, (parse pMove "Bb5Δ").Annotation.Value)
+        Assert.AreEqual(MoveAnnotation.TheoreticalNovelty, (parse pMove "Bb5N").Annotation.Value)

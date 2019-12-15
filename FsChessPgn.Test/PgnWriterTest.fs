@@ -3,7 +3,6 @@ namespace FsChessPgn.Test
 open System.IO
 open FsChessPgn.NET
 open FsChessPgn.Data
-open FsChessPgn.Data.PgnTextTypes
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open System.Text
@@ -19,7 +18,7 @@ type PgnWriterTest () =
 [Result ""1-0""]
 
 {some moves} 1-0"
-    let _testGame = {pGameEMP with Event="Breslau";Site="Breslau";Year=Some(1879);WhitePlayer="Tarrasch, Siegbert";BlackPlayer ="Mendelsohn, J.";Result=GameResult.WhiteWins;MoveText=[CommentEntry("some moves");GameEndEntry(GameResult.WhiteWins)]}
+    let _testGame = {GameEMP with Event="Breslau";Site="Breslau";Year=Some(1879);WhitePlayer="Tarrasch, Siegbert";BlackPlayer ="Mendelsohn, J.";Result=GameResult.WhiteWins;MoveText=[CommentEntry("some moves");GameEndEntry(GameResult.WhiteWins)]}
 
     [<TestMethod>]
     member this.Write_should_write_game_correctly() =

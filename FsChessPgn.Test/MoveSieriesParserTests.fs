@@ -2,7 +2,6 @@
 namespace FsChessPgn.Test
 
 open FsChessPgn.Data
-open FsChessPgn.Data.PgnTextTypes
 open FsChessPgn.PgnParsers.Move
 open FsChessPgn.PgnParsers.MoveSeries
 open FsChessPgn.Test.TestBase

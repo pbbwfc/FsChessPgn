@@ -3,7 +3,6 @@ module FsChessPgn.PgnParsers.MoveSeries
 
 open FParsec
 open FsChessPgn.Data
-open FsChessPgn.Data.PgnTextTypes
 
 let pPeriods =
     (str ".." .>> manyChars (pchar '.') >>% true) //two or more dots => Continued move pair

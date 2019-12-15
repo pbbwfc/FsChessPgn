@@ -2,7 +2,6 @@
 
 open System.IO
 open System.Globalization
-open PgnTextTypes
 
 module Formatter =
     let (-?) (lhs:string option) rhs = (if lhs.IsNone then rhs else lhs.Value)
@@ -168,7 +167,7 @@ module Formatter =
         writer.Write(value)
         writer.WriteLine("\"]")
 
-    let FormatDate(game:pGame, writer:TextWriter) =
+    let FormatDate(game:Game, writer:TextWriter) =
         writer.Write("[Date \"")
         writer.Write(game.Year |? "????")
         writer.Write(".")
@@ -177,7 +176,7 @@ module Formatter =
         writer.Write(game.Day |? "??")
         writer.WriteLine("\"]")
 
-    let Format(game:pGame, writer:TextWriter) =
+    let Format(game:Game, writer:TextWriter) =
         FormatTag("Event", game.Event, writer)
         FormatTag("Site", game.Site, writer)
         FormatDate(game, writer)
@@ -192,7 +191,7 @@ module Formatter =
         writer.WriteLine();
         FormatMoveText(game.MoveText, writer)
 
-    let FormatStr(game:pGame) =
+    let FormatStr(game:Game) =
         let writer = new StringWriter()
         Format(game,writer)
         writer.ToString()

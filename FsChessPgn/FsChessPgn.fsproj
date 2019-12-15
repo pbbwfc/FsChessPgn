@@ -6,8 +6,9 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
-    <Compile Include="PgnTextTypes.fs" />
     <Compile Include="Util.fs" />
+    <Compile Include="pMove.fs" />
+    <Compile Include="Game.fs" />
     <Compile Include="Player.fs" />
     <Compile Include="PieceType.fs" />
     <Compile Include="Piece.fs" />

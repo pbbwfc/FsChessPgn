@@ -1,7 +1,6 @@
 ﻿namespace FsChessPgn.Test
 
 open FsChessPgn.Data
-open FsChessPgn.Data.PgnTextTypes
 open FsChessPgn.PgnParsers.Game
 open FParsec
 
@@ -23,7 +22,7 @@ type MoveTextEntryListTest()=
 9.Nf3 O-O 10.O-O d6 11.c3 Bc5 12.d4 exd4 13.Nxd4 Ba6 14.Re1 Bc4 15.Nc6 Qf6
 16.Be3 Rfe8 17.Bxc5 Rxe1+ 18.Qxe1 dxc5 19.Qe4 Bb5 20.d6 Kf8 21.Ne7 Re8 22.Qxh7 Qxd6
 23.Re1 Be2 24.Nf5  1-0"
-    let mv = pMoveCreate(pMoveType.Simple,None,OUTOFBOUNDS,None,None)
+    let mv = pMove.Create(MoveType.Simple,None,OUTOFBOUNDS,None,None)
 
     [<TestMethod>]
     member this.FullMoveCount_should_return_move_count_without_comments() =
@@ -37,24 +36,24 @@ type MoveTextEntryListTest()=
              HalfMoveEntry(None,false,mv);
              GameEndEntry(GameResult.Draw)]
 
-        Assert.AreEqual(2, mtel|>FullMoveCount)
-        Assert.AreEqual(4, mtel|>MoveCount)
+        Assert.AreEqual(2, mtel|>Game.FullMoveCount)
+        Assert.AreEqual(4, mtel|>Game.MoveCount)
 
     [<TestMethod>]
     member this.FullMoveCount_should_not_count_single_halfmoves() =
         let mtel =
             [HalfMoveEntry(None,false,mv)]
 
-        Assert.AreEqual(0, mtel|>FullMoveCount)
-        Assert.AreEqual(1, mtel|>MoveCount)
+        Assert.AreEqual(0, mtel|>Game.FullMoveCount)
+        Assert.AreEqual(1, mtel|>Game.MoveCount)
 
     [<TestMethod>]
     member this.FullMoveCount_should_count_pairwise_halfmoves() =
         let mtel =
             [HalfMoveEntry(None,false,mv);HalfMoveEntry(None,false,mv)]
 
-        Assert.AreEqual(1, mtel|>FullMoveCount)
-        Assert.AreEqual(2, mtel|>MoveCount)
+        Assert.AreEqual(1, mtel|>Game.FullMoveCount)
+        Assert.AreEqual(2, mtel|>Game.MoveCount)
 
     [<TestMethod>]
     member this.Moves_should_return_an_enumeration_of_moves() =
@@ -64,8 +63,8 @@ type MoveTextEntryListTest()=
             | Failure(errorMsg, _, _) -> failwith errorMsg
         let game= parse pGame TestGameString
         let mtel = game.MoveText
-        let mvs = mtel|>GetMoves
+        let mvs = mtel|>Game.GetMoves
 
-        Assert.AreEqual(23, mtel|>FullMoveCount)
-        Assert.AreEqual(47, mtel|>MoveCount)
+        Assert.AreEqual(23, mtel|>Game.FullMoveCount)
+        Assert.AreEqual(47, mtel|>Game.MoveCount)
         Assert.AreEqual(47, mvs.Length)

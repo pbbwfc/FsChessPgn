@@ -3,7 +3,6 @@ module FsChessPgn.PgnParsers.Move
 
 open FParsec
 open FsChessPgn.Data
-open FsChessPgn.Data.PgnTextTypes
 
 type MoveInfo(piece, file, rank) =
     member val Piece = piece with get, set
@@ -15,10 +14,10 @@ let getSquare(moveInfo : MoveInfo) =
     | (x:File option, y:Rank option) when x.IsSome && y.IsSome -> (y.Value |> Rank.ToPosition x.Value)
     | _, _ -> OUTOFBOUNDS
 
-let getMove(originInfo: MoveInfo option, targetInfo: MoveInfo, moveType: pMoveType) =
+let getMove(originInfo: MoveInfo option, targetInfo: MoveInfo, moveType: MoveType) =
     match originInfo, targetInfo with
-    | None, _ -> pMoveCreate (moveType,targetInfo.Piece,getSquare targetInfo,targetInfo.File,targetInfo.Piece)
-    | Some(orig), _ -> pMoveCreateOrig (moveType,targetInfo.Piece,getSquare targetInfo,targetInfo.File,orig.Piece,getSquare orig,orig.File,orig.Rank)
+    | None, _ -> pMove.Create (moveType,targetInfo.Piece,getSquare targetInfo,targetInfo.File,targetInfo.Piece)
+    | Some(orig), _ -> pMove.CreateOrig (moveType,targetInfo.Piece,getSquare targetInfo,targetInfo.File,orig.Piece,getSquare orig,orig.File,orig.Rank)
 
 
 //MOVE MECHANICS
@@ -38,8 +37,8 @@ let pOrigin =
     <!> "pOrigin"
 
 let pBasicMove =
-    attempt (pOrigin .>>. pTarget) |>> fun (origin, target) -> getMove(Some(origin), target, pMoveType.Simple)
-    <|> (pTarget |>> fun target -> getMove(None, target, pMoveType.Simple))
+    attempt (pOrigin .>>. pTarget) |>> fun (origin, target) -> getMove(Some(origin), target, MoveType.Simple)
+    <|> (pTarget |>> fun target -> getMove(None, target, MoveType.Simple))
     <!!> ("pBasicMove", 1)
 
 // parsers for capturing
@@ -47,7 +46,7 @@ let pCapturingSign = (pchar 'x' <|> pchar ':') |>> fun x -> x.ToString()
 
 let pInfixCaptureMove =   // e.g. QxBc5
     pOrigin .>> pCapturingSign .>>. pTarget
-    |>> fun (orig, target) -> getMove(Some orig, target, pMoveType.Capture)
+    |>> fun (orig, target) -> getMove(Some orig, target, MoveType.Capture)
     <!> "pInfixCaptureMove"
 
 let pSimplifiedPawnCapture =  // e.g. dxe or de
@@ -56,12 +55,12 @@ let pSimplifiedPawnCapture =  // e.g. dxe or de
         match f1 = f2 with //do not allow a6xa7
         | true -> pzero
         | false -> preturn (f1, f2)
-    |>> fun (file1, file2) -> pMoveCreateOrig(pMoveType.Capture,None,OUTOFBOUNDS,Some(file2),Some(PieceType.Pawn),OUTOFBOUNDS,Some(file1),None)
+    |>> fun (file1, file2) -> pMove.CreateOrig(MoveType.Capture,None,OUTOFBOUNDS,Some(file2),Some(PieceType.Pawn),OUTOFBOUNDS,Some(file1),None)
     <!> "pSimplifiedPawnCapture"
 
 let pSuffixCaptureMove = // e.g. Qf4d4x or Qf4:
     pBasicMove .>> pCapturingSign
-    |>> fun move -> {move with Mtype = pMoveType.Capture}
+    |>> fun move -> {move with Mtype = MoveType.Capture}
     <!> "pSuffixCaptureMove"
 
 let pBasicCapturingMove =
@@ -76,7 +75,7 @@ let pCapturingMove =
     |>> fun (move, enpassant) ->
             match enpassant with
             | None -> move
-            | _ -> {move with Mtype=pMoveType.CaptureEnPassant}
+            | _ -> {move with Mtype=MoveType.CaptureEnPassant}
     <!!> ("pCapturingMove", 1)
 
 
@@ -92,12 +91,12 @@ let pPawnPromotion =
 
 let pCasteKingSide =
     str "O-O" <|> str "O - O" <|> str "0-0"  <|> str "0 - 0"
-    |>> fun _ -> pMoveCreateCastle(pMoveType.CastleKingSide)
+    |>> fun _ -> pMove.CreateCastle(MoveType.CastleKingSide)
     <!> "pCastleKingSide"
 
 let pCasteQueenSide =
     str "O-O-O" <|> str "O - O - O" <|> str "0-0-0"  <|> str "0 - 0 - 0"
-    |>> fun _ -> pMoveCreateCastle(pMoveType.CastleQueenSide)
+    |>> fun _ -> pMove.CreateCastle(MoveType.CastleQueenSide)
     <!> "pCasteQueenSide"
 
 let pCastle = pCasteQueenSide <|> pCasteKingSide
@@ -116,32 +115,32 @@ let pAnnotation =
     <|> str "TN" <|> str "N"
     |>> fun annotation ->
             match annotation with
-            | "!!!" | "!!!!" -> pMoveAnnotation.MindBlowing
-            | "!!" -> pMoveAnnotation.Brilliant
-            | "!" -> pMoveAnnotation.Good
-            | "!?" -> pMoveAnnotation.Interesting
-            | "?!" -> pMoveAnnotation.Dubious
-            | "?" -> pMoveAnnotation.Mistake
-            | "??" -> pMoveAnnotation.Blunder
-            | "???" | "????" -> pMoveAnnotation.Abysmal
-            | "!?!" | "?!?" -> pMoveAnnotation.FascinatingButUnsound
-            | "∞" -> pMoveAnnotation.Unclear
-            | "=/∞" -> pMoveAnnotation.WithCompensation
-            | "=" -> pMoveAnnotation.EvenPosition
-            | "+/=" -> pMoveAnnotation.SlightAdvantageWhite
-            | "=/+" -> pMoveAnnotation.SlightAdvantageBlack
-            | "+/-" -> pMoveAnnotation.AdvantageWhite
-            | "-/+" -> pMoveAnnotation.AdvantageBlack
-            | "+-" -> pMoveAnnotation.DecisiveAdvantageWhite
-            | "-+" -> pMoveAnnotation.DecisiveAdvantageBlack
-            | "○" -> pMoveAnnotation.Space
-            | "↑" -> pMoveAnnotation.Initiative
-            | "↑↑" -> pMoveAnnotation.Development
-            | "⇄" -> pMoveAnnotation.Counterplay
-            | "∇" -> pMoveAnnotation.Countering
-            | "Δ" -> pMoveAnnotation.Idea
-            | "TN" | "N" -> pMoveAnnotation.TheoreticalNovelty
-            | _ -> pMoveAnnotation.UnknownAnnotation
+            | "!!!" | "!!!!" -> MoveAnnotation.MindBlowing
+            | "!!" -> MoveAnnotation.Brilliant
+            | "!" -> MoveAnnotation.Good
+            | "!?" -> MoveAnnotation.Interesting
+            | "?!" -> MoveAnnotation.Dubious
+            | "?" -> MoveAnnotation.Mistake
+            | "??" -> MoveAnnotation.Blunder
+            | "???" | "????" -> MoveAnnotation.Abysmal
+            | "!?!" | "?!?" -> MoveAnnotation.FascinatingButUnsound
+            | "∞" -> MoveAnnotation.Unclear
+            | "=/∞" -> MoveAnnotation.WithCompensation
+            | "=" -> MoveAnnotation.EvenPosition
+            | "+/=" -> MoveAnnotation.SlightAdvantageWhite
+            | "=/+" -> MoveAnnotation.SlightAdvantageBlack
+            | "+/-" -> MoveAnnotation.AdvantageWhite
+            | "-/+" -> MoveAnnotation.AdvantageBlack
+            | "+-" -> MoveAnnotation.DecisiveAdvantageWhite
+            | "-+" -> MoveAnnotation.DecisiveAdvantageBlack
+            | "○" -> MoveAnnotation.Space
+            | "↑" -> MoveAnnotation.Initiative
+            | "↑↑" -> MoveAnnotation.Development
+            | "⇄" -> MoveAnnotation.Counterplay
+            | "∇" -> MoveAnnotation.Countering
+            | "Δ" -> MoveAnnotation.Idea
+            | "TN" | "N" -> MoveAnnotation.TheoreticalNovelty
+            | _ -> MoveAnnotation.UnknownAnnotation
     <!> "pAnnotation"
     <?> "Move annotation (e.g. ! or ??)"
 

@@ -2,9 +2,9 @@
 module FsChessPgn.PgnParsers.Game
 
 open FParsec
-open FsChessPgn.Data.PgnTextTypes
+open FsChessPgn.Data
 
-let setTag(igame : pGame, tag : PgnTag) =
+let setTag(igame : Game, tag : PgnTag) =
     let game = {igame with Tags = igame.Tags.Add(tag.Name, tag.Value)}
     match tag.Name with
     | "Event" -> {game with Event = tag.Value}
@@ -19,14 +19,14 @@ let setTag(igame : pGame, tag : PgnTag) =
         {game with AdditionalInfo= game.AdditionalInfo @ [{Name=tag.Name; Value=tag.Value}]}
 
 let makeGame (tagList : PgnTag list, moveTextList : MoveTextEntry list) =
-    let mutable game = pGameEMP
+    let mutable game = GameEMP
     tagList |> List.iter(fun tag -> game <- setTag(game, tag)) 
     {game with MoveText = moveTextList}
 
 let pGame =
     ws >>. pTagList .>> ws .>>.  pMoveSeries .>> (ws <|> eof)
     |>>  makeGame
-    <!!> ("pGame", 5)
+    <!!> ("Game", 5)
 
 let pDatabase =
     sepEndBy pGame ws .>> eof

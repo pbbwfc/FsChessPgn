@@ -7,25 +7,6 @@ module Types =
     type Move = int
     let MoveEmpty = 0
     
-    [<Flags>]
-    type MoveFlags = 
-        | Killer = 1
-        | Capture = 2
-        | Promote = 4
-        | TransTable = 8
-    
-    type ChessMoveData = 
-        { Move : Move
-          SEE : int
-          Score : int
-          Flags : MoveFlags }
-
-    let CMDemp = 
-        { Move = MoveEmpty
-          SEE = 0
-          Score = 0
-          Flags = enum<MoveFlags> (0) }
-    
     type PieceType = 
         | EMPTY = 0
         | Pawn = 1
@@ -54,20 +35,6 @@ module Types =
         | None = -1
         | White = 0
         | Black = 1
-    
-    type GameResultReason = 
-        | NotDecided = 0
-        | Checkmate = 1
-        | Resign = 2
-        | OutOfTime = 3
-        | Adjudication = 4
-        | Stalemate = 5
-        | FiftyMoveRule = 6
-        | InsufficientMaterial = 7
-        | MutualAgreement = 8
-        | Repetition = 9
-        | Unknown = 10
-        | IllegalMove = 11
     
     type GameResult = 
         | Draw = 0
@@ -233,3 +200,96 @@ module Types =
         | Full = 18446744073709551615UL
 
     let FileBits = [|Bitboard.FileA;Bitboard.FileB;Bitboard.FileC;Bitboard.FileD;Bitboard.FileE;Bitboard.FileF;Bitboard.FileG;Bitboard.FileH|]
+
+    type MoveType =
+        | Simple
+        | Capture
+        | CaptureEnPassant
+        | CastleKingSide
+        | CastleQueenSide
+
+    type MoveAnnotation =
+        |MindBlowing
+        |Brilliant
+        |Good
+        |Interesting
+        |Dubious
+        |Mistake
+        |Blunder
+        |Abysmal
+        |FascinatingButUnsound
+        |Unclear
+        |WithCompensation
+        |EvenPosition
+        |SlightAdvantageWhite
+        |SlightAdvantageBlack
+        |AdvantageWhite
+        |AdvantageBlack
+        |DecisiveAdvantageWhite
+        |DecisiveAdvantageBlack
+        |Space
+        |Initiative
+        |Development
+        |Counterplay
+        |Countering
+        |Idea
+        |TheoreticalNovelty
+        |UnknownAnnotation
+
+    type pMove = 
+        {Mtype:MoveType 
+         TargetPiece:PieceType option
+         TargetSquare:Square 
+         TargetFile:File option
+         Piece: PieceType option
+         OriginSquare:Square
+         OriginFile:File option
+         OriginRank:Rank option
+         PromotedPiece: PieceType option
+         IsCheck:bool
+         IsDoubleCheck:bool
+         IsCheckMate:bool
+         Annotation:MoveAnnotation option}
+
+    type MoveTextEntry =
+        |HalfMoveEntry of int option * bool * pMove
+        |CommentEntry of string
+        |GameEndEntry of GameResult
+        |NAGEntry of int
+        |RAVEntry of MoveTextEntry list
+ 
+    type GameInfo = {Name:string;Value:string}
+
+    type Game =
+        {
+            Event : string
+            Site : string
+            Year : int option
+            Month : int option
+            Day : int option
+            Round :string
+            WhitePlayer : string
+            BlackPlayer : string
+            Result : GameResult
+            BoardSetup : Fen option
+            AdditionalInfo : GameInfo list
+            Tags : Map<string,string>
+            MoveText : MoveTextEntry list
+        }
+
+    let GameEMP =
+        {
+            Event = "?"
+            Site = "?"
+            Year = None
+            Month = None
+            Day = None
+            Round = "?"
+            WhitePlayer = "?"
+            BlackPlayer = "?"
+            Result = GameResult.Open
+            BoardSetup = None
+            AdditionalInfo = []
+            Tags = Map.empty
+            MoveText = []
+        }

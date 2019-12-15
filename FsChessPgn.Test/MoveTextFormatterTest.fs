@@ -2,15 +2,14 @@
 
 open System.IO
 open FsChessPgn.Data
-open FsChessPgn.Data.PgnTextTypes
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
 [<TestClass>]
 type MoveTextFormatterTest()=
 
-    let _move1 = pMoveCreateOrig(pMoveType.Capture,None,Sq(FileD, Rank5),None,None,OUTOFBOUNDS,Some(FileE),None)
-    let _move2 = pMoveCreate(pMoveType.Simple,None,Sq(FileD, Rank4),None,PieceType.Knight|>Some)
+    let _move1 = pMove.CreateOrig(MoveType.Capture,None,Sq(FileD, Rank5),None,None,OUTOFBOUNDS,Some(FileE),None)
+    let _move2 = pMove.Create(MoveType.Simple,None,Sq(FileD, Rank4),None,PieceType.Knight|>Some)
 
     [<TestMethod>]
     member this.Format_should_accept_TextWriter() =
@@ -76,14 +75,14 @@ type MoveTextFormatterTest()=
 
     [<TestMethod>]
     member this.Format_should_format_move_text() =
-        let entry1 = HalfMoveEntry(Some(37),false,pMoveCreateAll(pMoveType.Capture,None,Sq(FileE, Rank5),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,pMoveAnnotation.Good|>Some))
+        let entry1 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Capture,None,Sq(FileE, Rank5),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,MoveAnnotation.Good|>Some))
         let entry2 = NAGEntry(13)
         let rav1 = CommentEntry("comment")
-        let rav2 = HalfMoveEntry(Some(37),false,pMoveCreateAll(pMoveType.Simple,None,Sq(FileE, Rank3),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,pMoveAnnotation.Blunder|>Some))
+        let rav2 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Simple,None,Sq(FileE, Rank3),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,MoveAnnotation.Blunder|>Some))
         let entry3 = RAVEntry([rav1;rav2])
-        let entry4 = HalfMoveEntry(Some(37),true,pMoveCreate(pMoveType.Simple,None,Sq(FileD, Rank8),None,PieceType.Rook|>Some))
-        let entry5a = HalfMoveEntry(Some(38),false,pMoveCreate(pMoveType.Simple,None,Sq(FileH, Rank4),None,PieceType.Pawn|>Some))
-        let entry5b = HalfMoveEntry(None,false,pMoveCreate(pMoveType.Simple,None,Sq(FileD, Rank5),None,PieceType.Rook|>Some))
+        let entry4 = HalfMoveEntry(Some(37),true,pMove.Create(MoveType.Simple,None,Sq(FileD, Rank8),None,PieceType.Rook|>Some))
+        let entry5a = HalfMoveEntry(Some(38),false,pMove.Create(MoveType.Simple,None,Sq(FileH, Rank4),None,PieceType.Pawn|>Some))
+        let entry5b = HalfMoveEntry(None,false,pMove.Create(MoveType.Simple,None,Sq(FileD, Rank5),None,PieceType.Rook|>Some))
         let entry6 = GameEndEntry(GameResult.WhiteWins)
         let entry7 = CommentEntry("game ends in win, whooot")
 

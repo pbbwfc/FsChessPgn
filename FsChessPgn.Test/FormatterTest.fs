@@ -2,7 +2,6 @@
 
 open System.IO
 open FsChessPgn.Data
-open FsChessPgn.Data.PgnTextTypes
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
@@ -21,7 +20,7 @@ type FormatterTest()=
 {some moves} 1-0"
 
     let _testGame = 
-        {pGameEMP with Event="Breslau";Site="Breslau";Year=Some(1879);WhitePlayer="Tarrasch, Siegbert";BlackPlayer="Mendelsohn, J.";Result=GameResult.WhiteWins;MoveText=[CommentEntry("some moves");GameEndEntry(GameResult.WhiteWins)]}
+        {GameEMP with Event="Breslau";Site="Breslau";Year=Some(1879);WhitePlayer="Tarrasch, Siegbert";BlackPlayer="Mendelsohn, J.";Result=GameResult.WhiteWins;MoveText=[CommentEntry("some moves");GameEndEntry(GameResult.WhiteWins)]}
 
     [<TestMethod>]
     member this.Format_should_accept_TextWriter() =
