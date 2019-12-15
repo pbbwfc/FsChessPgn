@@ -9,7 +9,7 @@ type BoardSetupTest () =
 
     [<TestMethod>]
     member this.Index_accessor_should_set_and_get_Pieces() =
-        let isut = FEN.Start()
+        let isut = FEN.Start
         let upd33 i p = if i=33 then Piece.BKnight else p 
         let sut = {isut with Pieceat=isut.Pieceat|>List.mapi upd33}
 
@@ -17,7 +17,7 @@ type BoardSetupTest () =
  
     [<TestMethod>]
     member this.square_number_correspondation_test() =
-        let isut = FEN.Start()
+        let isut = FEN.Start
         let upd i p =
             if i=0 then Piece.BPawn
             elif i=1 then Piece.WKing

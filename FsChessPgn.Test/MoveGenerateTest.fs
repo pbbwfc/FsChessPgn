@@ -9,7 +9,7 @@ type MoveGenerateTest()=
 
     [<TestMethod>]
     member this.Generate_initial_moves() =
-        let bd = Board.Create2 (FEN.Start())
+        let bd = Board.Start
         let fen = bd|>FEN.FromBd|>FEN.ToStr
         Assert.AreEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",fen)
         let mvs = bd|>MoveGenerate.GenMovesLegal

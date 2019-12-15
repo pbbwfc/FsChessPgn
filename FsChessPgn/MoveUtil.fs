@@ -32,7 +32,7 @@ module MoveUtil =
             else failwith "invalid move input"
         else fits.Head
     
-    let Parse (board : Brd) (movetext : string) = 
+    let Parse (board : Brd) (movetext : string) :Move = 
         let promote = Piece.EMPTY
         let mFrom = OUTOFBOUNDS
         let mTo = OUTOFBOUNDS

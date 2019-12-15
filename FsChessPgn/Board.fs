@@ -48,7 +48,7 @@ module Board =
           }
     
     let PieceMove (mfrom : Square) mto (bd : Brd) = 
-        let piece = bd.PieceAt.[int (mfrom)]
+        let piece = bd.PieceAt.[mfrom]
         let player = piece|>Piece.PieceToPlayer
         let pieceType = piece|>Piece.ToPieceType
         let pieceat = bd.PieceAt|>List.mapi(fun i p -> if i=int(mto) then piece elif i = int(mfrom) then Piece.EMPTY else p)
@@ -255,22 +255,13 @@ module Board =
                   }
     
     let FENCurrent (fen : Fen) (bd : Brd) = 
-        let rec rempc posl ibd = 
-            if List.isEmpty posl then ibd
-            else 
-                let pos = posl.Head
-                let pc = bd.PieceAt.[int (pos)]
-                if pc = Piece.EMPTY then rempc posl.Tail ibd
-                else rempc posl.Tail (ibd |> PieceRemove pos)
-        
-        let bd = rempc SQUARES bd
         let bd = bd |> initPieceAtArray
         
         let rec addpc posl ibd = 
             if List.isEmpty posl then ibd
             else 
                 let pos = posl.Head
-                let pc = fen.Pieceat.[int (pos)]
+                let pc = fen.Pieceat.[pos]
                 if pc = Piece.EMPTY then addpc posl.Tail ibd
                 else addpc posl.Tail (ibd |> PieceAdd pos pc)
         
@@ -295,3 +286,4 @@ module Board =
         let bd = bd |> FENCurrent fen
         bd
     
+    let Start = Create2 FEN.Start

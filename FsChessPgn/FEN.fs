@@ -121,4 +121,4 @@ module FEN =
           Fullmove = fullMove }
     
     let StartStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    let Start() = FromStr StartStr
+    let Start = FromStr StartStr

@@ -34,6 +34,8 @@
     <Compile Include="MoveFormatterTest.fs" />
     <Compile Include="MoveTextEntryListTest.fs" />
     <Compile Include="MoveTextFormatterTest.fs" />
+    <Compile Include="FENTest.fs" />
+    <Compile Include="BoardTest.fs" />
     <Compile Include="MoveGenerateTest.fs" />
     <Compile Include="TestBase.fs" />
     <Compile Include="GameParserTest.fs" />
