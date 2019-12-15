@@ -9,14 +9,14 @@ type BoardSetupTest () =
 
     [<TestMethod>]
     member this.Index_accessor_should_set_and_get_Pieces() =
-        let sut = FEN.Start
+        let sut = FEN.Start()
         sut.Pieceat.[33] <- Piece.BKnight
 
         Assert.AreEqual(Piece.BKnight, sut.Pieceat.[33])
  
     [<TestMethod>]
     member this.square_number_correspondation_test() =
-        let sut = FEN.Start
+        let sut = FEN.Start()
         sut.Pieceat.[0] <- Piece.BPawn
         sut.Pieceat.[1] <- Piece.WKing
         sut.Pieceat.[59] <- Piece.BRook

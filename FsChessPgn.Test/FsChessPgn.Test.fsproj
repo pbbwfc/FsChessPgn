@@ -34,6 +34,7 @@
     <Compile Include="MoveFormatterTest.fs" />
     <Compile Include="MoveTextEntryListTest.fs" />
     <Compile Include="MoveTextFormatterTest.fs" />
+    <Compile Include="MoveGenerateTest.fs" />
     <Compile Include="TestBase.fs" />
     <Compile Include="GameParserTest.fs" />
     <Compile Include="MoveParsersTest.fs" />
@@ -45,8 +46,6 @@
     <Compile Include="RealFileTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />

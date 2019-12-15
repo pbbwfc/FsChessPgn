@@ -58,16 +58,16 @@ module FEN =
         sb.Append(" " + fen.Fullmove.ToString()) |> ignore
         sb.ToString()
     
-    //let FromBd(bd : Brd) = 
-    //    { Pieceat = bd.PieceAt|>Array.copy
-    //      Whosturn = bd.WhosTurn
-    //      CastleWS = int (bd.CastleRights &&& CstlFlgs.WhiteShort) <> 0
-    //      CastleWL = int (bd.CastleRights &&& CstlFlgs.WhiteLong) <> 0
-    //      CastleBS = int (bd.CastleRights &&& CstlFlgs.BlackShort) <> 0
-    //      CastleBL = int (bd.CastleRights &&& CstlFlgs.BlackLong) <> 0
-    //      Enpassant = bd.EnPassant
-    //      Fiftymove = bd.Fiftymove
-    //      Fullmove = bd.Fullmove }
+    let FromBd(bd : Brd) = 
+        { Pieceat = bd.PieceAt|>Array.copy
+          Whosturn = bd.WhosTurn
+          CastleWS = int (bd.CastleRights &&& CstlFlgs.WhiteShort) <> 0
+          CastleWL = int (bd.CastleRights &&& CstlFlgs.WhiteLong) <> 0
+          CastleBS = int (bd.CastleRights &&& CstlFlgs.BlackShort) <> 0
+          CastleBL = int (bd.CastleRights &&& CstlFlgs.BlackLong) <> 0
+          Enpassant = bd.EnPassant
+          Fiftymove = bd.Fiftymove
+          Fullmove = bd.Fullmove }
     
     let FromStr(sFEN : string) = 
         let pieceat = Array.create 64 Piece.EMPTY
@@ -142,4 +142,4 @@ module FEN =
           Fullmove = fullMove }
     
     let StartStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    let Start = FromStr StartStr
+    let Start() = FromStr StartStr

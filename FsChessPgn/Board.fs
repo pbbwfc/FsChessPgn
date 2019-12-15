@@ -613,7 +613,7 @@ module Board =
                              |> AttacksTo(if bd.WhosTurn=Player.White then bd.WtKingPos else bd.BkKingPos)
                              &&& (if (bd.WhosTurn|>Player.PlayerOther)=Player.White then bd.WtPrBds else bd.BkPrBds) }
 
-    let Create2 fen pcSqEvaluator = 
+    let Create2 fen = 
         let bd = Create()
         
         //let bd = { bd with PcSqEvaluator = pcSqEvaluator }
@@ -625,6 +625,6 @@ module Board =
         let rec getbd mvl ibd = 
             if List.isEmpty mvl then ibd
             else getbd mvl.Tail (ibd |> MoveApply mvl.Head)
-        getbd prevMoves (Create2 fen pcSqEvaluator)
+        getbd prevMoves (Create2 fen)
 
 
