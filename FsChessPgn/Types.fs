@@ -291,3 +291,22 @@ module Types =
             Tags = Map.empty
             MoveText = []
         }
+
+    type Brd = 
+        { PieceAt : Piece []
+          WtPcCnt : int []
+          BkPcCnt : int []
+          WtKingPos : Square
+          BkKingPos : Square
+          PieceTypes : Bitboard []
+          WtPrBds : Bitboard
+          BkPrBds : Bitboard
+          PieceLocationsAll : Bitboard
+          Checkers : Bitboard
+          WhosTurn : Player
+          CastleRights : CstlFlgs
+          EnPassant : Square
+          Fiftymove : int
+          Fullmove : int
+          MovesSinceNull : int
+          }
