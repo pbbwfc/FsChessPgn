@@ -131,7 +131,7 @@ module Formatter =
 
     let rec FormatMoveTextEntry(entry:MoveTextEntry, writer:TextWriter) =
         match entry with
-        |HalfMoveEntry(mn,ic,mv) -> 
+        |HalfMoveEntry(mn,ic,mv,amv) -> 
             if mn.IsSome then
                 writer.Write(mn.Value)
                 writer.Write(if ic then "... " else ". ")

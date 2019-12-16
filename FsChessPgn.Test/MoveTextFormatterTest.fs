@@ -15,40 +15,40 @@ type MoveTextFormatterTest()=
     member this.Format_should_accept_TextWriter() =
         let writer = new StringWriter()
         writer.Write("Foo ")
-        let entry = HalfMoveEntry(None,false,_move1)
+        let entry = HalfMoveEntry(None,false,_move1,None)
         Formatter.FormatMoveTextEntry(entry, writer)
         writer.Write(" ")
-        let entry = HalfMoveEntry(None,false,_move2)
+        let entry = HalfMoveEntry(None,false,_move2,None)
         Formatter.FormatMoveTextEntry(entry, writer)
 
         Assert.AreEqual("Foo exd5 Nd4", writer.ToString())
 
     [<TestMethod>]
     member this.Format_should_format_move_pair() =
-        let entry1 = HalfMoveEntry(None,false,_move1)
-        let entry2 = HalfMoveEntry(None,false,_move2)
+        let entry1 = HalfMoveEntry(None,false,_move1,None)
+        let entry2 = HalfMoveEntry(None,false,_move2,None)
         let act = Formatter.FormatMoveTextEntryStr(entry1) + " " + Formatter.FormatMoveTextEntryStr(entry2)
 
         Assert.AreEqual("exd5 Nd4", act)
 
     [<TestMethod>]
     member this.Format_should_format_move_pair_with_number() =
-        let entry1 = HalfMoveEntry(Some(6),false,_move1)
-        let entry2 = HalfMoveEntry(None,false,_move2)
+        let entry1 = HalfMoveEntry(Some(6),false,_move1,None)
+        let entry2 = HalfMoveEntry(None,false,_move2,None)
         let act = Formatter.FormatMoveTextEntryStr(entry1) + " " + Formatter.FormatMoveTextEntryStr(entry2)
 
         Assert.AreEqual("6. exd5 Nd4", act)
 
     [<TestMethod>]
     member this.Format_should_format_starting_single_move() =
-        let entry = HalfMoveEntry(Some(6),false,_move1)
+        let entry = HalfMoveEntry(Some(6),false,_move1,None)
         let act = Formatter.FormatMoveTextEntryStr (entry)
 
         Assert.AreEqual("6. exd5", act)
 
     [<TestMethod>]
     member this.Format_should_format_continued_single_move() =
-        let entry = HalfMoveEntry(Some(6),true,_move2)
+        let entry = HalfMoveEntry(Some(6),true,_move2,None)
         let act = Formatter.FormatMoveTextEntryStr (entry)
 
         Assert.AreEqual("6... Nd4", act)
@@ -69,20 +69,20 @@ type MoveTextFormatterTest()=
 
     [<TestMethod>]
     member this.Format_should_format_a_RAVEntry() =
-        let entry = HalfMoveEntry(Some(6),true,_move2)
+        let entry = HalfMoveEntry(Some(6),true,_move2,None)
         let ravEntry = RAVEntry([entry])
         Assert.AreEqual("(6... Nd4)", Formatter.FormatMoveTextEntryStr(ravEntry))
 
     [<TestMethod>]
     member this.Format_should_format_move_text() =
-        let entry1 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Capture,None,Sq(FileE, Rank5),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,MoveAnnotation.Good|>Some))
+        let entry1 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Capture,None,Sq(FileE, Rank5),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,MoveAnnotation.Good|>Some),None)
         let entry2 = NAGEntry(13)
         let rav1 = CommentEntry("comment")
-        let rav2 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Simple,None,Sq(FileE, Rank3),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,MoveAnnotation.Blunder|>Some))
+        let rav2 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Simple,None,Sq(FileE, Rank3),None,PieceType.Knight|>Some,OUTOFBOUNDS,None,None,None,false,false,false,MoveAnnotation.Blunder|>Some),None)
         let entry3 = RAVEntry([rav1;rav2])
-        let entry4 = HalfMoveEntry(Some(37),true,pMove.Create(MoveType.Simple,None,Sq(FileD, Rank8),None,PieceType.Rook|>Some))
-        let entry5a = HalfMoveEntry(Some(38),false,pMove.Create(MoveType.Simple,None,Sq(FileH, Rank4),None,PieceType.Pawn|>Some))
-        let entry5b = HalfMoveEntry(None,false,pMove.Create(MoveType.Simple,None,Sq(FileD, Rank5),None,PieceType.Rook|>Some))
+        let entry4 = HalfMoveEntry(Some(37),true,pMove.Create(MoveType.Simple,None,Sq(FileD, Rank8),None,PieceType.Rook|>Some),None)
+        let entry5a = HalfMoveEntry(Some(38),false,pMove.Create(MoveType.Simple,None,Sq(FileH, Rank4),None,PieceType.Pawn|>Some),None)
+        let entry5b = HalfMoveEntry(None,false,pMove.Create(MoveType.Simple,None,Sq(FileD, Rank5),None,PieceType.Rook|>Some),None)
         let entry6 = GameEndEntry(GameResult.WhiteWins)
         let entry7 = CommentEntry("game ends in win, whooot")
 

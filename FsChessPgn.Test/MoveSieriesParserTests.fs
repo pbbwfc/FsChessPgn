@@ -30,7 +30,7 @@ type MoveSeriesParserTest() =
 
     [<TestMethod>]
     member this.pMoveSeriesEntry_should_accept_a_split_move_white() =
-        let (HalfMoveEntry (mn,_,mv)) = (parse pMoveSeriesEntry "1. e2e4")
+        let (HalfMoveEntry (mn,_,mv,_)) = (parse pMoveSeriesEntry "1. e2e4")
         let moveWhite = parse pMove "e2e4"
 
         Assert.AreEqual(moveWhite, mv)
@@ -38,7 +38,7 @@ type MoveSeriesParserTest() =
 
     [<TestMethod>]
     member this.pMoveSeriesEntry_should_accept_a_single_move_by_white() =
-        let (HalfMoveEntry (mn,ic,mv)) = (parse pMoveSeriesEntry "13.Nxd4")
+        let (HalfMoveEntry (mn,ic,mv,_)) = (parse pMoveSeriesEntry "13.Nxd4")
         let move = parse pMove "Nxd4"
 
         Assert.AreEqual(move, mv)
@@ -47,7 +47,7 @@ type MoveSeriesParserTest() =
 
     [<TestMethod>]
     member this.pMoveSeriesEntry_should_accept_a_continued_move_by_black() =
-        let (HalfMoveEntry (mn,ic,mv)) = (parse pMoveSeriesEntry "13... Ba6")
+        let (HalfMoveEntry (mn,ic,mv,_)) = (parse pMoveSeriesEntry "13... Ba6")
         let move = parse pMove "Ba6"
 
         Assert.AreEqual(move, mv)
@@ -157,8 +157,8 @@ type MoveSeriesParserTest() =
         Assert.AreEqual(4, entries.Length)
         let (RAVEntry ml) = entries.[2]
         Assert.AreEqual(5, ml.Length)
-        let (HalfMoveEntry (_, _, mv0)) = ml.[0] 
-        let (HalfMoveEntry (_, _, mv1)) = ml.[2]
+        let (HalfMoveEntry (_, _, mv0,None)) = ml.[0] 
+        let (HalfMoveEntry (_, _, mv1,None)) = ml.[2]
         let (CommentEntry str) = ml.[4]
         Assert.AreEqual(parse pMove "Bd3", mv0)
         Assert.AreEqual(parse pMove "exd4", mv1)
@@ -174,6 +174,6 @@ type MoveSeriesParserTest() =
 
         let (RAVEntry ml2) = ml.[4]
         Assert.AreEqual(1, ml2.Length)
-        let (HalfMoveEntry (_,_,mv)) = ml2.[0]
+        let (HalfMoveEntry (_,_,mv,_)) = ml2.[0]
         Assert.AreEqual(parse pMove "Qa4", mv)
         

@@ -29,11 +29,11 @@ type MoveTextEntryListTest()=
         let mtel =
             [CommentEntry("foo");
              NAGEntry(1);
-             RAVEntry([HalfMoveEntry(None,false,mv); HalfMoveEntry(None,false,mv)]);
-             HalfMoveEntry(None,false,mv);
-             HalfMoveEntry(None,false,mv);
-             HalfMoveEntry(None,false,mv);
-             HalfMoveEntry(None,false,mv);
+             RAVEntry([HalfMoveEntry(None,false,mv,None); HalfMoveEntry(None,false,mv,None)]);
+             HalfMoveEntry(None,false,mv,None);
+             HalfMoveEntry(None,false,mv,None);
+             HalfMoveEntry(None,false,mv,None);
+             HalfMoveEntry(None,false,mv,None);
              GameEndEntry(GameResult.Draw)]
 
         Assert.AreEqual(2, mtel|>Game.FullMoveCount)
@@ -42,7 +42,7 @@ type MoveTextEntryListTest()=
     [<TestMethod>]
     member this.FullMoveCount_should_not_count_single_halfmoves() =
         let mtel =
-            [HalfMoveEntry(None,false,mv)]
+            [HalfMoveEntry(None,false,mv,None)]
 
         Assert.AreEqual(0, mtel|>Game.FullMoveCount)
         Assert.AreEqual(1, mtel|>Game.MoveCount)
@@ -50,7 +50,7 @@ type MoveTextEntryListTest()=
     [<TestMethod>]
     member this.FullMoveCount_should_count_pairwise_halfmoves() =
         let mtel =
-            [HalfMoveEntry(None,false,mv);HalfMoveEntry(None,false,mv)]
+            [HalfMoveEntry(None,false,mv,None);HalfMoveEntry(None,false,mv,None)]
 
         Assert.AreEqual(1, mtel|>Game.FullMoveCount)
         Assert.AreEqual(2, mtel|>Game.MoveCount)

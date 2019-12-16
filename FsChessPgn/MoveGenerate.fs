@@ -1,11 +1,6 @@
 ﻿namespace FsChessPgn.Data
 
 module MoveGenerate = 
-    let Create (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) = 
-        (int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16))
-    let CreateProm (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) (promoteType : PieceType) = 
-        (int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16) 
-         ||| (int (promoteType) <<< 20))
     
     let GenCapsNonCaps (board : Brd) captures :Move list = 
         let mypawnwest = 
@@ -44,7 +39,7 @@ module MoveGenerate =
             if att = Bitboard.Empty then mvl
             else 
                 let attPos, natt = Bitboard.PopFirst(att)
-                let mv = Create kingPos attPos board.PieceAt.[int (kingPos)] board.PieceAt.[int (attPos)]
+                let mv = Move.Create kingPos attPos board.PieceAt.[int (kingPos)] board.PieceAt.[int (attPos)]
                 getKingAttacks natt (mv :: mvl)
         
         let attacks = Attacks.KingAttacks(kingPos) &&& targetLocations
@@ -85,7 +80,7 @@ module MoveGenerate =
                         if att = Bitboard.Empty then jmvl
                         else 
                             let attPos, natt = Bitboard.PopFirst(att)
-                            let mv = Create piecepos attPos piece board.PieceAt.[int (attPos)]
+                            let mv = Move.Create piecepos attPos piece board.PieceAt.[int (attPos)]
                             getAtts natt (mv :: jmvl)
                     
                     let nimvl = getAtts atts imvl
@@ -120,25 +115,25 @@ module MoveGenerate =
                                     targetpos |> Square.PositionInDirectionUnsafe(capDir |> Direction.Opposite)
                                 if (targetpos |> Square.ToRank) = myrank8 then 
                                     let mv = 
-                                        CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)] PieceType.Queen
                                     let imvl = mv :: imvl
                                     let mv = 
-                                        CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)] PieceType.Rook
                                     let imvl = mv :: imvl
                                     let mv = 
-                                        CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)] PieceType.Bishop
                                     let imvl = mv :: imvl
                                     let mv = 
-                                        CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)] PieceType.Knight
                                     let imvl = mv :: imvl
                                     getPcaps capDir natt imvl
                                 else 
                                     let mv = 
-                                        Create piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.Create piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)]
                                     let imvl = mv :: imvl
                                     getPcaps capDir natt imvl
@@ -154,25 +149,25 @@ module MoveGenerate =
                                 let targetpos = piecepos |> Square.PositionInDirectionUnsafe(mypawnnorth)
                                 if (targetpos |> Square.ToRank) = myrank8 then 
                                     let mv = 
-                                        CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)] PieceType.Queen
                                     let imvl = mv :: imvl
                                     let mv = 
-                                        CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)] PieceType.Rook
                                     let imvl = mv :: imvl
                                     let mv = 
-                                        CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)] PieceType.Bishop
                                     let imvl = mv :: imvl
                                     let mv = 
-                                        CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)] PieceType.Knight
                                     let imvl = mv :: imvl
                                     getPones natt imvl
                                 else 
                                     let mv = 
-                                        Create piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        Move.Create piecepos targetpos board.PieceAt.[int (piecepos)] 
                                             board.PieceAt.[int (targetpos)]
                                     let imvl = mv :: imvl
                                     getPones natt imvl
@@ -193,7 +188,7 @@ module MoveGenerate =
                                     |> Square.PositionInDirectionUnsafe(mypawnnorth)
                                 
                                 let mv = 
-                                    Create piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                    Move.Create piecepos targetpos board.PieceAt.[int (piecepos)] 
                                         board.PieceAt.[int (targetpos)]
                                 let imvl = mv :: imvl
                                 getPtwos natt imvl
@@ -221,7 +216,7 @@ module MoveGenerate =
                                 && board.PieceAt.[int (E1)] = Piece.WKing 
                                 && board.PieceAt.[int (H1)] = Piece.WRook && sqemp && not sqatt) then 
                                 let mv = 
-                                    Create E1 G1 board.PieceAt.[int (E1)] 
+                                    Move.Create E1 G1 board.PieceAt.[int (E1)] 
                                         board.PieceAt.[int (G1)]
                                 let mvl = mv :: mvl
                                 mvl
@@ -239,7 +234,7 @@ module MoveGenerate =
                             && board.PieceAt.[int (E1)] = Piece.WKing 
                             && board.PieceAt.[int (A1)] = Piece.WRook && sqemp && not sqatt) then 
                             let mv = 
-                                Create E1 C1 board.PieceAt.[int (E1)] 
+                                Move.Create E1 C1 board.PieceAt.[int (E1)] 
                                     board.PieceAt.[int (C1)]
                             let mvl = mv :: mvl
                             mvl
@@ -257,7 +252,7 @@ module MoveGenerate =
                                 && board.PieceAt.[int (E8)] = Piece.BKing 
                                 && board.PieceAt.[int (H8)] = Piece.BRook && sqemp && not sqatt) then 
                                 let mv = 
-                                    Create E8 G8 board.PieceAt.[int (E8)] 
+                                    Move.Create E8 G8 board.PieceAt.[int (E8)] 
                                         board.PieceAt.[int (G8)]
                                 let mvl = mv :: mvl
                                 mvl
@@ -275,7 +270,7 @@ module MoveGenerate =
                             && board.PieceAt.[int (E8)] = Piece.BKing 
                             && board.PieceAt.[int (A8)] = Piece.BRook && sqemp && not sqatt) then 
                             let mv = 
-                                Create E8 C8 board.PieceAt.[int (E8)] 
+                                Move.Create E8 C8 board.PieceAt.[int (E8)] 
                                     board.PieceAt.[int (C8)]
                             let mvl = mv :: mvl
                             mvl

@@ -14,7 +14,7 @@ module Game =
     let GetMoves(mtel:MoveTextEntry list) =
         let gm(mte:MoveTextEntry) =
             match mte with
-            |HalfMoveEntry(_,_,mv) -> [mv]
+            |HalfMoveEntry(_,_,mv,_) -> [mv]
             |_ -> []
         mtel|>List.map gm|>List.concat
 

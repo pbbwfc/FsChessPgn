@@ -19,6 +19,7 @@
     <Compile Include="Direction.fs" />
     <Compile Include="Attacks.fs" />
     <Compile Include="FEN.fs" />
+    <Compile Include="Move.fs" />
     <Compile Include="Board.fs" />
     <Compile Include="MoveGenerate.fs" />
     <Compile Include="MoveUtil.fs" />

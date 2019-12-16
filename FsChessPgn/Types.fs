@@ -108,6 +108,7 @@ module Types =
     
     [<Flags>]
     type CstlFlgs = 
+        | EMPTY = 0
         | WhiteShort = 1
         | WhiteLong = 2
         | BlackShort = 4
@@ -249,8 +250,49 @@ module Types =
          IsCheckMate:bool
          Annotation:MoveAnnotation option}
 
+    type Brd = 
+        { PieceAt : Piece list
+          WtKingPos : Square
+          BkKingPos : Square
+          PieceTypes : Bitboard list
+          WtPrBds : Bitboard
+          BkPrBds : Bitboard
+          PieceLocationsAll : Bitboard
+          Checkers : Bitboard
+          WhosTurn : Player
+          CastleRights : CstlFlgs
+          EnPassant : Square
+          Fiftymove : int
+          Fullmove : int
+          MovesSinceNull : int
+          }
+
+    let BrdEMP = 
+        { PieceAt = Array.create 64 Piece.EMPTY|>List.ofArray
+          WtKingPos = OUTOFBOUNDS
+          BkKingPos = OUTOFBOUNDS
+          PieceTypes = Array.create 7 Bitboard.Empty|>List.ofArray
+          WtPrBds = Bitboard.Empty
+          BkPrBds = Bitboard.Empty
+          PieceLocationsAll = Bitboard.Empty
+          Checkers = Bitboard.Empty
+          WhosTurn = Player.White
+          CastleRights = CstlFlgs.EMPTY
+          EnPassant = OUTOFBOUNDS
+          Fiftymove = 0
+          Fullmove = 0
+          MovesSinceNull = 100
+          }
+
+    type aMove =
+        {
+            PreBrd : Brd
+            Mv : Move
+            PostBrd : Brd
+        }
+
     type MoveTextEntry =
-        |HalfMoveEntry of int option * bool * pMove
+        |HalfMoveEntry of int option * bool * pMove * aMove option
         |CommentEntry of string
         |GameEndEntry of GameResult
         |NAGEntry of int
@@ -291,21 +333,4 @@ module Types =
             Tags = Map.empty
             MoveText = []
         }
-
-    type Brd = 
-        { PieceAt : Piece list
-          WtKingPos : Square
-          BkKingPos : Square
-          PieceTypes : Bitboard list
-          WtPrBds : Bitboard
-          BkPrBds : Bitboard
-          PieceLocationsAll : Bitboard
-          Checkers : Bitboard
-          WhosTurn : Player
-          CastleRights : CstlFlgs
-          EnPassant : Square
-          Fiftymove : int
-          Fullmove : int
-          MovesSinceNull : int
-          }
 
