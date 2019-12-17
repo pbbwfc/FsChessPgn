@@ -23,3 +23,25 @@ module pMove =
 
     let CreateCastle(mt) = CreateOrig(mt,None,OUTOFBOUNDS,None,None,OUTOFBOUNDS,None,None)
 
+    let ToaMove (bd:Brd) (pmv:pMove) =
+    //TODO:need to fix this
+        let mv = 
+            if pmv.Piece.IsNone then MoveEmpty
+            else
+                match pmv.Piece.Value with
+                |PieceType.Pawn ->
+                    let mvs = 
+                        bd|>MoveGenerate.PawnMoves
+                        |>List.filter(fun mv -> pmv.TargetSquare=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        MoveEmpty
+                |_ -> MoveEmpty
+        
+        
+        
+        {
+            PreBrd = bd
+            Mv = mv
+            PostBrd = bd|>Board.MoveApply mv
+        }

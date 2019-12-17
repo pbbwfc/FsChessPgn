@@ -35,6 +35,7 @@
     <Compile Include="MoveTest.fs" />
     <Compile Include="BoardTest.fs" />
     <Compile Include="MoveGenerateTest.fs" />
+    <Compile Include="pMoveTest.fs" />
     <Compile Include="MoveUtilTest.fs" />
     <Compile Include="PgnWriteTest.fs" />
     <Compile Include="fp.TestBase.fs" />

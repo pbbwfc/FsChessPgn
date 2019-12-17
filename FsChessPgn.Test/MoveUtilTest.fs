@@ -8,7 +8,6 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 type MoveUtilTest()=
     let brd1 = Board.Start
     let mv1 = "e4"|>MoveUtil.Parse brd1
-    //let brd2 = brd1|>Board.MoveApply mv1
 
     [<TestMethod>]
     member this.MoveUtil_ParseFilter() =
