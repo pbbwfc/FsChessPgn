@@ -8,7 +8,7 @@ module PgnWriter =
     let WriteStream(stream:Stream,pgnDatabase:Game list) =
         use writer = new StreamWriter(stream)
         for game in pgnDatabase do
-            Formatter.Format(game, writer)
+            PgnWrite.Game(game, writer)
 
     let WriteFile(file:string, pgnDatabase:Game list) =
         let stream = new FileStream(file, FileMode.OpenOrCreate)
@@ -17,6 +17,6 @@ module PgnWriter =
     let WriteString(pgnDatabase:Game list) =
         use writer = new StringWriter()
         for game in pgnDatabase do
-            Formatter.Format(game, writer)
+            PgnWrite.Game(game, writer)
         writer.ToString()
  

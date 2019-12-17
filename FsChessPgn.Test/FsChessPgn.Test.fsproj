@@ -29,21 +29,19 @@
     <None Include="TestExamples\time-annotated-games.pgn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="BoardSetupTest.fs" />
-    <Compile Include="FormatterTest.fs" />
-    <Compile Include="MoveFormatterTest.fs" />
     <Compile Include="MoveTextEntryListTest.fs" />
-    <Compile Include="MoveTextFormatterTest.fs" />
+    <Compile Include="BoardSetupTest.fs" />
     <Compile Include="FENTest.fs" />
     <Compile Include="MoveTest.fs" />
     <Compile Include="BoardTest.fs" />
     <Compile Include="MoveGenerateTest.fs" />
     <Compile Include="MoveUtilTest.fs" />
-    <Compile Include="TestBase.fs" />
-    <Compile Include="GameParserTest.fs" />
-    <Compile Include="MoveParsersTest.fs" />
-    <Compile Include="MoveSieriesParserTests.fs" />
-    <Compile Include="TagParserTest.fs" />
+    <Compile Include="PgnWriteTest.fs" />
+    <Compile Include="fp.TestBase.fs" />
+    <Compile Include="fp.GameParserTest.fs" />
+    <Compile Include="fp.MoveParsersTest.fs" />
+    <Compile Include="fp.MoveSieriesParserTests.fs" />
+    <Compile Include="fp.TagParserTest.fs" />
     <Compile Include="FileTestCases.fs" />
     <Compile Include="ParserTest.fs" />
     <Compile Include="PgnWriterTest.fs" />

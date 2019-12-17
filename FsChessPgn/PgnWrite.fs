@@ -3,18 +3,18 @@
 open System.IO
 open System.Globalization
 
-module Formatter =
+module PgnWrite =
     let (-?) (lhs:string option) rhs = (if lhs.IsNone then rhs else lhs.Value)
     let (|?) (lhs:int option) rhs = (if lhs.IsNone then rhs else lhs.Value.ToString(CultureInfo.InvariantCulture))
 
-    let GetResultString(result:GameResult) =
+    let ResultString(result:GameResult) =
         match result with
         |GameResult.WhiteWins -> "1-0" 
         |GameResult.BlackWins -> "0-1" 
         |GameResult.Draw -> "½-½" 
         |_ -> "*" 
 
-    let GetPiece(pieceType: PieceType option) =
+    let Piece(pieceType: PieceType option) =
         if pieceType.IsNone then ""
         else 
             match pieceType.Value with
@@ -26,19 +26,19 @@ module Formatter =
             |PieceType.King -> "K"
             |_ -> ""
             
-    let GetMoveTarget(move:pMove) =
+    let MoveTarget(move:pMove) =
         let piece = 
             match move.Mtype with
             |Simple -> "" 
-            |_ -> GetPiece(move.TargetPiece)
+            |_ -> Piece(move.TargetPiece)
         if move.TargetSquare <> OUTOFBOUNDS then
             piece + SQUARE_NAMES.[move.TargetSquare]
         elif move.TargetFile.IsSome then
             piece + FILE_NAMES.[move.TargetFile.Value]
         else ""
 
-    let GetMoveOrigin(move:pMove) =
-        let piece = GetPiece(move.Piece)
+    let MoveOrigin(move:pMove) =
+        let piece = Piece(move.Piece)
         if move.OriginSquare <> OUTOFBOUNDS then
             piece + SQUARE_NAMES.[move.OriginSquare]
         else 
@@ -46,13 +46,13 @@ module Formatter =
             let origr = if move.OriginRank.IsSome then RANK_NAMES.[move.OriginRank.Value] else ""
             piece + origf + origr    
     
-    let GetCheckAndMateAnnotation(move:pMove) =
+    let CheckAndMateAnnotation(move:pMove) =
         if move.IsCheckMate then "#"
         elif move.IsDoubleCheck then "++"
         elif move.IsCheck then "+"
         else ""
 
-    let GetAnnotation(move:pMove) =
+    let Annotation(move:pMove) =
         if move.Annotation.IsNone then ""
         else
             match move.Annotation.Value with
@@ -83,91 +83,91 @@ module Formatter =
             | TheoreticalNovelty -> "N"
             | UnknownAnnotation -> ""
 
-    let FormatMove(mv:pMove, writer:TextWriter) =
+    let Move(mv:pMove, writer:TextWriter) =
         match mv.Mtype with
         | Simple -> 
-            let origin = GetMoveOrigin(mv)
-            let target = GetMoveTarget(mv)
+            let origin = MoveOrigin(mv)
+            let target = MoveTarget(mv)
             writer.Write(origin)
             writer.Write(target)
             if mv.PromotedPiece.IsSome then
                 writer.Write("=")
-                writer.Write(GetPiece(mv.PromotedPiece))
-            writer.Write(GetCheckAndMateAnnotation(mv))
-            writer.Write(GetAnnotation(mv))
+                writer.Write(Piece(mv.PromotedPiece))
+            writer.Write(CheckAndMateAnnotation(mv))
+            writer.Write(Annotation(mv))
         | Capture -> 
-            let origin = GetMoveOrigin(mv)
-            let target = GetMoveTarget(mv)
+            let origin = MoveOrigin(mv)
+            let target = MoveTarget(mv)
             writer.Write(origin)
             writer.Write("x")
             writer.Write(target)
             if mv.PromotedPiece.IsSome then
                 writer.Write("=")
-                writer.Write(GetPiece(mv.PromotedPiece))
-            writer.Write(GetCheckAndMateAnnotation(mv))
-            writer.Write(GetAnnotation(mv))
+                writer.Write(Piece(mv.PromotedPiece))
+            writer.Write(CheckAndMateAnnotation(mv))
+            writer.Write(Annotation(mv))
         | CaptureEnPassant ->
-            let origin = GetMoveOrigin(mv)
-            let target = GetMoveTarget(mv)
+            let origin = MoveOrigin(mv)
+            let target = MoveTarget(mv)
             writer.Write(origin)
             writer.Write("x")
             writer.Write(target)
             writer.Write("e.p.")
-            writer.Write(GetCheckAndMateAnnotation(mv))
-            writer.Write(GetAnnotation(mv))
+            writer.Write(CheckAndMateAnnotation(mv))
+            writer.Write(Annotation(mv))
         | CastleKingSide -> 
             writer.Write("O-O")
-            writer.Write(GetCheckAndMateAnnotation(mv))
-            writer.Write(GetAnnotation(mv))
+            writer.Write(CheckAndMateAnnotation(mv))
+            writer.Write(Annotation(mv))
         | CastleQueenSide ->
             writer.Write("O-O-O")
-            writer.Write(GetCheckAndMateAnnotation(mv))
-            writer.Write(GetAnnotation(mv))
+            writer.Write(CheckAndMateAnnotation(mv))
+            writer.Write(Annotation(mv))
 
-    let FormatMoveStr(mv:pMove) =
+    let MoveStr(mv:pMove) =
         let writer = new StringWriter()
-        FormatMove(mv,writer)
+        Move(mv,writer)
         writer.ToString()
 
-    let rec FormatMoveTextEntry(entry:MoveTextEntry, writer:TextWriter) =
+    let rec MoveTextEntry(entry:MoveTextEntry, writer:TextWriter) =
         match entry with
         |HalfMoveEntry(mn,ic,mv,amv) -> 
             if mn.IsSome then
                 writer.Write(mn.Value)
                 writer.Write(if ic then "... " else ". ")
-            FormatMove(mv, writer)
+            Move(mv, writer)
         |CommentEntry(str) -> writer.Write("{" + str + "}")
-        |GameEndEntry(gr) -> writer.Write(GetResultString(gr))
+        |GameEndEntry(gr) -> writer.Write(ResultString(gr))
         |NAGEntry(cd) -> writer.Write("$" + cd.ToString())
         |RAVEntry(ml) -> 
             writer.Write("(")
-            FormatMoveText(ml, writer)
+            MoveText(ml, writer)
             writer.Write(")")
     
-    and FormatMoveText(ml:MoveTextEntry list, writer:TextWriter) =
+    and MoveText(ml:MoveTextEntry list, writer:TextWriter) =
         let doent i m =
-            FormatMoveTextEntry(m,writer)
+            MoveTextEntry(m,writer)
             if i<ml.Length-1 then writer.Write(" ")
 
         ml|>List.iteri doent
     
-    let FormatMoveTextEntryStr(entry:MoveTextEntry) =
+    let MoveTextEntryStr(entry:MoveTextEntry) =
         let writer = new StringWriter()
-        FormatMoveTextEntry(entry,writer)
+        MoveTextEntry(entry,writer)
         writer.ToString()
 
-    let FormatMoveTextStr(ml:MoveTextEntry list) =
+    let MoveTextStr(ml:MoveTextEntry list) =
         let writer = new StringWriter()
-        FormatMoveText(ml,writer)
+        MoveText(ml,writer)
         writer.ToString()
 
-    let FormatTag(name:string, value:string, writer:TextWriter) =
+    let Tag(name:string, value:string, writer:TextWriter) =
         writer.Write("[")
         writer.Write(name + " \"")
         writer.Write(value)
         writer.WriteLine("\"]")
 
-    let FormatDate(game:Game, writer:TextWriter) =
+    let Date(game:Game, writer:TextWriter) =
         writer.Write("[Date \"")
         writer.Write(game.Year |? "????")
         writer.Write(".")
@@ -176,24 +176,24 @@ module Formatter =
         writer.Write(game.Day |? "??")
         writer.WriteLine("\"]")
 
-    let Format(game:Game, writer:TextWriter) =
-        FormatTag("Event", game.Event, writer)
-        FormatTag("Site", game.Site, writer)
-        FormatDate(game, writer)
-        FormatTag("Round", game.Round, writer)
-        FormatTag("White", game.WhitePlayer, writer)
-        FormatTag("Black", game.BlackPlayer, writer)
-        FormatTag("Result", GetResultString(game.Result), writer)
+    let Game(game:Game, writer:TextWriter) =
+        Tag("Event", game.Event, writer)
+        Tag("Site", game.Site, writer)
+        Date(game, writer)
+        Tag("Round", game.Round, writer)
+        Tag("White", game.WhitePlayer, writer)
+        Tag("Black", game.BlackPlayer, writer)
+        Tag("Result", ResultString(game.Result), writer)
 
         for info in game.AdditionalInfo do
-            FormatTag(info.Name, info.Value, writer)
+            Tag(info.Name, info.Value, writer)
 
         writer.WriteLine();
-        FormatMoveText(game.MoveText, writer)
+        MoveText(game.MoveText, writer)
 
-    let FormatStr(game:Game) =
+    let GameStr(game:Game) =
         let writer = new StringWriter()
-        Format(game,writer)
+        Game(game,writer)
         writer.ToString()
 
 
