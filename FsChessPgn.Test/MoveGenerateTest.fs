@@ -12,7 +12,7 @@ type MoveGenerateTest()=
         let bd = Board.Start
         let fen = bd|>Board.ToStr
         Assert.AreEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",fen)
-        let mvs = bd|>MoveGenerate.GenMovesLegal
+        let mvs = bd|>MoveGenerate.MovesLegal
         let mvh = mvs.Head
         let mvhstr = mvh|>MoveUtil.Desc
         let bd1 = bd|>Board.MoveApply mvh
@@ -31,16 +31,16 @@ type MoveGenerateTest()=
     [<TestMethod>]
     member this.MoveGenerate_Moves1() =
         let bd = Board.FromStr "rnbqkbnr/ppp2ppp/3p4/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3"
-        let mvs = bd|>MoveGenerate.GenMovesLegal
+        let mvs = bd|>MoveGenerate.MovesLegal
         let mvh = mvs.Head
         let mvhstr = mvh|>MoveUtil.Desc
         Assert.AreEqual(27, mvs.Length)
-        Assert.AreEqual("f3e5",mvhstr)
+        Assert.AreEqual("h2h4",mvhstr)
 
     [<TestMethod>]
     member this.MoveGenerate_Moves2() =
         let bd = Board.FromStr "rnbqkbnr/ppp2ppp/3p4/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3"
-        let mvs = bd|>MoveGenerate.GenMovesLegal
+        let mvs = bd|>MoveGenerate.MovesLegal
         let mvh = mvs.Head
         let mvhstr = mvh|>MoveUtil.Desc
         Assert.AreEqual(6, mvs.Length)
@@ -49,7 +49,7 @@ type MoveGenerateTest()=
     [<TestMethod>]
     member this.MoveGenerate_Moves3() =
         let bd = Board.FromStr "r1bqkb1r/ppp2ppp/2Bp1n2/4p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 0 5"
-        let mvs = bd|>MoveGenerate.GenMovesLegal
+        let mvs = bd|>MoveGenerate.MovesLegal
         let mvh = mvs.Head
         let mvhstr = mvh|>MoveUtil.Desc
         Assert.AreEqual(5, mvs.Length)

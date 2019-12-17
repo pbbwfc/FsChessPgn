@@ -2,7 +2,7 @@
 
 module MoveGenerate = 
     
-    let GenCapsNonCaps (board : Brd) captures :Move list = 
+    let Moves (board : Brd) :Move list = 
         let mypawnwest = 
             if board.WhosTurn = Player.White then Direction.DirNW
             else Direction.DirSW
@@ -30,8 +30,7 @@ module MoveGenerate =
         let me = board.WhosTurn
         
         let targetLocations = 
-            if captures then (if (me |> Player.PlayerOther)=Player.White then board.WtPrBds else board.BkPrBds)
-            else ~~~board.PieceLocationsAll
+            (if (me |> Player.PlayerOther)=Player.White then board.WtPrBds else board.BkPrBds)|||(~~~board.PieceLocationsAll)
         
         let kingPos = if me=Player.White then board.WtKingPos else board.BkKingPos
         
@@ -94,115 +93,112 @@ module MoveGenerate =
             
             let mvl = 
                 if piecePositions <> Bitboard.Empty then 
-                    if captures then 
-                        let targetLocations = 
-                            (if (me |> Player.PlayerOther)=Player.White then board.WtPrBds else board.BkPrBds) ||| (if board.EnPassant|> Square.IsInBounds then board.EnPassant|> Square.ToBitboard else Bitboard.Empty)
+                    let targetLocations = 
+                        (if (me |> Player.PlayerOther)=Player.White then board.WtPrBds else board.BkPrBds) ||| (if board.EnPassant|> Square.IsInBounds then board.EnPassant|> Square.ToBitboard else Bitboard.Empty)
                         
-                        let targetLocations = 
-                            targetLocations &&& evasionTargets ||| (if board.EnPassant |> Square.IsInBounds then 
-                                                                        board.EnPassant |> Square.ToBitboard
-                                                                    else Bitboard.Empty)
+                    let targetLocations = 
+                        targetLocations &&& evasionTargets ||| (if board.EnPassant |> Square.IsInBounds then 
+                                                                    board.EnPassant |> Square.ToBitboard
+                                                                else Bitboard.Empty)
                         
-                        let rec getPcaps capDir att imvl = 
-                            if att = Bitboard.Empty then 
-                                if capDir = mypawneast then 
-                                    let attacks = (piecePositions |> Bitboard.Shift(mypawnwest)) &&& targetLocations
-                                    getPcaps mypawnwest attacks imvl
-                                else imvl
+                    let rec getPcaps capDir att imvl = 
+                        if att = Bitboard.Empty then 
+                            if capDir = mypawneast then 
+                                let attacks = (piecePositions |> Bitboard.Shift(mypawnwest)) &&& targetLocations
+                                getPcaps mypawnwest attacks imvl
+                            else imvl
+                        else 
+                            let targetpos, natt = Bitboard.PopFirst(att)
+                            let piecepos = 
+                                targetpos |> Square.PositionInDirectionUnsafe(capDir |> Direction.Opposite)
+                            if (targetpos |> Square.ToRank) = myrank8 then 
+                                let mv = 
+                                    Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)] PieceType.Queen
+                                let imvl = mv :: imvl
+                                let mv = 
+                                    Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)] PieceType.Rook
+                                let imvl = mv :: imvl
+                                let mv = 
+                                    Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)] PieceType.Bishop
+                                let imvl = mv :: imvl
+                                let mv = 
+                                    Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)] PieceType.Knight
+                                let imvl = mv :: imvl
+                                getPcaps capDir natt imvl
                             else 
-                                let targetpos, natt = Bitboard.PopFirst(att)
-                                let piecepos = 
-                                    targetpos |> Square.PositionInDirectionUnsafe(capDir |> Direction.Opposite)
-                                if (targetpos |> Square.ToRank) = myrank8 then 
-                                    let mv = 
-                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Queen
-                                    let imvl = mv :: imvl
-                                    let mv = 
-                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Rook
-                                    let imvl = mv :: imvl
-                                    let mv = 
-                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Bishop
-                                    let imvl = mv :: imvl
-                                    let mv = 
-                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Knight
-                                    let imvl = mv :: imvl
-                                    getPcaps capDir natt imvl
-                                else 
-                                    let mv = 
-                                        Move.Create piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)]
-                                    let imvl = mv :: imvl
-                                    getPcaps capDir natt imvl
-                        
-                        let attacks = (piecePositions |> Bitboard.Shift(mypawneast)) &&& targetLocations
-                        let nmvl = getPcaps mypawneast attacks mvl
-                        nmvl
-                    else 
-                        let rec getPones att imvl = 
-                            if att = Bitboard.Empty then imvl
-                            else 
-                                let piecepos, natt = Bitboard.PopFirst(att)
-                                let targetpos = piecepos |> Square.PositionInDirectionUnsafe(mypawnnorth)
-                                if (targetpos |> Square.ToRank) = myrank8 then 
-                                    let mv = 
-                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Queen
-                                    let imvl = mv :: imvl
-                                    let mv = 
-                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Rook
-                                    let imvl = mv :: imvl
-                                    let mv = 
-                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Bishop
-                                    let imvl = mv :: imvl
-                                    let mv = 
-                                        Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Knight
-                                    let imvl = mv :: imvl
-                                    getPones natt imvl
-                                else 
-                                    let mv = 
-                                        Move.Create piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)]
-                                    let imvl = mv :: imvl
-                                    getPones natt imvl
-                        
-                        let targetLocations = ~~~board.PieceLocationsAll
-                        let targetLocations = targetLocations &&& evasionTargets
-                        let attacks = (targetLocations |> Bitboard.Shift(mypawnsouth)) &&& piecePositions
-                        let mvl = getPones attacks mvl
-                        
-                        let rec getPtwos att imvl = 
-                            if att = Bitboard.Empty then imvl
-                            else 
-                                let piecepos, natt = Bitboard.PopFirst(att)
-                                
-                                let targetpos = 
-                                    piecepos
-                                    |> Square.PositionInDirectionUnsafe(mypawnnorth)
-                                    |> Square.PositionInDirectionUnsafe(mypawnnorth)
-                                
                                 let mv = 
                                     Move.Create piecepos targetpos board.PieceAt.[int (piecepos)] 
                                         board.PieceAt.[int (targetpos)]
                                 let imvl = mv :: imvl
-                                getPtwos natt imvl
+                                getPcaps capDir natt imvl
                         
-                        let attacks = 
-                            (myrank2 |> Rank.ToBitboard) &&& piecePositions 
-                            &&& ((targetLocations |> Bitboard.Shift(mypawnsouth)) |> Bitboard.Shift(mypawnsouth)) 
-                            &&& (~~~board.PieceLocationsAll |> Bitboard.Shift(mypawnsouth))
-                        let mvl = getPtwos attacks mvl
-                        mvl
+                    let attacks = (piecePositions |> Bitboard.Shift(mypawneast)) &&& targetLocations
+                    let mvl = getPcaps mypawneast attacks mvl
+                    let rec getPones att imvl = 
+                        if att = Bitboard.Empty then imvl
+                        else 
+                            let piecepos, natt = Bitboard.PopFirst(att)
+                            let targetpos = piecepos |> Square.PositionInDirectionUnsafe(mypawnnorth)
+                            if (targetpos |> Square.ToRank) = myrank8 then 
+                                let mv = 
+                                    Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)] PieceType.Queen
+                                let imvl = mv :: imvl
+                                let mv = 
+                                    Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)] PieceType.Rook
+                                let imvl = mv :: imvl
+                                let mv = 
+                                    Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)] PieceType.Bishop
+                                let imvl = mv :: imvl
+                                let mv = 
+                                    Move.CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)] PieceType.Knight
+                                let imvl = mv :: imvl
+                                getPones natt imvl
+                            else 
+                                let mv = 
+                                    Move.Create piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                        board.PieceAt.[int (targetpos)]
+                                let imvl = mv :: imvl
+                                getPones natt imvl
+                        
+                    let targetLocations = ~~~board.PieceLocationsAll
+                    let targetLocations = targetLocations &&& evasionTargets
+                    let attacks = (targetLocations |> Bitboard.Shift(mypawnsouth)) &&& piecePositions
+                    let mvl = getPones attacks mvl
+                        
+                    let rec getPtwos att imvl = 
+                        if att = Bitboard.Empty then imvl
+                        else 
+                            let piecepos, natt = Bitboard.PopFirst(att)
+                                
+                            let targetpos = 
+                                piecepos
+                                |> Square.PositionInDirectionUnsafe(mypawnnorth)
+                                |> Square.PositionInDirectionUnsafe(mypawnnorth)
+                                
+                            let mv = 
+                                Move.Create piecepos targetpos board.PieceAt.[int (piecepos)] 
+                                    board.PieceAt.[int (targetpos)]
+                            let imvl = mv :: imvl
+                            getPtwos natt imvl
+                        
+                    let attacks = 
+                        (myrank2 |> Rank.ToBitboard) &&& piecePositions 
+                        &&& ((targetLocations |> Bitboard.Shift(mypawnsouth)) |> Bitboard.Shift(mypawnsouth)) 
+                        &&& (~~~board.PieceLocationsAll |> Bitboard.Shift(mypawnsouth))
+                    let mvl = getPtwos attacks mvl
+                    mvl
                 else mvl
             
             let mvl = 
-                if not captures && not (board |> Board.IsChk) then 
+                if not (board |> Board.IsChk) then 
                     if board.WhosTurn = Player.White then 
                         let mvl = 
                             let sqatt = board
@@ -279,14 +275,9 @@ module MoveGenerate =
             
             mvl
     
-    let GenMoves(board : Brd) :Move list = 
-        let capsl = GenCapsNonCaps board true
-        let ncapsl = GenCapsNonCaps board false
-        capsl @ ncapsl
-    
-    let GenMovesLegal(board : Brd) = 
+    let MovesLegal(board : Brd) = 
         let me = board.WhosTurn
-        let mvs = GenMoves(board)
+        let mvs = Moves(board)
         
         let filt mv = 
             let bd = board |> Board.MoveApply(mv)
@@ -295,11 +286,11 @@ module MoveGenerate =
         mvs |> List.filter filt
     
     let IsDrawByStalemate(bd : Brd) = 
-        if not (bd |> Board.IsChk) then GenMovesLegal(bd) |> List.isEmpty
+        if not (bd |> Board.IsChk) then MovesLegal(bd) |> List.isEmpty
         else false
     
     let IsMate(bd : Brd) = 
-        if bd |> Board.IsChk then GenMovesLegal(bd) |> List.isEmpty
+        if bd |> Board.IsChk then MovesLegal(bd) |> List.isEmpty
         else false
 
 

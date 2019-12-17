@@ -27,7 +27,7 @@ module MoveUtil =
                     elif rank <> RANK_EMPTY && (mv|>Move.From|>Square.ToRank) <> rank then getfits mvl.Tail fitl
                     else getfits mvl.Tail ((mv|>Move.From) :: fitl)
             
-            let fits = getfits (MoveGenerate.GenMovesLegal(board) |> Seq.toList) []
+            let fits = getfits (MoveGenerate.MovesLegal(board) |> Seq.toList) []
             if fits.Length = 1 then fits.Head
             else failwith "invalid move input"
         else fits.Head
@@ -234,7 +234,7 @@ module MoveUtil =
             sb.Append(sTo) |> ignore
         let board = board|>Board.MoveApply(move)
         if board|>Board.IsChk then 
-            if MoveGenerate.GenMovesLegal(board) |> Seq.isEmpty then sb.Append("#") |> ignore
+            if MoveGenerate.MovesLegal(board) |> Seq.isEmpty then sb.Append("#") |> ignore
             else sb.Append("+") |> ignore
         sb.ToString()
     
@@ -252,6 +252,6 @@ module MoveUtil =
         sb.ToString()
 
     let FindMv uci bd =
-        let mvs = MoveGenerate.GenMovesLegal bd
+        let mvs = MoveGenerate.MovesLegal bd
         let fmvs = mvs|>List.filter(fun m -> m|>Desc=uci)
         if fmvs.Length=1 then Some(fmvs.Head) else None
