@@ -29,10 +29,15 @@ module MoveGenerate =
         let attacks = Attacks.KingAttacks(kingPos) &&& targetLocations
         let mvl = getKingAttacks attacks []
         
-        let csmvl =
-            if not (board |> Board.IsChk) then 
+        mvl|>legal(board)
+    
+    let CastleMoves (board : Brd) :Move list = 
+        let checkerCount = board.Checkers |> Bitboard.BitCount
+        if (checkerCount > 1) || (board |> Board.IsChk) then []
+        else
+            let mvl =
                 if board.WhosTurn = Player.White then 
-                    let cmvl = 
+                    let mvl1 = 
                         let sqatt = board
                                     |> Board.PositionAttacked E1 Player.Black
                                     || board |> Board.PositionAttacked F1 Player.Black
@@ -63,10 +68,10 @@ module MoveGenerate =
                         let mv = 
                             Move.Create E1 C1 board.PieceAt.[int (E1)] 
                                 board.PieceAt.[int (C1)]
-                        mv :: cmvl
-                    else cmvl
+                        mv :: mvl1
+                    else mvl1
                 else 
-                    let cmvl = 
+                    let mvl2 = 
                         let sqatt = board
                                     |> Board.PositionAttacked E8 Player.White
                                     || board |> Board.PositionAttacked F8 Player.White
@@ -97,12 +102,10 @@ module MoveGenerate =
                         let mv = 
                             Move.Create E8 C8 board.PieceAt.[int (E8)] 
                                 board.PieceAt.[int (C8)]
-                        mv :: cmvl
-                    else cmvl
-            else []
-        
-        (csmvl@mvl)|>legal(board)
-    
+                        mv :: mvl2
+                    else mvl2
+            mvl|>legal(board)
+
     let private pcMoves(board : Brd) (pt:PieceType) (fnsqbb: (Square -> Bitboard -> Bitboard)) :Move list =
         let me = board.WhosTurn
         let kingPos = if me=Player.White then board.WtKingPos else board.BkKingPos
@@ -318,6 +321,7 @@ module MoveGenerate =
         let checkerCount = board.Checkers |> Bitboard.BitCount
         if checkerCount > 1 then board|>KingMoves
         else
+            (board|>CastleMoves) @
             (board|>PawnMoves) @
             (board|>KnightMoves) @
             (board|>BishopMoves) @

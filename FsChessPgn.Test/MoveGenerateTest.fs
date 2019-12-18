@@ -41,6 +41,8 @@ type MoveGenerateTest()=
         let kmvhstr = kmvh|>MoveUtil.Desc
         Assert.AreEqual(1, kmvs.Length)
         Assert.AreEqual("e1e2",kmvhstr)
+        let cmvs = bd|>MoveGenerate.CastleMoves
+        Assert.AreEqual(0, cmvs.Length)
         let nmvs = bd|>MoveGenerate.KnightMoves
         let nmvh = nmvs.Head
         let nmvhstr = nmvh|>MoveUtil.Desc
@@ -80,6 +82,8 @@ type MoveGenerateTest()=
         let kmvhstr = kmvh|>MoveUtil.Desc
         Assert.AreEqual(1, kmvs.Length)
         Assert.AreEqual("e8e7",kmvhstr)
+        let cmvs = bd|>MoveGenerate.CastleMoves
+        Assert.AreEqual(0, cmvs.Length)
         let nmvs = bd|>MoveGenerate.KnightMoves
         let nmvh = nmvs.Head
         let nmvhstr = nmvh|>MoveUtil.Desc
@@ -110,12 +114,17 @@ type MoveGenerateTest()=
         let mvh = mvs.Head
         let mvhstr = mvh|>MoveUtil.Desc
         Assert.AreEqual(32, mvs.Length)
-        Assert.AreEqual("h2h4",mvhstr)
+        Assert.AreEqual("e1g1",mvhstr)
         let kmvs = bd|>MoveGenerate.KingMoves
         let kmvh = kmvs.Head
         let kmvhstr = kmvh|>MoveUtil.Desc
-        Assert.AreEqual(3, kmvs.Length)
-        Assert.AreEqual("e1g1",kmvhstr)
+        Assert.AreEqual(2, kmvs.Length)
+        Assert.AreEqual("e1f1",kmvhstr)
+        let cmvs = bd|>MoveGenerate.CastleMoves
+        let cmvh = cmvs.Head
+        let cmvhstr = cmvh|>MoveUtil.Desc
+        Assert.AreEqual(1, cmvs.Length)
+        Assert.AreEqual("e1g1",cmvhstr)
         let nmvs = bd|>MoveGenerate.KnightMoves
         let nmvh = nmvs.Head
         let nmvhstr = nmvh|>MoveUtil.Desc
@@ -155,6 +164,8 @@ type MoveGenerateTest()=
         let kmvhstr = kmvh|>MoveUtil.Desc
         Assert.AreEqual(1, kmvs.Length)
         Assert.AreEqual("e8e7",kmvhstr)
+        let cmvs = bd|>MoveGenerate.CastleMoves
+        Assert.AreEqual(0, cmvs.Length)
         let nmvs = bd|>MoveGenerate.KnightMoves
         let nmvh = nmvs.Head
         let nmvhstr = nmvh|>MoveUtil.Desc
