@@ -49,7 +49,7 @@ module pMove =
                         |>List.filter(fun mv -> pmv.TargetSquare=(mv|>Move.To))
                     if mvs.Length=1 then mvs.Head
                     else
-                        failwith "p"
+                        failwith ("p " + (pmv|>PgnWrite.MoveStr))
                 |PieceType.Knight ->
                     let mvs = 
                         bd|>MoveGenerate.KnightMoves
@@ -110,9 +110,6 @@ module pMove =
                     else
                         failwith "k"
                 |_ -> failwith "all"
-        
-        
-        
         {
             PreBrd = bd
             Mv = mv
