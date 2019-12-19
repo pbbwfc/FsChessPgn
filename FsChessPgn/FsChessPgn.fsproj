@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,7 +35,7 @@
     <Compile Include="fp.MoveSeriesParsers.fs" />
     <Compile Include="fp.GameParsers.fs" />
     <Compile Include="fp.Parser.fs" />
-    <Compile Include="PgnReader.fs" />
+    <Compile Include="Games.fs" />
     <Compile Include="PgnWriter.fs" />
   </ItemGroup>
 

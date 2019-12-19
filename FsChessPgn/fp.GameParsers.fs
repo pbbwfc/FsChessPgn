@@ -4,8 +4,7 @@ module FsChessPgn.PgnParsers.Game
 open FParsec
 open FsChessPgn.Data
 
-let setTag(igame : Game, tag : PgnTag) =
-    let game = {igame with Tags = igame.Tags.Add(tag.Name, tag.Value)}
+let setTag(game : Game, tag : PgnTag) =
     match tag.Name with
     | "Event" -> {game with Event = tag.Value}
     | "Site" -> {game with Site = tag.Value}

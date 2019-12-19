@@ -35,22 +35,22 @@ type ParserTest () =
     [<TestMethod>]
     member this.ReadFromStream_should_return_empty_Database_if_data_is_empty() =
         let stream = PrepareStream("")
-        let db = PgnReader.ReadFromStream(stream)
+        let db = Games.ReadFromStream(stream)
         Assert.AreEqual(db|>Seq.length,0)
 
     [<TestMethod>]
     member this.ReadFromStream_should_return_read_game_from_stream() =
         let stream = PrepareStream(NormalGame)
-        let db = PgnReader.ReadFromStream(stream)
+        let db = Games.ReadFromStream(stream)
         Assert.AreEqual(db|>Seq.length,1)
 
     [<TestMethod>]
     member this.ReadFromFile_should_return_read_game_from_file() =
         PrepareFile("one-game.pgn", NormalGame)
-        let db = PgnReader.ReadFromFile("one-game.pgn")
+        let db = Games.ReadFromFile("one-game.pgn")
         Assert.AreEqual(db|>Seq.length,1)
 
     [<TestMethod>]
     member this.ReadFromString_should_read_game_from_string() =
-        let db = PgnReader.ReadFromString(NormalGame)
+        let db = Games.ReadFromString(NormalGame)
         Assert.AreEqual(db|>Seq.length,1)

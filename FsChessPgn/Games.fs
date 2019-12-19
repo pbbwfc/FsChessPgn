@@ -2,14 +2,15 @@
 
 open System.IO
 open FsChessPgn.PgnParsers
+open FsChessPgn.Data
 
-module PgnReader =
+module Games =
 
-    let ReadGamesFromStream(stream:Stream) =
+    let ReadSeqFromStream(stream:Stream) =
         let p = new Parser()
         seq{for game in p.ReadGamesFromStream(stream) -> game}
 
-    let ReadGamesFromFile(file:string) =
+    let ReadSeqFromFile(file:string) =
         let p = new Parser()
         seq{for game in p.ReadGamesFromFile(file) -> game}
 
@@ -24,3 +25,6 @@ module PgnReader =
     let ReadFromFile(file:string) =
         let p = new Parser()
         p.ReadFromFile(file)
+
+    let SetaMoves(gml:Game list) =
+        gml|>List.map Game.SetaMoves

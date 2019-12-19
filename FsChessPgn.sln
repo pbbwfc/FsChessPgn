@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D9
 		scripts\Script1.fsx = scripts\Script1.fsx
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "LoadPgn", "Samples\LoadPgn\LoadPgn.fsproj", "{CF025AEB-706B-4EF3-B204-EE69BC61B297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +30,16 @@ Global
 		{49C93F3C-20E9-4A67-8452-4F92ED25D402}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49C93F3C-20E9-4A67-8452-4F92ED25D402}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49C93F3C-20E9-4A67-8452-4F92ED25D402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF025AEB-706B-4EF3-B204-EE69BC61B297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF025AEB-706B-4EF3-B204-EE69BC61B297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF025AEB-706B-4EF3-B204-EE69BC61B297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF025AEB-706B-4EF3-B204-EE69BC61B297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF025AEB-706B-4EF3-B204-EE69BC61B297} = {7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EFBBF18-81E9-4F01-A431-E58B2EB70F3E}

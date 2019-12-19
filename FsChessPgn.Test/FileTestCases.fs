@@ -11,15 +11,15 @@ type FileTestCases () =
 
     [<TestMethod>]
     member this.EmptyFile() =
-        let db = PgnReader.ReadGamesFromFile(TestFolder + "empty-file.pgn")
+        let db = Games.ReadSeqFromFile(TestFolder + "empty-file.pgn")
         Assert.AreEqual(db|>Seq.length,0)
 
     [<TestMethod>]
     member this.SimpleGame() =
-        let db = PgnReader.ReadGamesFromFile(TestFolder + "simple-game.pgn")
+        let db = Games.ReadSeqFromFile(TestFolder + "simple-game.pgn")
         Assert.AreEqual(db|>Seq.length,1)
 
     [<TestMethod>]
     member this.TimeAnnotatedGames() =
-        let db = PgnReader.ReadGamesFromFile(TestFolder + "time-annotated-games.pgn")
+        let db = Games.ReadSeqFromFile(TestFolder + "time-annotated-games.pgn")
         Assert.AreEqual(db|>Seq.length,4)

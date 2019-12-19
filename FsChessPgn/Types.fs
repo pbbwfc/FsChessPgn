@@ -313,7 +313,6 @@ module Types =
             Result : GameResult
             BoardSetup : Fen option
             AdditionalInfo : GameInfo list
-            Tags : Map<string,string>
             MoveText : MoveTextEntry list
         }
 
@@ -330,7 +329,6 @@ module Types =
             Result = GameResult.Open
             BoardSetup = None
             AdditionalInfo = []
-            Tags = Map.empty
             MoveText = []
         }
 

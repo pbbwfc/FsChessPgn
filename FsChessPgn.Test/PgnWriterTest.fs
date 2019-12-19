@@ -35,7 +35,7 @@ type PgnWriterTest () =
         let db = [_testGame]
         PgnWriter.WriteStream(stream,db)
         let writtenResult = Encoding.UTF8.GetString(stream.ToArray())
-        let actualDb = PgnReader.ReadFromString(writtenResult)
+        let actualDb = Games.ReadFromString(writtenResult)
         let actual = PgnWriter.WriteString(actualDb)
 
         Assert.AreEqual(TestGameString, actual)

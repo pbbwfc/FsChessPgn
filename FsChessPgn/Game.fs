@@ -19,8 +19,8 @@ module Game =
         mtel|>List.map gm|>List.concat
 
     //TODO
-    let SetpMoves(gm:Game) =
-        let rec setpmv (pmvl:MoveTextEntry list) bd opmvl =
+    let SetaMoves(gm:Game) =
+        let rec setamv (pmvl:MoveTextEntry list) bd opmvl =
             if pmvl|>List.isEmpty then opmvl|>List.rev
             else
                 let mte = pmvl.Head
@@ -28,10 +28,10 @@ module Game =
                 |HalfMoveEntry(mn,ic,mv,_) -> 
                     let amv = mv|>pMove.ToaMove bd
                     let nmte = HalfMoveEntry(mn,ic,mv,Some(amv))
-                    setpmv pmvl.Tail amv.PostBrd (nmte::opmvl)
-                |_ -> setpmv pmvl.Tail bd (mte::opmvl)
+                    setamv pmvl.Tail amv.PostBrd (nmte::opmvl)
+                |_ -> setamv pmvl.Tail bd (mte::opmvl)
         
         let ibd = if gm.BoardSetup.IsSome then gm.BoardSetup.Value|>Board.FromFEN else Board.Start
-        let nmt = setpmv gm.MoveText ibd []
+        let nmt = setamv gm.MoveText ibd []
         {gm with MoveText=nmt}
 

@@ -104,18 +104,17 @@ type GameParserTest() =
         Assert.AreEqual("Mendelsohn, J.", game.BlackPlayer)
 
     [<TestMethod>]
-    member this.pGame_should_fill_tags_dictionary_correctly() =
+    member this.pGame_should_fill_tags_correctly() =
         let game= parse pGame testGame2
-        Assert.AreEqual("Braingames WCC", game.Tags.["Event"])
-        Assert.AreEqual("London ENG", game.Tags.["Site"])
-        Assert.AreEqual("2000-11-02", game.Tags.["Date"])
-        Assert.AreEqual("15", game.Tags.["Round"])
-        Assert.AreEqual("Kasparov,G", game.Tags.["White"])
-        Assert.AreEqual("Kramnik,V", game.Tags.["Black"])
-        Assert.AreEqual("1/2 - 1/2", game.Tags.["Result"])
-        Assert.AreEqual("2849",game.Tags.["WhiteElo"])
-        Assert.AreEqual("2770", game.Tags.["BlackElo"])
-        Assert.AreEqual("E05", game.Tags.["ECO"])
+        Assert.AreEqual("Braingames WCC", game.Event)
+        Assert.AreEqual("London ENG", game.Site)
+        Assert.AreEqual(2000, game.Year.Value)
+        Assert.AreEqual(11, game.Month.Value)
+        Assert.AreEqual(2, game.Day.Value)
+        Assert.AreEqual("15", game.Round)
+        Assert.AreEqual("Kasparov,G", game.WhitePlayer)
+        Assert.AreEqual("Kramnik,V", game.BlackPlayer)
+        Assert.AreEqual("½-½", game.Result|>PgnWrite.ResultString)
 
     [<TestMethod>]
     member this.pGame_should_set_game_result_correctly() =

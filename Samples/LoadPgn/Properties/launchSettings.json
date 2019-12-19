@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LoadPgn": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\GitHub\\FsChessPgn\\FsChessPgn.Test\\TestExamples\\RealGames\\tilb98r2.pgn"
+    }
+  }
+}

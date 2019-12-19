@@ -45,9 +45,17 @@ module pMove =
                 match pmv.Piece.Value with
                 |PieceType.Pawn ->
                     let mvs = 
-                        bd|>MoveGenerate.PawnMoves
-                        |>List.filter(fun mv -> pmv.TargetSquare=(mv|>Move.To))
+                        if pmv.PromotedPiece.IsSome then
+                            bd|>MoveGenerate.PawnMoves
+                            |>List.filter(fun mv -> pmv.TargetSquare=(mv|>Move.To))
+                            |>List.filter(fun mv -> pmv.PromotedPiece.Value=(mv|>Move.PromoteType))
+                        else
+                            bd|>MoveGenerate.PawnMoves
+                            |>List.filter(fun mv -> pmv.TargetSquare=(mv|>Move.To))
                     if mvs.Length=1 then mvs.Head
+                    elif pmv.OriginFile.IsSome then
+                        let mvs1=mvs|>List.filter(fun mv -> pmv.OriginFile.Value=(mv|>Move.From|>Square.ToFile))
+                        if mvs1.Length=1 then mvs1.Head else failwith ("pf " + (pmv|>PgnWrite.MoveStr))
                     else
                         failwith ("p " + (pmv|>PgnWrite.MoveStr))
                 |PieceType.Knight ->
