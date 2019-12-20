@@ -48,7 +48,7 @@ module FEN =
           Fiftymove = bd.Fiftymove
           Fullmove = bd.Fullmove }
     
-    let FromStr(sFEN : string) = 
+    let Parse(sFEN : string) = 
         let pieceat = Array.create 64 Piece.EMPTY
         let sbPattern = new StringBuilder()
         sbPattern.Append(@"(?<R8>[\w]{1,8})/") |> ignore
@@ -121,4 +121,4 @@ module FEN =
           Fullmove = fullMove }
     
     let StartStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    let Start = FromStr StartStr
+    let Start = Parse StartStr

@@ -302,14 +302,6 @@ type MoveParserTest() =
         Assert.AreEqual(Sq(FileC,Rank6), move.TargetSquare);
         Assert.AreEqual(FileB, move.OriginFile.Value);
 
-
-    [<TestMethod>]
-    member this.pMove_should_correctly_parse_en_passant() =
-        let move = parse pMove "cxd5e.p."
-        Assert.AreEqual(MoveType.CaptureEnPassant, move.Mtype);
-        Assert.AreEqual(Sq(FileD,Rank5), move.TargetSquare);
-        Assert.AreEqual(FileC, move.OriginFile.Value);
-
     [<TestMethod>]
     member this.pMove_should_correctly_parse_simple_pawn_move() =
         let move = parse pMove "d5"
@@ -389,27 +381,9 @@ type MoveParserTest() =
 
     [<TestMethod>]
     member this.pMove_should_correctly_parse_differentAnnotations() =
-        Assert.AreEqual(MoveAnnotation.MindBlowing, (parse pMove "Bb5!!!").Annotation.Value)
         Assert.AreEqual(MoveAnnotation.Brilliant, (parse pMove "Bb5!!").Annotation.Value)
         Assert.AreEqual(MoveAnnotation.Good, (parse pMove "Bb5!").Annotation.Value)
         Assert.AreEqual(MoveAnnotation.Interesting, (parse pMove "Bb5!?").Annotation.Value)
         Assert.AreEqual(MoveAnnotation.Dubious, (parse pMove "Bb5?!").Annotation.Value)
         Assert.AreEqual(MoveAnnotation.Mistake, (parse pMove "Bb5?").Annotation.Value)
         Assert.AreEqual(MoveAnnotation.Blunder, (parse pMove "Bb5??").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.Abysmal, (parse pMove "Bb5???").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.FascinatingButUnsound, (parse pMove "Bb5!?!").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.Unclear, (parse pMove "Bb5∞").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.WithCompensation, (parse pMove "Bb5=/∞").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.EvenPosition, (parse pMove "Bb5=").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.SlightAdvantageWhite, (parse pMove "Bb5+/=").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.SlightAdvantageBlack, (parse pMove "Bb5=/+").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.AdvantageWhite, (parse pMove "Bb5+/-").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.AdvantageBlack, (parse pMove "Bb5-/+").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.DecisiveAdvantageWhite, (parse pMove "Bb5+-").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.Space, (parse pMove "Bb5○").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.Initiative, (parse pMove "Bb5↑").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.Development, (parse pMove "Bb5↑↑").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.Counterplay, (parse pMove "Bb5⇄").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.Countering, (parse pMove "Bb5∇").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.Idea, (parse pMove "Bb5Δ").Annotation.Value)
-        Assert.AreEqual(MoveAnnotation.TheoreticalNovelty, (parse pMove "Bb5N").Annotation.Value)

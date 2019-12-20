@@ -82,7 +82,7 @@ type BoardTest()=
 
     [<TestMethod>]
     member this.Board_FromFEN() =
-        let fen = FEN.FromStr "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
+        let fen = FEN.Parse "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
         let brd2 = Board.FromFEN fen
         let str = brd2|>Board.ToStr
         Assert.AreEqual("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",str)

@@ -21,5 +21,5 @@ type FENTest()=
     [<TestMethod>]
     member this.FEN_Start_FromStr() =
         let str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-        let fen = str|>FEN.FromStr
+        let fen = str|>FEN.Parse
         Assert.AreEqual("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",fen|>FEN.ToStr)

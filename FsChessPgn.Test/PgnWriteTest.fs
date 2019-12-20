@@ -121,13 +121,6 @@ type MoveFormatterTest()=
         Assert.AreEqual("exd5", str)
 
     [<TestMethod>]
-    member this.PgnWrite_should_PgnWrite_e4xd5ep() =
-        let move = pMove.CreateOrig(MoveType.CaptureEnPassant,PieceType.Pawn|>Some,Sq(FileD,Rank5),None,PieceType.Pawn|>Some,Sq(FileE,Rank4),None,None)
-        let str = PgnWrite.MoveStr(move)
-
-        Assert.AreEqual("e4xd5e.p.", str)
-
-    [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_piece_promotion() =
         let move = pMove.CreateAll(MoveType.Simple,None,Sq(FileE,Rank8),None,PieceType.Pawn|>Some,OUTOFBOUNDS,None,None,PieceType.Queen|>Some,false,false,false,None)
         let str = PgnWrite.MoveStr(move)

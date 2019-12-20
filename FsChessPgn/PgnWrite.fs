@@ -56,32 +56,12 @@ module PgnWrite =
         if move.Annotation.IsNone then ""
         else
             match move.Annotation.Value with
-            | MindBlowing -> "!!!"
             | Brilliant -> "!!"
             | Good -> "!"
             | Interesting -> "!?"
             | Dubious -> "?!"
             | Mistake -> "?"
             | Blunder -> "??"
-            | Abysmal -> "???"
-            | FascinatingButUnsound -> "!!?"
-            | Unclear -> "∞"
-            | WithCompensation -> "=/∞"
-            | EvenPosition -> "="
-            | SlightAdvantageWhite -> "+/="
-            | SlightAdvantageBlack -> "=/+"
-            | AdvantageWhite -> "+/−"
-            | AdvantageBlack -> "−/+"
-            | DecisiveAdvantageWhite -> "+−"
-            | DecisiveAdvantageBlack -> "-+"
-            | Space -> "○"
-            | Initiative -> "↑"
-            | Development -> "↑↑"
-            | Counterplay -> "⇄"
-            | Countering -> "∇"
-            | Idea -> "Δ"
-            | TheoreticalNovelty -> "N"
-            | UnknownAnnotation -> ""
 
     let Move(mv:pMove, writer:TextWriter) =
         match mv.Mtype with
@@ -104,15 +84,6 @@ module PgnWrite =
             if mv.PromotedPiece.IsSome then
                 writer.Write("=")
                 writer.Write(Piece(mv.PromotedPiece))
-            writer.Write(CheckAndMateAnnotation(mv))
-            writer.Write(Annotation(mv))
-        | CaptureEnPassant ->
-            let origin = MoveOrigin(mv)
-            let target = MoveTarget(mv)
-            writer.Write(origin)
-            writer.Write("x")
-            writer.Write(target)
-            writer.Write("e.p.")
             writer.Write(CheckAndMateAnnotation(mv))
             writer.Write(Annotation(mv))
         | CastleKingSide -> 

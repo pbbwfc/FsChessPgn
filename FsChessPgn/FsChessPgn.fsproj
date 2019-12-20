@@ -13,6 +13,8 @@
     <Compile Include="Rank.fs" />
     <Compile Include="File.fs" />
     <Compile Include="Square.fs" />
+    <Compile Include="GameResult.fs" />
+    <Compile Include="Annotation.fs" />
     <Compile Include="Bitboard.fs" />
     <Compile Include="Direction.fs" />
     <Compile Include="Attacks.fs" />
@@ -22,6 +24,7 @@
     <Compile Include="MoveGenerate.fs" />
     <Compile Include="PgnWrite.fs" />
     <Compile Include="pMove.fs" />
+    <Compile Include="MoveTextEntry.fs" />
     <Compile Include="Game.fs" />
     <Compile Include="MoveUtil.fs" />
     <Compile Include="RegParse.fs" />

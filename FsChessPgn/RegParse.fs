@@ -21,7 +21,13 @@ module RegParse =
     let private NextGameRdr(sr : StreamReader) = 
 
         let rec proclin st cstr s gm = 
-            if s = "" then st, gm
+            if s = "" then 
+                match st with
+                |InMove ->
+                     let mte = MoveTextEntry.Parse(cstr)
+                     let ngm = {gm with MoveText=mte::gm.MoveText}
+                     Unknown,"",ngm
+                |_ -> st, cstr, gm
             else 
                 let hd = s.[0]
                 let tl = s.[1..]
@@ -37,13 +43,22 @@ module RegParse =
                 | Invalid -> 
                     proclin st cstr tl gm
                 | InHeader -> 
-                    proclin st cstr tl gm
+                    if hd=']' then
+                         let ngm = gm|>Game.AddTag cstr
+                         proclin Unknown "" tl ngm
+                    else
+                        proclin st (cstr+hd.ToString()) tl gm
                 | InMove -> 
-                    proclin st cstr tl gm
-                | FinishedOK | FinishedInvalid -> st, gm
+                    if hd=' ' then
+                         let mte = MoveTextEntry.Parse(cstr)
+                         let ngm = {gm with MoveText=mte::gm.MoveText}
+                         proclin Unknown "" tl ngm
+                    else
+                        proclin st (cstr+hd.ToString()) tl gm
+                | FinishedOK | FinishedInvalid -> st, cstr, gm
                 | Unknown -> 
                     let st, ns = 
-                        match s.[0] with
+                        match hd with
                         | '[' -> InHeader, s.[1..]
                         | '{' -> InComment(1), s.[1..]
                         | '(' -> InRAV(1), s.[1..]
@@ -52,26 +67,25 @@ module RegParse =
                         | c when System.Char.IsNumber(c) || c = '.' -> InNum, s
                         | ' ' -> Unknown, s.[1..]
                         | _ -> InMove, s
-                    proclin st cstr tl gm
+                    proclin st cstr ns gm
     
-        let rec getgm st gm = 
+        let rec getgm st cstr gm = 
             let lin = sr.ReadLine()
             if lin |> isNull then { gm with MoveText = (gm.MoveText |> List.rev) }
             else 
-                let nst, ngm = proclin st "" lin gm
+                let nst, ncstr, ngm = proclin st "" lin gm
                 if nst = FinishedOK then { ngm with MoveText = (ngm.MoveText |> List.rev) }
                 elif nst = FinishedInvalid then GameEMP
-                else getgm nst ngm
+                else getgm nst ncstr ngm
     
-        let gm = getgm Unknown GameEMP
-        if gm.MoveText.Length > 0 then gm |> Some
-        else None
+        let gm = getgm Unknown "" GameEMP
+        gm
     
     let private AllGamesRdr(sr : System.IO.StreamReader) = 
         seq { 
             while not sr.EndOfStream do
                 let gm = NextGameRdr(sr)
-                if gm.IsSome then yield gm.Value
+                yield gm
         }
     
     let private ReadFromStream(stream : Stream) = 

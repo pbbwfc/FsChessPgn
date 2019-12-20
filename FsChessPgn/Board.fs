@@ -228,7 +228,7 @@ module Board =
                              |> AttacksTo(if bd.WhosTurn=Player.White then bd.WtKingPos else bd.BkKingPos)
                              &&& (if (bd.WhosTurn|>Player.PlayerOther)=Player.White then bd.WtPrBds else bd.BkPrBds) }
 
-    let FromStr (str: string) = str|>FEN.FromStr|>FromFEN 
+    let FromStr (str: string) = str|>FEN.Parse|>FromFEN 
     
     let ToStr (bd : Brd) = bd|>FEN.FromBd|>FEN.ToStr
     

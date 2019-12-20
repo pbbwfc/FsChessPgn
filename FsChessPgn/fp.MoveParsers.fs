@@ -63,20 +63,20 @@ let pSuffixCaptureMove = // e.g. Qf4d4x or Qf4:
     |>> fun move -> {move with Mtype = MoveType.Capture}
     <!> "pSuffixCaptureMove"
 
-let pBasicCapturingMove =
+let pCapturingMove =
     attempt (attempt pInfixCaptureMove <|> pSuffixCaptureMove)
     <|> pSimplifiedPawnCapture
     <!> "pBasicCapturingMove"
 
 
 // the two most common move types: move and capture
-let pCapturingMove =
-    pBasicCapturingMove .>>. opt (strCI "e.p." ) //TODO: e.p. should only be allowed for pawns
-    |>> fun (move, enpassant) ->
-            match enpassant with
-            | None -> move
-            | _ -> {move with Mtype=MoveType.CaptureEnPassant}
-    <!!> ("pCapturingMove", 1)
+//let pCapturingMove =
+//    pBasicCapturingMove .>>. opt (strCI "e.p." ) //TODO: e.p. should only be allowed for pawns
+//    |>> fun (move, enpassant) ->
+//            match enpassant with
+//            | None -> move
+//            | _ -> {move with Mtype=MoveType.CaptureEnPassant}
+//    <!!> ("pCapturingMove", 1)
 
 
 // special moves: pawn promotion and castle (king-side, queen-side)
@@ -84,7 +84,7 @@ let pCapturingMove =
 //       It should be asserted, that the moved piece is a pawn.
 //       If rank is set, then only rank 8 is allowed
 let pPawnPromotion =
-    (attempt  pBasicCapturingMove <|> pBasicMove)
+    (attempt  pCapturingMove <|> pBasicMove)
     .>>. ((str "=" >>. pPiece) <|> (str "(" >>. pPiece .>> str ")"))
     |>> fun (move, piece) -> {move with PromotedPiece = Some(piece)}
     <!> "pPawnPromotion"
@@ -106,41 +106,17 @@ let pCheckIndicator = str "++" <|> str "††" <|> str "dbl ch" <|> str "+" <|>
 let pCheckMateIndicator = str "#" <|> str "‡" <!> "pCheckMateIndicator"
 let pIndicator = pCheckIndicator <|> pCheckMateIndicator
 let pAnnotation =
-    str "????" <|> str "???"
-    <|> str "!!!!" <|> str "!!!" <|> str "?!?" <|> str "!?!" <|> str "??" <|> str "?!"
+    str "??" <|> str "?!"
     <|> str "!!" <|> str "!?" <|> str "?" <|> str "!"
-    <|> str "=/∞" <|> str "=/+" <|> str "="
-    <|> str "+/=" <|> str "+/-" <|> str "+-" <|> str "-/+" <|> str "-+"
-    <|> str "∞" <|> str "○" <|> str "↑↑" <|> str "↑" <|> str "⇄" <|> str "∇" <|> str "Δ"
-    <|> str "TN" <|> str "N"
     |>> fun annotation ->
             match annotation with
-            | "!!!" | "!!!!" -> MoveAnnotation.MindBlowing
             | "!!" -> MoveAnnotation.Brilliant
             | "!" -> MoveAnnotation.Good
             | "!?" -> MoveAnnotation.Interesting
             | "?!" -> MoveAnnotation.Dubious
             | "?" -> MoveAnnotation.Mistake
             | "??" -> MoveAnnotation.Blunder
-            | "???" | "????" -> MoveAnnotation.Abysmal
-            | "!?!" | "?!?" -> MoveAnnotation.FascinatingButUnsound
-            | "∞" -> MoveAnnotation.Unclear
-            | "=/∞" -> MoveAnnotation.WithCompensation
-            | "=" -> MoveAnnotation.EvenPosition
-            | "+/=" -> MoveAnnotation.SlightAdvantageWhite
-            | "=/+" -> MoveAnnotation.SlightAdvantageBlack
-            | "+/-" -> MoveAnnotation.AdvantageWhite
-            | "-/+" -> MoveAnnotation.AdvantageBlack
-            | "+-" -> MoveAnnotation.DecisiveAdvantageWhite
-            | "-+" -> MoveAnnotation.DecisiveAdvantageBlack
-            | "○" -> MoveAnnotation.Space
-            | "↑" -> MoveAnnotation.Initiative
-            | "↑↑" -> MoveAnnotation.Development
-            | "⇄" -> MoveAnnotation.Counterplay
-            | "∇" -> MoveAnnotation.Countering
-            | "Δ" -> MoveAnnotation.Idea
-            | "TN" | "N" -> MoveAnnotation.TheoreticalNovelty
-            | _ -> MoveAnnotation.UnknownAnnotation
+            | _ -> failwith "unknown annotation"
     <!> "pAnnotation"
     <?> "Move annotation (e.g. ! or ??)"
 
