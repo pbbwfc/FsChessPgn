@@ -186,7 +186,7 @@ module PgnWrite =
         Tag("Result", ResultString(game.Result), writer)
 
         for info in game.AdditionalInfo do
-            Tag(info.Name, info.Value, writer)
+            Tag(info.Key, info.Value, writer)
 
         writer.WriteLine();
         MoveText(game.MoveText, writer)

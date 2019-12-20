@@ -24,6 +24,7 @@
     <Compile Include="pMove.fs" />
     <Compile Include="Game.fs" />
     <Compile Include="MoveUtil.fs" />
+    <Compile Include="RegParse.fs" />
     <Compile Include="fp.Bootstrap.fs" />
     <Compile Include="fp.BasicParsers.fs" />
     <Compile Include="fp.BasicChessParsers.fs" />

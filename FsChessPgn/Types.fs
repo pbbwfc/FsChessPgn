@@ -298,8 +298,6 @@ module Types =
         |NAGEntry of int
         |RAVEntry of MoveTextEntry list
  
-    type GameInfo = {Name:string;Value:string}
-
     type Game =
         {
             Event : string
@@ -312,7 +310,7 @@ module Types =
             BlackPlayer : string
             Result : GameResult
             BoardSetup : Fen option
-            AdditionalInfo : GameInfo list
+            AdditionalInfo : Map<string,string>
             MoveText : MoveTextEntry list
         }
 
@@ -328,7 +326,7 @@ module Types =
             BlackPlayer = "?"
             Result = GameResult.Open
             BoardSetup = None
-            AdditionalInfo = []
+            AdditionalInfo = Map.empty
             MoveText = []
         }
 

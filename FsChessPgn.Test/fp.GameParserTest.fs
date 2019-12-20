@@ -125,7 +125,7 @@ type GameParserTest() =
     member this.pGame_should_set_all_other_tags_correctly() =
         let game= parse pGame testGame2
 
-        Assert.AreEqual(3, game.AdditionalInfo.Length)
+        Assert.AreEqual(3, game.AdditionalInfo.Count)
 
     [<TestMethod>]
     member this.pGame_should_set_the_move_text() =

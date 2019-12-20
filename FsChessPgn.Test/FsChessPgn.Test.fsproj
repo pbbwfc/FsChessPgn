@@ -44,6 +44,7 @@
     <Compile Include="fp.MoveParsersTest.fs" />
     <Compile Include="fp.MoveSieriesParserTests.fs" />
     <Compile Include="fp.TagParserTest.fs" />
+    <Compile Include="reg.TagParserTest.fs" />
     <Compile Include="FileTestCases.fs" />
     <Compile Include="ParserTest.fs" />
     <Compile Include="PgnWriterTest.fs" />

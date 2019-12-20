@@ -15,7 +15,7 @@ let setTag(game : Game, tag : PgnTag) =
     | "Result" -> {game with Result = (tag :?> PgnResultTag).Result}
     | "FEN" -> {game with BoardSetup = (tag :?> FenTag).Setup|>Some}
     | _ ->
-        {game with AdditionalInfo= game.AdditionalInfo @ [{Name=tag.Name; Value=tag.Value}]}
+        {game with AdditionalInfo=game.AdditionalInfo.Add(tag.Name,tag.Value)}
 
 let makeGame (tagList : PgnTag list, moveTextList : MoveTextEntry list) =
     let mutable game = GameEMP
