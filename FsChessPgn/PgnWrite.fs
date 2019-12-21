@@ -11,7 +11,7 @@ module PgnWrite =
         match result with
         |GameResult.WhiteWins -> "1-0" 
         |GameResult.BlackWins -> "0-1" 
-        |GameResult.Draw -> "½-½" 
+        |GameResult.Draw -> "1/2-1/2" 
         |_ -> "*" 
 
     let Piece(pieceType: PieceType option) =

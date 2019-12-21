@@ -114,7 +114,7 @@ type GameParserTest() =
         Assert.AreEqual("15", game.Round)
         Assert.AreEqual("Kasparov,G", game.WhitePlayer)
         Assert.AreEqual("Kramnik,V", game.BlackPlayer)
-        Assert.AreEqual("½-½", game.Result|>PgnWrite.ResultString)
+        Assert.AreEqual("1/2-1/2", game.Result|>PgnWrite.ResultString)
 
     [<TestMethod>]
     member this.pGame_should_set_game_result_correctly() =

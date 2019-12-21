@@ -1,7 +1,7 @@
 ﻿namespace FsChessPgn.Data
 
 module Annotation = 
-    let All = ["!!";"!";"!?";"?!";"??";"?"]
+    let All = ["!!";"!?";"?!";"??";"!";"?"]
 
     let Parse(s:string) =
          match s with
