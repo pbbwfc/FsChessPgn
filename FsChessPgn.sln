@@ -9,6 +9,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FsChessPgn.Test", "FsChessP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D95D5E-660B-4DBE-9C0D-3C9FCA10CA2C}"
 	ProjectSection(SolutionItems) = preProject
+		scripts\setup.fsx = scripts\setup.fsx
 		scripts\Script1.fsx = scripts\Script1.fsx
 	EndProjectSection
 EndProject

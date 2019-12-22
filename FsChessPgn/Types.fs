@@ -1,7 +1,5 @@
 ﻿namespace FsChessPgn.Data
 
-open System
-
 [<AutoOpen>]
 module Types = 
     type Move = int
@@ -106,7 +104,7 @@ module Types =
           Fiftymove : int
           Fullmove : int }
     
-    [<Flags>]
+    [<System.Flags>]
     type CstlFlgs = 
         | EMPTY = 0
         | WhiteShort = 1
@@ -115,7 +113,7 @@ module Types =
         | BlackLong = 8
         | All = 15
     
-    [<Flags>]
+    [<System.Flags>]
     type Bitboard = 
         | A8 = 1UL
         | B8 = 2UL
