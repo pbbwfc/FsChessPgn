@@ -193,10 +193,10 @@ Rc1 Ba7 33. Ra1 Bb6 34. Ra4 d3 35. Be3 Bc7 36. Bf4 Rc6 37. Rd4 Bxf3 38.
 gxf3 Rc3 39. Kg2 g5 40. e6 Bb6 41. Rxd3 Rxd3 42. e7 Rd8 43. exd8=Q Bxd8
 1/2-1/2"
 
-    let gm1 = testGame1|>FsChessPgn.NET.Games.ReadFromString|>List.head
-    let gm2 = testGame2|>FsChessPgn.NET.Games.ReadFromString|>List.head
-    let gm3 = testGame3|>FsChessPgn.NET.Games.ReadFromString|>List.head
-    let gm4 = testGame4|>FsChessPgn.NET.Games.ReadFromString|>List.head
+    let gm1 = testGame1|>FsChessPgn.Games.ReadFromString|>List.head
+    let gm2 = testGame2|>FsChessPgn.Games.ReadFromString|>List.head
+    let gm3 = testGame3|>FsChessPgn.Games.ReadFromString|>List.head
+    let gm4 = testGame4|>FsChessPgn.Games.ReadFromString|>List.head
 
     [<TestMethod>]
     member this.Game_should_accept_a_standard_pgn_game1() =

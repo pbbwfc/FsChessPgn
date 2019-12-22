@@ -28,24 +28,8 @@
     <Compile Include="Game.fs" />
     <Compile Include="MoveUtil.fs" />
     <Compile Include="RegParse.fs" />
-    <Compile Include="fp.Bootstrap.fs" />
-    <Compile Include="fp.BasicParsers.fs" />
-    <Compile Include="fp.BasicChessParsers.fs" />
-    <Compile Include="fp.PgnTags.fs" />
-    <Compile Include="fp.DateTagParser.fs" />
-    <Compile Include="fp.FenTagParser.fs" />
-    <Compile Include="fp.TagParsers.fs" />
-    <Compile Include="fp.MoveParsers.fs" />
-    <Compile Include="fp.MoveSeriesParsers.fs" />
-    <Compile Include="fp.GameParsers.fs" />
-    <Compile Include="fp.Parser.fs" />
     <Compile Include="Games.fs" />
     <Compile Include="PgnWriter.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FParsec" Version="1.1.0-RC" />
-    <PackageReference Include="NLog" Version="4.6.8" />
   </ItemGroup>
 
 </Project>

@@ -1,30 +1,32 @@
-﻿namespace FsChessPgn.NET
+﻿namespace FsChessPgn
 
 open System.IO
-open FsChessPgn.PgnParsers
+open System.Text
 open FsChessPgn.Data
 
 module Games =
 
-    let ReadSeqFromStream(stream:Stream) =
-        let p = new Parser()
-        seq{for game in p.ReadGamesFromStream(stream) -> game}
+    let ReadFromStream(stream : Stream) = 
+        let sr = new StreamReader(stream)
+        let db = RegParse.AllGamesRdr(sr)
+        db
 
-    let ReadSeqFromFile(file:string) =
-        let p = new Parser()
-        seq{for game in p.ReadGamesFromFile(file) -> game}
+    let ReadFromFile(file : string) = 
+        let stream = new FileStream(file, FileMode.Open)
+        let result = ReadFromStream(stream) |> Seq.toList
+        stream.Close()
+        result
 
-    let ReadFromString(str:string) =
-        let p = new Parser()
-        p.ReadFromString(str)
+    let ReadFromString(str : string) = 
+        let byteArray = Encoding.ASCII.GetBytes(str)
+        let stream = new MemoryStream(byteArray)
+        let result = ReadFromStream(stream) |> Seq.toList
+        stream.Close()
+        result
 
-    let ReadFromStream(stream:Stream) =
-        let p = new Parser()
-        p.ReadFromStream(stream)
-
-    let ReadFromFile(file:string) =
-        let p = new Parser()
-        p.ReadFromFile(file)
+    let ReadOneFromString(str : string) = 
+        let gms = str|>ReadFromString
+        gms.Head
 
     let SetaMoves(gml:Game list) =
         gml|>List.map Game.SetaMoves

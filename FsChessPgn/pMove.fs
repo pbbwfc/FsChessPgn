@@ -66,7 +66,7 @@ module pMove =
             | Castle(c) ->
                 CreateCastle(if c='K' then MoveType.CastleKingSide else MoveType.CastleQueenSide)
             | PawnCapture(f, sq) -> 
-                CreateOrig(MoveType.Capture,None,sq,None,None,OUTOFBOUNDS,Some(f),None)
+                CreateOrig(MoveType.Capture,None,sq,None,Some(PieceType.Pawn),OUTOFBOUNDS,Some(f),None)
             | AmbiguousFile(p, f, sq) -> 
                 CreateOrig(MoveType.Simple,None,sq,None,Some(p),OUTOFBOUNDS,Some(f),None)
             | AmbiguousRank(p, r, sq) -> 

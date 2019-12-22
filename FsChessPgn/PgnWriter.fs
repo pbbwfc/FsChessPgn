@@ -1,4 +1,4 @@
-﻿namespace FsChessPgn.NET
+﻿namespace FsChessPgn
 
 open System.IO
 open FsChessPgn.Data

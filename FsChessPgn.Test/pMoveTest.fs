@@ -2,7 +2,7 @@
 namespace FsChessPgn.Test
 
 open FsChessPgn.Data
-open FsChessPgn.NET
+open FsChessPgn
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 

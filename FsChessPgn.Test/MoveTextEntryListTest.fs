@@ -1,8 +1,7 @@
 ﻿namespace FsChessPgn.Test
 
+open FsChessPgn
 open FsChessPgn.Data
-open FsChessPgn.PgnParsers.Game
-open FParsec
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
@@ -57,11 +56,10 @@ type MoveTextEntryListTest()=
 
     [<TestMethod>]
     member this.Moves_should_return_an_enumeration_of_moves() =
-        let parse p str =
-            match run p str with
-            | Success(result, _, _)   -> result
-            | Failure(errorMsg, _, _) -> failwith errorMsg
-        let game= parse pGame TestGameString
+        let gml= Games.ReadFromString TestGameString
+        Assert.AreEqual(1, gml.Length)
+        let game = gml.Head
+
         let mtel = game.MoveText
         let mvs = mtel|>Game.GetMoves
 

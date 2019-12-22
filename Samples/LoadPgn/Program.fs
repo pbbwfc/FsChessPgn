@@ -1,6 +1,6 @@
 ﻿// This is s simple sample to load a pgn file
 
-open FsChessPgn.NET
+open FsChessPgn
 
 [<EntryPoint>]
 let main argv =

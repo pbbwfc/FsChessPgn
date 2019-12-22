@@ -1,9 +1,7 @@
 ﻿namespace FsChessPgn.Data
 
-open System
 open System.Text
 open System.IO
-open System.Text.RegularExpressions
 
 module RegParse = 
     type private State = 
@@ -50,8 +48,8 @@ module RegParse =
                             {gm1 with MoveText=mte1::gm1.MoveText}
                     FinishedOK,"",ngm
                 |InComment(_) |InRAV(_) -> st, cstr+nl, gm
-                |Unknown -> st, cstr, gm
-                |InHeader |InNum |Invalid |FinishedOK |FinishedInvalid -> failwith "Invalid state at end of line"
+                |Unknown |InNum -> st, cstr, gm
+                |InHeader |Invalid |FinishedOK |FinishedInvalid -> failwith "Invalid state at end of line"
             else 
                 let hd = s.[0]
                 let tl = s.[1..]
@@ -134,7 +132,7 @@ module RegParse =
             let lin = sr.ReadLine()
             if lin |> isNull then { gm with MoveText = (gm.MoveText |> List.rev) }
             else 
-                let nst, ncstr, ngm = proclin st "" lin gm
+                let nst, ncstr, ngm = proclin st cstr lin gm
                 if nst = FinishedOK then { ngm with MoveText = (ngm.MoveText |> List.rev) }
                 elif nst = FinishedInvalid then GameEMP
                 else getgm nst ncstr ngm
@@ -142,32 +140,12 @@ module RegParse =
         let gm = getgm Unknown "" GameEMP
         gm
     
-    let private AllGamesRdr(sr : System.IO.StreamReader) = 
+    let AllGamesRdr(sr : System.IO.StreamReader) = 
         seq { 
             while not sr.EndOfStream do
                 let gm = NextGameRdr(sr)
-                yield gm
+                if gm<>GameEMP then
+                    yield gm
         }
     
-    let private ReadFromStream(stream : Stream) = 
-        let sr = new StreamReader(stream)
-        let db = AllGamesRdr(sr)
-        db
-    
-    let ReadFromFile(file : string) = 
-        let stream = new FileStream(file, FileMode.Open)
-        let result = ReadFromStream(stream) |> Seq.toList
-        stream.Close()
-        result
-
-    let ReadFromString(str : string) = 
-        let byteArray = Encoding.ASCII.GetBytes(str)
-        let stream = new MemoryStream(byteArray)
-        let result = ReadFromStream(stream) |> Seq.toList
-        stream.Close()
-        result
-
-    let ReadOneFromString(str : string) = 
-        let gms = str|>ReadFromString
-        gms.Head
 

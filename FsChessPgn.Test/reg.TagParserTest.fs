@@ -1,6 +1,7 @@
 ﻿namespace FsChessPgn.Test
 
 open FsChessPgn.Data
+open FsChessPgn
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
@@ -9,7 +10,7 @@ type TagRegParserTests() =
 
     [<TestMethod>]
     member this.pTag_should_accept_tags_which_are_prefixes_of_others() =
-        let gml = RegParse.ReadFromString "[WhiteSomethingFoo \"\"]"
+        let gml = Games.ReadFromString "[WhiteSomethingFoo \"\"]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual(1, gm.AdditionalInfo.Count)
@@ -19,7 +20,7 @@ type TagRegParserTests() =
 
     [<TestMethod>]
     member this.pTag_should_create_a_PgnDateTag_object_from_a_valid_tag() =
-        let gml = RegParse.ReadFromString "[Date \"2013.05.15\"]"
+        let gml = Games.ReadFromString "[Date \"2013.05.15\"]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual(2013, gm.Year.Value)
@@ -28,7 +29,7 @@ type TagRegParserTests() =
 
     [<TestMethod>]
     member this.pTag_should_accept_only_the_year_as_date() =
-        let gml = RegParse.ReadFromString "[Date \"2013\"]"
+        let gml = Games.ReadFromString "[Date \"2013\"]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual(2013, gm.Year.Value)
@@ -37,14 +38,14 @@ type TagRegParserTests() =
 
     [<TestMethod>]
     member this.pTag_should_create_a_PgnRoundTag_object_from_a_valid_tag() =
-        let gml = RegParse.ReadFromString "[Round \"13\"]"
+        let gml = Games.ReadFromString "[Round \"13\"]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual("13",gm.Round)
 
     [<TestMethod>]
     member this.pTag_should_create_PgnRoundTag_object_from_two_tags_in_sequence() =
-        let gml = RegParse.ReadFromString @"[Round ""?""][White ""Tarrasch, Siegbert""]"
+        let gml = Games.ReadFromString @"[Round ""?""][White ""Tarrasch, Siegbert""]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual("?",gm.Round)
@@ -52,21 +53,21 @@ type TagRegParserTests() =
 
     [<TestMethod>]
     member this.pTag_should_accept_non_numeric_rounds() =
-        let gml = RegParse.ReadFromString "[Round \"4.1\"]"
+        let gml = Games.ReadFromString "[Round \"4.1\"]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual("4.1",gm.Round)
 
     [<TestMethod>]
     member this.pTag_should_create_a_PgnResultTag_object_from_a_valid_tag() =
-        let gml = RegParse.ReadFromString "[Result \"1-0\"]"
+        let gml = Games.ReadFromString "[Result \"1-0\"]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual(GameResult.WhiteWins,gm.Result)
 
     [<TestMethod>]
     member this.pTag_should_create_a_FenTag_object_from_a_valid_tag() =
-        let gml = RegParse.ReadFromString "[FEN \"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\"]"
+        let gml = Games.ReadFromString "[FEN \"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\"]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual(true,gm.BoardSetup.IsSome)
@@ -92,7 +93,7 @@ type TagRegParserTests() =
 
     [<TestMethod>]
     member this.pTag_should_create_a_FenTag_object_from_another_valid_tag() =
-        let gml = RegParse.ReadFromString "[FEN \"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR b Kq c6 1 2\"]"
+        let gml = Games.ReadFromString "[FEN \"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR b Kq c6 1 2\"]"
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         Assert.AreEqual(true,gm.BoardSetup.IsSome)

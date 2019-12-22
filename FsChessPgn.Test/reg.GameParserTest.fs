@@ -1,6 +1,7 @@
 ﻿#nowarn "25"
 namespace FsChessPgn.Test
 
+open FsChessPgn
 open FsChessPgn.Data
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
@@ -58,7 +59,7 @@ type GameRegParserTest() =
 
     [<TestMethod>]
     member this.pGame_should_accept_a_standard_pgn_game() =
-        let gml= RegParse.ReadFromString testGame1
+        let gml= Games.ReadFromString testGame1
         Assert.AreEqual(1, gml.Length)
         let game = gml.Head
         Assert.AreEqual("Tarrasch, Siegbert", game.WhitePlayer)
@@ -75,7 +76,7 @@ type GameRegParserTest() =
 
     [<TestMethod>]
     member this.pGame_should_accept_a_standard_pgn_game2() =
-        let gml= RegParse.ReadFromString testGame2
+        let gml= Games.ReadFromString testGame2
         Assert.AreEqual(1, gml.Length)
         let game = gml.Head
         Assert.AreEqual("Braingames WCC", game.Event)
@@ -93,7 +94,7 @@ type GameRegParserTest() =
 
     [<TestMethod>]
     member this.pGame_should_accept_a_standard_pgn_game3() =
-        let gml= RegParse.ReadFromString testGame3
+        let gml= Games.ReadFromString testGame3
         Assert.AreEqual(1, gml.Length)
         let game = gml.Head
         let setup= game.BoardSetup.Value

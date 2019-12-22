@@ -1,6 +1,6 @@
 namespace FsChessPgn.Test
 
-open FsChessPgn.NET
+open FsChessPgn
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
@@ -11,15 +11,15 @@ type FileTestCases () =
 
     [<TestMethod>]
     member this.EmptyFile() =
-        let db = Games.ReadSeqFromFile(TestFolder + "empty-file.pgn")
+        let db = Games.ReadFromFile(TestFolder + "empty-file.pgn")
         Assert.AreEqual(db|>Seq.length,0)
 
     [<TestMethod>]
     member this.SimpleGame() =
-        let db = Games.ReadSeqFromFile(TestFolder + "simple-game.pgn")
+        let db = Games.ReadFromFile(TestFolder + "simple-game.pgn")
         Assert.AreEqual(db|>Seq.length,1)
 
     [<TestMethod>]
     member this.TimeAnnotatedGames() =
-        let db = Games.ReadSeqFromFile(TestFolder + "time-annotated-games.pgn")
+        let db = Games.ReadFromFile(TestFolder + "time-annotated-games.pgn")
         Assert.AreEqual(db|>Seq.length,4)

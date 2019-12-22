@@ -1,6 +1,7 @@
 ﻿#nowarn "25"
 namespace FsChessPgn.Test
 
+open FsChessPgn
 open FsChessPgn.Data
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
@@ -11,7 +12,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_simple_piece_move() =
         let s = "Qf5"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -25,7 +26,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_simple_pawn_move() =
         let s = "d5"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -39,7 +40,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_castleK() =
         let s = "O-O"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -52,7 +53,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_castleQ() =
         let s = "O-O-O"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -65,7 +66,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_pawn_capture() =
         let s = "cxd4"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -79,7 +80,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_piece_capture() =
         let s = "Bxf3"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -93,7 +94,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_ambiguous_file() =
         let s = "Nfd7"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -108,7 +109,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_ambiguous_rank() =
         let s = "R3d5"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -123,7 +124,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_prom() =
         let s = "d8=Q"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -138,7 +139,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_prom_cap() =
         let s = "cxd8=Q"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -153,7 +154,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_simple_check_move() =
         let s = "Qf5+"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -167,7 +168,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_simple_doublecheck_move() =
         let s = "Qf5+"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -181,7 +182,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_simple_mate_move() =
         let s = "Qf5#"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -195,7 +196,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_simple_good_move() =
         let s = "Qf5!"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -210,7 +211,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_simple_blunder_move() =
         let s = "Qf5??"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -226,7 +227,7 @@ type MoveRegParserTest() =
     [<TestMethod>]
     member this.parse_simple_interesting_move() =
         let s = "Qf5!?"
-        let gml = RegParse.ReadFromString s
+        let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText

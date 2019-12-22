@@ -39,14 +39,9 @@
     <Compile Include="GameTest.fs" />
     <Compile Include="MoveUtilTest.fs" />
     <Compile Include="PgnWriteTest.fs" />
-    <Compile Include="fp.TestBase.fs" />
-    <Compile Include="fp.GameParserTest.fs" />
     <Compile Include="reg.GameParserTest.fs" />
-    <Compile Include="fp.MoveParsersTest.fs" />
     <Compile Include="reg.MoveParsersTest.fs" />
-    <Compile Include="fp.MoveSieriesParserTests.fs" />
     <Compile Include="reg.MoveSieriesParserTests.fs" />
-    <Compile Include="fp.TagParserTest.fs" />
     <Compile Include="reg.TagParserTest.fs" />
     <Compile Include="FileTestCases.fs" />
     <Compile Include="ParserTest.fs" />
