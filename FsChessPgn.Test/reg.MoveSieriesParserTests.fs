@@ -228,48 +228,69 @@ type MoveSeriesRegParserTest() =
         Assert.AreEqual(E4, mv.TargetSquare)
         Assert.AreEqual(s,mt|>PgnWrite.MoveTextStr)
 
+    [<TestMethod>]
+    member this.parse_NAG() =
+        let s = "1. e4 c5 $6 2. Nf3 $5"
+        let gml = RegParse.ReadFromString s
+        Assert.AreEqual(1, gml.Length)
+        let gm = gml.Head
+        let mt = gm.MoveText
+        Assert.AreEqual(5, mt.Length)
+        let (NAGEntry(cd)) = mt.[2]
+        Assert.AreEqual(6,cd)
+        let (HalfMoveEntry (mn,ic,mv,_)) = mt.Head
+        Assert.AreEqual(1,mn.Value)
+        Assert.AreEqual(false,ic)
+        Assert.AreEqual(MoveType.Simple,mv.Mtype)
+        Assert.AreEqual(PieceType.Pawn, mv.Piece.Value)
+        Assert.AreEqual(E4, mv.TargetSquare)
+        let (NAGEntry(cd)) = mt.[4]
+        Assert.AreEqual(5,cd)
+        Assert.AreEqual(s,mt|>PgnWrite.MoveTextStr)
 
+    [<TestMethod>]
+    member this.parse_RAV() =
+        let s = "6. d5 $6 (6. Bd3 cxd4 7. exd4 d5 { - B14 }) 6... exd5"
+        let gml = RegParse.ReadFromString s
+        Assert.AreEqual(1, gml.Length)
+        let gm = gml.Head
+        let mt = gm.MoveText
+        Assert.AreEqual(4, mt.Length)
+        let (RAVEntry(mtel)) = mt.[2]
+        Assert.AreEqual(5,mtel.Length)
+        let (HalfMoveEntry (mn,ic,mv,_)) = mtel.Head
+        Assert.AreEqual(6,mn.Value)
+        Assert.AreEqual(false,ic)
+        Assert.AreEqual(MoveType.Simple,mv.Mtype)
+        Assert.AreEqual(PieceType.Bishop, mv.Piece.Value)
+        Assert.AreEqual(D3, mv.TargetSquare)
+        let (CommentEntry(str)) = mtel.[4]
+        Assert.AreEqual(" - B14 ",str)
+        Assert.AreEqual(s,mt|>PgnWrite.MoveTextStr)
 
-    //[<TestMethod>]
-    //member this.pMoveSeries_should_accept_comment_between_moves() =
-    //    let entries = parse pMoveSeries "1. e4 {[%emt 0.0]} c5 {[%emt 0.0]} 2. Nc3"
-
-    //    Assert.AreEqual(5, entries.Length)
-    //    let (CommentEntry str) = entries.[1]
-    //    Assert.AreEqual("[%emt 0.0]", str)
-
-    //[<TestMethod>]
-    //member this.pMoveSeries_should_accept_NAGs() =
-    //    let entries = parse pMoveSeries "1. e4 c5 $6 "
-
-    //    Assert.AreEqual(3, entries.Length)
-    //    let (NAGEntry cd) = entries.[2]
-    //    Assert.AreEqual(6, cd)
-
-    //[<TestMethod>]
-    //member this.pMoveSeries_should_accept_RAVs() =
-    //    let entries = parse pMoveSeries "6. d5 $6 (6. Bd3 cxd4 7. exd4 d5 { - B14 }) 6... exd5"
-
-    //    Assert.AreEqual(4, entries.Length)
-    //    let (RAVEntry ml) = entries.[2]
-    //    Assert.AreEqual(5, ml.Length)
-    //    let (HalfMoveEntry (_, _, mv0,None)) = ml.[0] 
-    //    let (HalfMoveEntry (_, _, mv1,None)) = ml.[2]
-    //    let (CommentEntry str) = ml.[4]
-    //    Assert.AreEqual(parse pMove "Bd3", mv0)
-    //    Assert.AreEqual(parse pMove "exd4", mv1)
-    //    Assert.AreEqual(" - B14 ", str)
-
-    //[<TestMethod>]
-    //member this.pMoveSeries_should_accept_nested_RAVs() =
-    //    let entries = parse pMoveSeries "6. d5 (6. Bd3 cxd4 7. exd4 d5 (7... Qa4)) 6... exd5"
-
-    //    Assert.AreEqual(3, entries.Length)
-    //    let (RAVEntry ml) = entries.[1]
-    //    Assert.AreEqual(5, ml.Length)
-
-    //    let (RAVEntry ml2) = ml.[4]
-    //    Assert.AreEqual(1, ml2.Length)
-    //    let (HalfMoveEntry (_,_,mv,_)) = ml2.[0]
-    //    Assert.AreEqual(parse pMove "Qa4", mv)
-        
+    [<TestMethod>]
+    member this.parse_nested_RAV() =
+        let s = "6. d5 (6. Bd3 cxd4 7. exd4 d5 (7... Qa4)) 6... exd5"
+        let gml = RegParse.ReadFromString s
+        Assert.AreEqual(1, gml.Length)
+        let gm = gml.Head
+        let mt = gm.MoveText
+        Assert.AreEqual(3, mt.Length)
+        let (RAVEntry(mtel)) = mt.[1]
+        Assert.AreEqual(5,mtel.Length)
+        let (HalfMoveEntry (mn,ic,mv,_)) = mtel.Head
+        Assert.AreEqual(6,mn.Value)
+        Assert.AreEqual(false,ic)
+        Assert.AreEqual(MoveType.Simple,mv.Mtype)
+        Assert.AreEqual(PieceType.Bishop, mv.Piece.Value)
+        Assert.AreEqual(D3, mv.TargetSquare)
+        let (RAVEntry(m2)) = mtel.[4]
+        let (HalfMoveEntry (mn,ic,mv,_)) = m2.Head
+        Assert.AreEqual(7,mn.Value)
+        Assert.AreEqual(true,ic)
+        Assert.AreEqual(MoveType.Simple,mv.Mtype)
+        Assert.AreEqual(PieceType.Queen, mv.Piece.Value)
+        Assert.AreEqual(A4, mv.TargetSquare)
+        Assert.AreEqual(s,mt|>PgnWrite.MoveTextStr)
+ 
+       

@@ -20,13 +20,17 @@ module RegParse =
         | Invalid
         | FinishedInvalid
     
-    let private NextGameRdr(sr : StreamReader) = 
-
+    let rec private NextGameRdr(sr : StreamReader) = 
+        let nl = System.Environment.NewLine
         let rec proclin st cstr s gm = 
             if s = "" then 
                 match st with
                 |InMove ->
                     let mte = MoveTextEntry.Parse(cstr)
+                    let ngm = {gm with MoveText=mte::gm.MoveText}
+                    Unknown,"",ngm
+                |InNAG ->
+                    let mte = NAGEntry(cstr|>int)
                     let ngm = {gm with MoveText=mte::gm.MoveText}
                     Unknown,"",ngm
                 |InSingleLineComment ->
@@ -45,7 +49,9 @@ module RegParse =
                             let mte1 = CommentEntry(bits.[1].Trim([|'}'|]))
                             {gm1 with MoveText=mte1::gm1.MoveText}
                     FinishedOK,"",ngm
-                |_ -> st, cstr, gm
+                |InComment(_) |InRAV(_) -> st, cstr+nl, gm
+                |Unknown -> st, cstr, gm
+                |InHeader |InNum |Invalid |FinishedOK |FinishedInvalid -> failwith "Invalid state at end of line"
             else 
                 let hd = s.[0]
                 let tl = s.[1..]
@@ -64,9 +70,27 @@ module RegParse =
                 |InSingleLineComment ->
                     proclin st (cstr+hd.ToString()) tl gm
                 |InRAV(cl) -> 
-                    proclin st cstr tl gm
+                    if hd=')' && cl=1 then
+                        let byteArray = Encoding.ASCII.GetBytes(cstr)
+                        let stream = new MemoryStream(byteArray)
+                        let nsr = new StreamReader(stream)
+                        let gmr = NextGameRdr(nsr)
+                        let mte = RAVEntry(gmr.MoveText)
+                        let ngm = {gm with MoveText=mte::gm.MoveText}
+                        proclin Unknown "" tl ngm
+                    elif hd=')' then
+                        proclin (InRAV(cl-1)) (cstr+hd.ToString()) tl gm
+                    elif hd='(' then
+                        proclin (InRAV(cl+1)) (cstr+hd.ToString()) tl gm
+                    else
+                        proclin st (cstr+hd.ToString()) tl gm
                 |InNAG -> 
-                    proclin st cstr tl gm
+                    if hd=' ' then
+                        let mte = NAGEntry(cstr|>int)
+                        let ngm = {gm with MoveText=mte::gm.MoveText}
+                        proclin Unknown "" tl ngm
+                    else
+                        proclin st (cstr+hd.ToString()) tl gm
                 |InNum -> 
                     if hd=' ' then
                         proclin InMove (cstr+hd.ToString()) tl gm
