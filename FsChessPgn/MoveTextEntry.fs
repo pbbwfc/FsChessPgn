@@ -13,7 +13,7 @@ module MoveTextEntry =
         let ic = s.Contains("...") 
 
         let mv =
-            let bits = s.Split([|' '|])
+            let bits = s.Trim().Split([|' ';'.'|])
             let mvtxt = bits.[bits.Length-1].Trim()
             pMove.Parse(mvtxt)
 

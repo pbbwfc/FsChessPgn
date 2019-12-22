@@ -92,12 +92,12 @@ module RegParse =
                     else
                         proclin st (cstr+hd.ToString()) tl gm
                 |InNum -> 
-                    if hd=' ' then
-                        proclin InMove (cstr+hd.ToString()) tl gm
+                    if System.Char.IsNumber(hd) || hd = '.' then
+                        proclin st (cstr+hd.ToString()) tl gm
                     elif hd='/'||hd='-' then
                         proclin InRes (cstr+hd.ToString()) tl gm
                     else
-                        proclin st (cstr+hd.ToString()) tl gm
+                        proclin InMove (cstr+hd.ToString()) tl gm
                 |InRes -> 
                     proclin st (cstr+hd.ToString()) tl gm
                 |Invalid -> 

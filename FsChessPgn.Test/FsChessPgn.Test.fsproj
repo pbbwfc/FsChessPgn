@@ -41,6 +41,7 @@
     <Compile Include="PgnWriteTest.fs" />
     <Compile Include="fp.TestBase.fs" />
     <Compile Include="fp.GameParserTest.fs" />
+    <Compile Include="reg.GameParserTest.fs" />
     <Compile Include="fp.MoveParsersTest.fs" />
     <Compile Include="reg.MoveParsersTest.fs" />
     <Compile Include="fp.MoveSieriesParserTests.fs" />
