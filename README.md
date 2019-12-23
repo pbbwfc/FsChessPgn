@@ -41,3 +41,33 @@ val nbd : FsChessPgn.Data.Types.Brd =
   r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4
 val ismate : bool = true
 ```
+
+##Documentation
+
+* [Core](Not done yet)
+* [PGN parsing and writing](Not done yet)
+
+##Features
+
+* Witten using .NET Core and designed to use the latest version of F# Interactive.
+
+* Generates images of a Board in PNG format - *TODO*
+
+* Can make moves given a Board. Can both make and unmake moves given a Game.
+
+```fsharp
+#load "setup.fsx"
+open FsChess
+
+let board = Board.Start
+
+let new_board = board|>Board.PushSAN "e4"|>Board.PushSAN "e5"
+
+//TODO:Game
+```
+
+* Show a simple ASCII board - *TODO*
+
+* Detects checkmates, stalemates and draws by insufficient material.- *TODO*
+
+* Detects checks and attacks.- *TODO*
