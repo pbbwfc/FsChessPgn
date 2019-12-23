@@ -23,6 +23,7 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\RegParse.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Games.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\PgnWriter.fs"
+#load @"d:\GitHub\FsChessPgn\FsChessPgn\FsChess.fs"
 open FsChessPgn.Data
 do
     fsi.AddPrinter<Brd>(Board.ToStr)
