@@ -39,9 +39,9 @@ module MoveGenerate =
                 if board.WhosTurn = Player.White then 
                     let mvl1 = 
                         let sqatt = board
-                                    |> Board.PositionAttacked E1 Player.Black
-                                    || board |> Board.PositionAttacked F1 Player.Black
-                                    || board |> Board.PositionAttacked G1 Player.Black
+                                    |> Board.SquareAttacked E1 Player.Black
+                                    || board |> Board.SquareAttacked F1 Player.Black
+                                    || board |> Board.SquareAttacked G1 Player.Black
                         let sqemp = 
                             board.PieceAt.[int (F1)] = Piece.EMPTY 
                             && board.PieceAt.[int (G1)] = Piece.EMPTY
@@ -55,9 +55,9 @@ module MoveGenerate =
                         else []
 
                     let sqatt = board
-                                |> Board.PositionAttacked E1 Player.Black
-                                || board |> Board.PositionAttacked D1 Player.Black
-                                || board |> Board.PositionAttacked C1 Player.Black
+                                |> Board.SquareAttacked E1 Player.Black
+                                || board |> Board.SquareAttacked D1 Player.Black
+                                || board |> Board.SquareAttacked C1 Player.Black
                     let sqemp = 
                         board.PieceAt.[int (B1)] = Piece.EMPTY 
                         && board.PieceAt.[int (C1)] = Piece.EMPTY 
@@ -73,9 +73,9 @@ module MoveGenerate =
                 else 
                     let mvl2 = 
                         let sqatt = board
-                                    |> Board.PositionAttacked E8 Player.White
-                                    || board |> Board.PositionAttacked F8 Player.White
-                                    || board |> Board.PositionAttacked G8 Player.White
+                                    |> Board.SquareAttacked E8 Player.White
+                                    || board |> Board.SquareAttacked F8 Player.White
+                                    || board |> Board.SquareAttacked G8 Player.White
                         let sqemp = 
                             board.PieceAt.[int (F8)] = Piece.EMPTY 
                             && board.PieceAt.[int (G8)] = Piece.EMPTY
@@ -89,9 +89,9 @@ module MoveGenerate =
                         else []
 
                     let sqatt = board
-                                |> Board.PositionAttacked E8 Player.White
-                                || board |> Board.PositionAttacked D8 Player.White
-                                || board |> Board.PositionAttacked C8 Player.White
+                                |> Board.SquareAttacked E8 Player.White
+                                || board |> Board.SquareAttacked D8 Player.White
+                                || board |> Board.SquareAttacked C8 Player.White
                     let sqemp = 
                         board.PieceAt.[int (B8)] = Piece.EMPTY 
                         && board.PieceAt.[int (C8)] = Piece.EMPTY 

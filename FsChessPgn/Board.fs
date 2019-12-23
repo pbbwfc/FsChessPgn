@@ -2,7 +2,7 @@
 
 module Board = 
     
-    let PieceMove (mfrom : Square) mto (bd : Brd) = 
+    let private PieceMove (mfrom : Square) mto (bd : Brd) = 
         let piece = bd.PieceAt.[mfrom]
         let player = piece|>Piece.PieceToPlayer
         let pieceType = piece|>Piece.ToPieceType
@@ -22,7 +22,7 @@ module Board =
                   WtKingPos = wtkingpos
                   BkKingPos = bkkingpos }
  
-    let PieceAdd pos (piece : Piece) (bd : Brd) = 
+    let private PieceAdd pos (piece : Piece) (bd : Brd) = 
         let player = piece |> Piece.PieceToPlayer
         let pieceType = piece |> Piece.ToPieceType
         
@@ -51,7 +51,7 @@ module Board =
                   WtKingPos = wtkingpos
                   BkKingPos = bkkingpos }
 
-    let PieceRemove (pos : Square) (bd : Brd) = 
+    let private PieceRemove (pos : Square) (bd : Brd) = 
         let piece = bd.PieceAt.[int (pos)]
         let player = piece |> Piece.PieceToPlayer
         let pieceType = piece |> Piece.ToPieceType
@@ -76,16 +76,12 @@ module Board =
                   PieceLocationsAll = piecelocationsall
                   }
     
-    let PieceChange pos newPiece (bd : Brd) = 
+    let private PieceChange pos newPiece (bd : Brd) = 
         bd
         |> PieceRemove(pos)
         |> PieceAdd pos newPiece
-    
-    let RookSliders(bd : Brd) = bd.PieceTypes.[int (PieceType.Rook)] ||| bd.PieceTypes.[int (PieceType.Queen)]
-    
-    let BishopSliders(bd : Brd) = bd.PieceTypes.[int (PieceType.Bishop)] ||| bd.PieceTypes.[int (PieceType.Queen)]
         
-    let AttacksTo (mto : Square) (bd : Brd) = 
+    let private AttacksToBoth (mto : Square) (bd : Brd) = 
         (Attacks.KnightAttacks(mto) &&& bd.PieceTypes.[int (PieceType.Knight)]) 
         ||| ((Attacks.RookAttacks mto bd.PieceLocationsAll) 
              &&& (bd.PieceTypes.[int (PieceType.Queen)] ||| bd.PieceTypes.[int (PieceType.Rook)])) 
@@ -97,14 +93,13 @@ module Board =
         ||| ((Attacks.PawnAttacks mto Player.White) &&& bd.BkPrBds 
              &&& bd.PieceTypes.[int (PieceType.Pawn)])
     
-    let AttacksTo2 (mto : Square) (by : Player) (bd : Brd) = bd
-                                                               |> AttacksTo(mto)
-                                                               &&& (if by=Player.White then bd.WtPrBds else bd.BkPrBds)
+    ///Gets the Bitboard that defines the squares that attack the specified Square(mto) by the specified Player(by) for this Board(bd) 
+    let internal AttacksTo (mto : Square) (by : Player) (bd : Brd) = bd|> AttacksToBoth(mto) &&& (if by=Player.White then bd.WtPrBds else bd.BkPrBds)
     
-    let PositionAttacked (mto : Square) (by : Player) (bd : Brd) = bd
-                                                                     |> AttacksTo2 mto by
-                                                                     <> Bitboard.Empty
+    ///Is the Square(mto) attacked by the specified Player(by) for this Board(bd)
+    let SquareAttacked (mto : Square) (by : Player) (bd : Brd) = bd|> AttacksTo mto by <> Bitboard.Empty
     
+    ///Make an encoded Move(move) for this Board(bd) and return the new Board
     let MoveApply (move : Move) (bd : Brd) = 
         let mfrom = move|>Move.From
         let mto = move|>Move.To
@@ -180,16 +175,18 @@ module Board =
         let bd = 
             { bd with WhosTurn = bd.WhosTurn|>Player.PlayerOther}
         { bd with Checkers = bd
-                             |> AttacksTo(if bd.WhosTurn=Player.White then bd.WtKingPos else bd.BkKingPos)
+                             |> AttacksToBoth(if bd.WhosTurn=Player.White then bd.WtKingPos else bd.BkKingPos)
                              &&& (if (bd.WhosTurn|>Player.PlayerOther)=Player.White then bd.WtPrBds else bd.BkPrBds) }
     
+    ///Is there a check on the Board(bd)
     let IsChk(bd : Brd) = bd.Checkers <> Bitboard.Empty
     
+    ///Is there a check on Player(kingplayer) on the Board(bd)
     let IsCheck (kingplayer : Player) (bd : Brd) = 
         let kingpos = if kingplayer=Player.White then bd.WtKingPos else bd.BkKingPos
-        bd |> PositionAttacked kingpos (kingplayer|>Player.PlayerOther)
+        bd |> SquareAttacked kingpos (kingplayer|>Player.PlayerOther)
     
-    let PieceInDirection (from : Square) (dir : Direction) (bd : Brd) = 
+    let private PieceInDirection (from : Square) (dir : Direction) (bd : Brd) = 
         let rec getpospc dist (pos : Square) pc = 
             if not (pos|>Square.IsInBounds) then pc, pos
             else 
@@ -201,6 +198,7 @@ module Board =
                     getpospc (dist + 1) npos npc
         getpospc 1 (from|>Square.PositionInDirection(dir)) Piece.EMPTY
     
+    ///Create a new Board given a Fen(fen)
     let FromFEN (fen : Fen) = 
         let bd = BrdEMP
 
@@ -225,11 +223,14 @@ module Board =
                   Fiftymove = fen.Fiftymove
                   Fullmove = fen.Fullmove
                   Checkers = bd
-                             |> AttacksTo(if bd.WhosTurn=Player.White then bd.WtKingPos else bd.BkKingPos)
+                             |> AttacksToBoth(if bd.WhosTurn=Player.White then bd.WtKingPos else bd.BkKingPos)
                              &&& (if (bd.WhosTurn|>Player.PlayerOther)=Player.White then bd.WtPrBds else bd.BkPrBds) }
 
+    ///Create a new Board given a FEN string(str)
     let FromStr (str: string) = str|>FEN.Parse|>FromFEN 
     
+    ///Gets a FEN string for this Board(bd) 
     let ToStr (bd : Brd) = bd|>FEN.FromBd|>FEN.ToStr
     
+    ///The starting Board at the beginning of a game
     let Start = FEN.Start|>FromFEN

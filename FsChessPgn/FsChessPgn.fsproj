@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OtherFlags></OtherFlags>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Util.fs" />

@@ -14,7 +14,7 @@ module MoveUtil =
                 elif file <> FILE_EMPTY && file <> (pos|>Square.ToFile) then getfits posl.Tail fitl
                 else getfits posl.Tail (pos :: fitl)
         
-        let attacksTo = board|>Board.AttacksTo2 attackto board.WhosTurn
+        let attacksTo = board|>Board.AttacksTo attackto board.WhosTurn
         let fits = getfits (attacksTo|>Bitboard.ToPositions) []
         if fits.Length <> 1 then 
             let rec getfits (mvl : Move list) fitl = 
@@ -224,7 +224,7 @@ module MoveUtil =
             
             let pu, fu, ru = 
                 getuniqs true true true 
-                    ((board|>Board.AttacksTo2 (move|>Move.To) (piece|>Piece.PieceToPlayer))|>Bitboard.ToPositions)
+                    ((board|>Board.AttacksTo (move|>Move.To) (piece|>Piece.PieceToPlayer))|>Bitboard.ToPositions)
             sb.Append(sPiece) |> ignore
             if pu then ()
             elif fu then sb.Append(sFile) |> ignore

@@ -1,5 +1,12 @@
 ﻿namespace FsChessPgn.Data
 
+module AssemblyInfo=
+
+    open System.Runtime.CompilerServices
+
+    [<assembly: InternalsVisibleTo("FsChessPgn.Test")>]
+    do()
+
 [<AutoOpen>]
 module Types = 
     type Move = int
