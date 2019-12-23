@@ -27,14 +27,8 @@ module PgnWrite =
             |_ -> ""
             
     let MoveTarget(move:pMove) =
-        let piece = 
-            match move.Mtype with
-            |Simple -> "" 
-            |_ -> Piece(move.TargetPiece)
         if move.TargetSquare <> OUTOFBOUNDS then
-            piece + SQUARE_NAMES.[move.TargetSquare]
-        elif move.TargetFile.IsSome then
-            piece + FILE_NAMES.[move.TargetFile.Value]
+            SQUARE_NAMES.[move.TargetSquare]
         else ""
 
     let MoveOrigin(move:pMove) =

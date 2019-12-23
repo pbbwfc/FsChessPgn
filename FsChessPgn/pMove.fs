@@ -4,11 +4,9 @@ open System.Text.RegularExpressions
 
 module pMove =
 
-    let CreateAll(mt,tgp,tgs,tgf,pc,ors,orf,orr,pp,ic,id,im,an) =
+    let CreateAll(mt,tgs,pc,ors,orf,orr,pp,ic,id,im,an) =
         {Mtype=mt 
-         TargetPiece=tgp
          TargetSquare=tgs
-         TargetFile=tgf
          Piece=pc
          OriginSquare=ors
          OriginFile=orf
@@ -19,11 +17,11 @@ module pMove =
          IsCheckMate=im
          Annotation=an}
 
-    let CreateOrig(mt,tgp,tgs,tgf,pc,ors,orf,orr) = CreateAll(mt,tgp,tgs,tgf,pc,ors,orf,orr,None,false,false,false,None)
+    let CreateOrig(mt,tgs,pc,ors,orf,orr) = CreateAll(mt,tgs,pc,ors,orf,orr,None,false,false,false,None)
 
-    let Create(mt,tgp,tgs,tgf,pc) = CreateOrig(mt,tgp,tgs,tgf,pc,OUTOFBOUNDS,None,None)
+    let Create(mt,tgs,pc) = CreateOrig(mt,tgs,pc,OUTOFBOUNDS,None,None)
 
-    let CreateCastle(mt) = CreateOrig(mt,None,OUTOFBOUNDS,None,None,OUTOFBOUNDS,None,None)
+    let CreateCastle(mt) = CreateOrig(mt,OUTOFBOUNDS,None,OUTOFBOUNDS,None,None)
 
     
     let Parse(s : string) =
@@ -62,19 +60,19 @@ module pMove =
         let mv0 =
             match m with
             | SimpleMove(p, sq) -> 
-                Create((if s1.Contains("x") then MoveType.Capture else MoveType.Simple),None,sq,None,Some(p))
+                Create((if s1.Contains("x") then MoveType.Capture else MoveType.Simple),sq,Some(p))
             | Castle(c) ->
                 CreateCastle(if c='K' then MoveType.CastleKingSide else MoveType.CastleQueenSide)
             | PawnCapture(f, sq) -> 
-                CreateOrig(MoveType.Capture,None,sq,None,Some(PieceType.Pawn),OUTOFBOUNDS,Some(f),None)
+                CreateOrig(MoveType.Capture,sq,Some(PieceType.Pawn),OUTOFBOUNDS,Some(f),None)
             | AmbiguousFile(p, f, sq) -> 
-                CreateOrig(MoveType.Simple,None,sq,None,Some(p),OUTOFBOUNDS,Some(f),None)
+                CreateOrig(MoveType.Simple,sq,Some(p),OUTOFBOUNDS,Some(f),None)
             | AmbiguousRank(p, r, sq) -> 
-                CreateOrig(MoveType.Simple,None,sq,None,Some(p),OUTOFBOUNDS,None,Some(r))
+                CreateOrig(MoveType.Simple,sq,Some(p),OUTOFBOUNDS,None,Some(r))
             | Promotion(sq, p) -> 
-                CreateAll(MoveType.Simple,None,sq,None,Some(PieceType.Pawn),OUTOFBOUNDS,None,None,Some(p),false,false,false,None)
+                CreateAll(MoveType.Simple,sq,Some(PieceType.Pawn),OUTOFBOUNDS,None,None,Some(p),false,false,false,None)
             | PromCapture(f, sq, p) -> 
-                CreateAll(MoveType.Capture,None,sq,None,Some(PieceType.Pawn),OUTOFBOUNDS,Some(f),None,Some(p),false,false,false,None)
+                CreateAll(MoveType.Capture,sq,Some(PieceType.Pawn),OUTOFBOUNDS,Some(f),None,Some(p),false,false,false,None)
       
         let mv1 =
             if s1.Contains("++") then {mv0 with IsDoubleCheck=true} 

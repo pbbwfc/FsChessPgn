@@ -214,9 +214,7 @@ module Types =
 
     type pMove = 
         {Mtype:MoveType 
-         TargetPiece:PieceType option
          TargetSquare:Square 
-         TargetFile:File option
          Piece: PieceType option
          OriginSquare:Square
          OriginFile:File option
