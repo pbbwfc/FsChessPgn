@@ -42,10 +42,10 @@ val nbd : FsChessPgn.Data.Types.Brd =
 val ismate : bool = true
 ```
 
-##Documentation
+##Detailed Documentation
 
-* [Core](Not done yet)
-* [PGN parsing and writing](Not done yet)
+* [Core](https://github.com/pbbwfc/FsChessPgn) - *TODO*
+* [PGN parsing and writing](https://github.com/pbbwfc/FsChessPgn) - *TODO*
 
 ##Features
 
@@ -71,3 +71,13 @@ let new_board = board|>Board.PushSAN "e4"|>Board.PushSAN "e5"
 * Detects checkmates, stalemates and draws by insufficient material.- *TODO*
 
 * Detects checks and attacks.- *TODO*
+
+* Parses and creates SAN representation of moves.- *TODO*
+
+* Parses and creates FENs- *TODO*
+
+* Reads and writes PGNs. Supports headers, comments, NAGs and a tree of variations. - *TODO*
+
+##Installing
+
+Please just download a copy of the code from GitHub and then start using any of the sample scripts. 
