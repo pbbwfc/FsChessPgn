@@ -42,12 +42,12 @@ val nbd : FsChessPgn.Data.Types.Brd =
 val ismate : bool = true
 ```
 
-##Detailed Documentation
+## Detailed Documentation
 
 * [Core](https://github.com/pbbwfc/FsChessPgn) - *TODO*
 * [PGN parsing and writing](https://github.com/pbbwfc/FsChessPgn) - *TODO*
 
-##Features
+## Features
 
 * Witten using .NET Core and designed to use the latest version of F# Interactive.
 
@@ -78,6 +78,6 @@ let new_board = board|>Board.PushSAN "e4"|>Board.PushSAN "e5"
 
 * Reads and writes PGNs. Supports headers, comments, NAGs and a tree of variations. - *TODO*
 
-##Installing
+## Installing
 
 Please just download a copy of the code from GitHub and then start using any of the sample scripts. 
