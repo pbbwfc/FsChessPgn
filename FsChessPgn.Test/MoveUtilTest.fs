@@ -7,15 +7,7 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 [<TestClass>]
 type MoveUtilTest()=
     let brd1 = Board.Start
-    let mv1 = "e4"|>MoveUtil.Parse brd1
-
-    [<TestMethod>]
-    member this.MoveUtil_ParseFilter() =
-        //doing Nf3
-        let mTo = Square.Parse("f3")
-        let pc = 'N'|>Piece.ParseAsPiece(Player.White)
-        let sq = MoveUtil.ParseFilter brd1 mTo pc FILE_EMPTY RANK_EMPTY
-        Assert.AreEqual(G1,sq)
+    let mv1 = "e4"|>MoveUtil.fromSAN brd1
 
     [<TestMethod>]
     member this.MoveUtil_Parse() =

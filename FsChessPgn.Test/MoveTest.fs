@@ -7,7 +7,7 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 [<TestClass>]
 type MoveTest()=
     let brd1 = Board.Start
-    let mv1 = "e4"|>MoveUtil.Parse brd1
+    let mv1 = "e4"|>MoveUtil.fromSAN brd1
 
     [<TestMethod>]
     member this.Move_Utils() =

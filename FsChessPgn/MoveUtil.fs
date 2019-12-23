@@ -4,166 +4,6 @@ open System.Text
 open System.Text.RegularExpressions
 
 module MoveUtil = 
-    let ParseFilter (board : Brd) attackto piece file rank = 
-        let rec getfits posl fitl = 
-            if List.isEmpty posl then fitl
-            else 
-                let pos:Square = posl.Head
-                if piece <> Piece.EMPTY && piece <> board.PieceAt.[int(pos)] then getfits posl.Tail fitl
-                elif rank <> RANK_EMPTY && rank <> (pos|>Square.ToRank) then getfits posl.Tail fitl
-                elif file <> FILE_EMPTY && file <> (pos|>Square.ToFile) then getfits posl.Tail fitl
-                else getfits posl.Tail (pos :: fitl)
-        
-        let attacksTo = board|>Board.AttacksTo attackto board.WhosTurn
-        let fits = getfits (attacksTo|>Bitboard.ToPositions) []
-        if fits.Length <> 1 then 
-            let rec getfits (mvl : Move list) fitl = 
-                if List.isEmpty mvl then fitl
-                else 
-                    let mv = mvl.Head
-                    if mv|>Move.To <> attackto then getfits mvl.Tail fitl
-                    elif board.PieceAt.[int(mv|>Move.From)] <> piece then getfits mvl.Tail fitl
-                    elif file <> FILE_EMPTY && ((mv|>Move.From)|>Square.ToFile) <> file then getfits mvl.Tail fitl
-                    elif rank <> RANK_EMPTY && (mv|>Move.From|>Square.ToRank) <> rank then getfits mvl.Tail fitl
-                    else getfits mvl.Tail ((mv|>Move.From) :: fitl)
-            
-            let fits = getfits (MoveGenerate.AllMoves(board) |> Seq.toList) []
-            if fits.Length = 1 then fits.Head
-            else failwith "invalid move input"
-        else fits.Head
-    
-    let Parse (board : Brd) (movetext : string) :Move = 
-        let promote = Piece.EMPTY
-        let mFrom = OUTOFBOUNDS
-        let mTo = OUTOFBOUNDS
-        let regex = new Regex("")
-        let movetext = movetext.Replace("+", "")
-        let movetext = movetext.Replace("x", "")
-        let movetext = movetext.Replace("#", "")
-        let movetext = movetext.Replace("=", "")
-        let me = board.WhosTurn
-        
-        let mypawn = 
-            if board.WhosTurn = Player.White then Piece.WPawn
-            else Piece.BPawn
-        
-        let myknight = 
-            if board.WhosTurn = Player.White then Piece.WKnight
-            else Piece.BKnight
-        
-        let mybishop = 
-            if board.WhosTurn = Player.White then Piece.WBishop
-            else Piece.BBishop
-        
-        let myrook = 
-            if board.WhosTurn = Player.White then Piece.WRook
-            else Piece.BRook
-        
-        let myqueen = 
-            if board.WhosTurn = Player.White then Piece.WQueen
-            else Piece.BQueen
-        
-        let myking = 
-            if board.WhosTurn = Player.White then Piece.WKing
-            else Piece.BKing
-        
-        let mynorth = 
-            if board.WhosTurn = Player.White then Direction.DirN
-            else Direction.DirS
-        
-        let mysouth = 
-            if board.WhosTurn = Player.White then Direction.DirS
-            else Direction.DirN
-        
-        let myrank4 = 
-            if board.WhosTurn = Player.White then Rank4
-            else Rank5
-        
-        if Regex.IsMatch(movetext, "^[abcdefgh][12345678][abcdefgh][12345678]$", RegexOptions.IgnoreCase) then 
-            let mFrom = Square.Parse(movetext.Substring(0, 2))
-            let mTo = Square.Parse(movetext.Substring(2, 2))
-            Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-        elif Regex.IsMatch(movetext, "^[abcdefgh][12345678][abcdefgh][12345678][BNRQK]$", RegexOptions.IgnoreCase) then 
-            let mFrom = Square.Parse(movetext.Substring(0, 2))
-            let mTo = Square.Parse(movetext.Substring(2, 2))
-            let promote = movetext.[4]|>Piece.ParseAsPiece(me)
-            Move.CreateProm mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType)
-        elif movetext = "0-0" || movetext = "O-O" || movetext = "o-o" then 
-            if me = Player.White then 
-                let mFrom = E1
-                let mTo = G1
-                Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-            else 
-                let mFrom = E8
-                let mTo = G8
-                Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-        elif movetext = "0-0-0" || movetext = "O-O-O" || movetext = "o-o-o" then 
-            if me = Player.White then 
-                let mFrom = E1
-                let mTo = C1
-                Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-            else 
-                let mFrom = E8
-                let mTo = C8
-                Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-        elif Regex.IsMatch(movetext, "^[abcdefgh][12345678]$") then 
-            let mTo = Square.Parse(movetext)
-            let tmppos = mTo|>Square.PositionInDirection(mysouth)
-            if board.PieceAt.[int(tmppos)] = mypawn then 
-                let mFrom = tmppos
-                Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-            elif board.PieceAt.[int(tmppos)] = Piece.EMPTY && (mTo|>Square.ToRank) = myrank4 then 
-                let tmppos = tmppos|>Square.PositionInDirection(mysouth)
-                if board.PieceAt.[int(tmppos)] = mypawn then 
-                    let mFrom = tmppos
-                    Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-                else failwith ("no pawn can move to " + movetext)
-            else failwith ("no pawn can move to " + movetext)
-        elif Regex.IsMatch(movetext, "^[abcdefgh][12345678][BNRQK]$") then 
-            let mTo = Square.Parse(movetext.Substring(0, 2))
-            let tmppos = mTo|>Square.PositionInDirection(mysouth)
-            if board.PieceAt.[int(tmppos)] = mypawn then 
-                let mFrom = tmppos
-                let promote = movetext.[2]|>Piece.ParseAsPiece(me)
-                Move.CreateProm mFrom mTo board.PieceAt.[int(mFrom)] 
-                                        board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType)
-            else failwith ("no pawn can promoted to " + movetext.Substring(0, 2))
-        elif Regex.IsMatch(movetext, "^[abcdefgh][abcdefgh][12345678]$") then 
-            let mTo = Square.Parse(movetext.Substring(1, 2))
-            let tmpfile = File.Parse(movetext.[0])
-            let mFrom = ParseFilter board mTo mypawn tmpfile RANK_EMPTY
-            Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-        elif Regex.IsMatch(movetext, "^[abcdefgh][abcdefgh][12345678][BNRQK]$") then 
-            let mTo = Square.Parse(movetext.Substring(1, 2))
-            let tmpfile = File.Parse(movetext.[0])
-            let mFrom = ParseFilter board mTo mypawn tmpfile RANK_EMPTY
-            let promote = movetext.[3]|>Piece.ParseAsPiece(me)
-            Move.CreateProm mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType)
-        elif Regex.IsMatch(movetext, "^[BNRQK][abcdefgh][12345678]$") then 
-            let mTo = Square.Parse(movetext.Substring(1, 2))
-            let tmppiece = movetext.[0]|>Piece.ParseAsPiece(me)
-            let mFrom = ParseFilter board mTo tmppiece FILE_EMPTY RANK_EMPTY
-            Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-        elif Regex.IsMatch(movetext, "^[BNRQK][abcdefgh][abcdefgh][12345678]$") then 
-            let mTo = Square.Parse(movetext.Substring(2, 2))
-            let tmppiece = movetext.[0]|>Piece.ParseAsPiece(me)
-            let tmpfile = File.Parse(movetext.[1])
-            let mFrom = ParseFilter board mTo tmppiece tmpfile RANK_EMPTY
-            Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-        elif Regex.IsMatch(movetext, "^[BNRQK][12345678][abcdefgh][12345678]$") then 
-            let mTo = Square.Parse(movetext.Substring(2, 2))
-            let tmppiece = movetext.[0]|>Piece.ParseAsPiece(me)
-            let tmprank = Rank.Parse(movetext.[1])
-            let mFrom = ParseFilter board mTo tmppiece FILE_EMPTY tmprank
-            Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-        elif Regex.IsMatch(movetext, "^[BNRQK][abcdefgh][12345678][abcdefgh][12345678]$") then 
-            let mTo = Square.Parse(movetext.Substring(3, 2))
-            let tmppiece = movetext.[0]|>Piece.ParseAsPiece(me)
-            let tmpfile = File.Parse(movetext.[1])
-            let tmprank = Rank.Parse(movetext.[2])
-            let mFrom = ParseFilter board mTo tmppiece tmpfile tmprank
-            Move.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-        else failwith "invalid move format"
     
     let Desc(move : Move) = 
         (move|>Move.From|>Square.Name).ToLower() + (move|>Move.To|>Square.Name).ToLower() 
@@ -255,3 +95,12 @@ module MoveUtil =
         let mvs = MoveGenerate.AllMoves bd
         let fmvs = mvs|>List.filter(fun m -> m|>Desc=uci)
         if fmvs.Length=1 then Some(fmvs.Head) else None
+
+    ///Get a n encoded move from a SAN Move(move) such as Nf3 for this Board(bd)
+    let fromSAN (bd : Brd) (move : string) = 
+        move|>pMove.Parse|>pMove.ToMove bd
+
+    ///Make a SAN Move(move) such as Nf3 for this Board(bd) and return the new Board
+    let ApplySAN (move : string) (bd : Brd) = 
+        let mv = move|>fromSAN bd
+        bd|>Board.MoveApply mv
