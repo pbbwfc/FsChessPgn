@@ -15,4 +15,4 @@ let nbd =
     |>Board.PushSAN "Nf6"
     |>Board.PushSAN "Qxf7"
 
-let ismate = nbd|>Board.IsMate
+let ismate = nbd|>Board.IsCheckMate
