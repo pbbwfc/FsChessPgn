@@ -8,6 +8,7 @@ It is intended to be similar to the excellent [python-chess](https://github.com/
 
 This is the Scholar's mate in FsChessPgn:
 
+```fsharp
 #load "setup.fsx"
 open FsChess
 
@@ -26,9 +27,11 @@ let nbd =
     |>Board.PushSAN "Qxf7"
 
 let ismate = nbd|>Board.IsCheckMate
+```
 
 This produces these results in F# Interactive:
 
+```
 val board : FsChessPgn.Data.Types.Brd =
   rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 val mvs : FsChessPgn.Data.Types.Move list =
@@ -37,3 +40,4 @@ val mvs : FsChessPgn.Data.Types.Move list =
 val nbd : FsChessPgn.Data.Types.Brd =
   r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4
 val ismate : bool = true
+```
