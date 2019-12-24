@@ -2,12 +2,16 @@
 
 module Game =
 
+    let Start = GameEMP
+
     let MoveCount(mtel:MoveTextEntry list) =
         let mc(mte:MoveTextEntry) =
             match mte with
             |HalfMoveEntry(_) -> 1
             |_ -> 0
-        mtel|>List.map mc|>List.reduce(+)
+        if mtel.IsEmpty then 0
+        else
+            mtel|>List.map mc|>List.reduce(+)
         
     let FullMoveCount(mtel:MoveTextEntry list) = MoveCount(mtel)/2
 
@@ -17,7 +21,6 @@ module Game =
             |HalfMoveEntry(_,_,mv,_) -> [mv]
             |_ -> []
         mtel|>List.map gm|>List.concat
-
     
     let AddTag (tagstr:string) (gm:Game) =
         let getdt (dtstr:string) =
@@ -42,6 +45,41 @@ module Game =
         | "FEN" -> {gm with BoardSetup = v|>FEN.Parse|>Some}
         | _ ->
             {gm with AdditionalInfo=gm.AdditionalInfo.Add(k,v)}
+    
+    let AddMoveEntry (mte:MoveTextEntry) (gm:Game) =
+        {gm with MoveText=gm.MoveText@[mte]}
+
+    let RemoveMoveEntry (gm:Game) =
+        let mtel = gm.MoveText
+        let nmtel =
+            if mtel.IsEmpty then mtel
+            else
+                mtel|>List.rev|>List.tail|>List.rev
+        {gm with MoveText=nmtel}
+
+    let AddpMove (pmv:pMove) (gm:Game) =
+        let mtel = gm.MoveText
+        let mc = mtel|>MoveCount
+        let mn = if mc%2=0 then Some(mc/2+1) else None
+        let mte = HalfMoveEntry(mn,false,pmv,None)
+        gm|>AddMoveEntry mte
+            
+    let AddSan (san:string) (gm:Game) =
+        let pmv = san|>pMove.Parse
+        gm|>AddpMove pmv
+     
+    let pretty(gm:Game) = 
+        let mtel = gm.MoveText
+        if mtel.IsEmpty then "No moves"
+        elif mtel.Length<6 then
+            let mvstr =mtel|>List.map PgnWrite.MoveTextEntryStr|>List.reduce(fun a b -> a + " " + b)
+            "moves: " + mvstr
+        else
+            let rl = mtel|>List.rev
+            let l5 = mtel.[0..4]|>List.rev
+            let mvstr = l5|>List.map PgnWrite.MoveTextEntryStr|>List.reduce(fun a b -> a + " " + b)
+            "moves: ..." + mvstr
+   
     
     //TODO
     let SetaMoves(gm:Game) =

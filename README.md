@@ -73,12 +73,31 @@ This produces this image:
 #load "setup.fsx"
 open FsChess
 
+//Board code
 let board = Board.Start
 
 let new_board = board|>Board.PushSAN "e4"|>Board.PushSAN "e5"
 
-//TODO:Game
+//Game code
+let game = Game.Start
+
+let new_game = game|>Game.PushSAN "e4"|>Game.PushSAN "e5"|>Game.PushSAN "Nf3"
+
+let reduced_game = new_game|>Game.Pop
 ```
+
+This produces these results in F# Interactive:
+
+```
+val board : FsChessPgn.Types.Brd =
+  rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+val new_board : FsChessPgn.Types.Brd =
+  rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2
+val game : FsChessPgn.Types.Game = No moves
+val new_game : FsChessPgn.Types.Game = moves: 1. e4 e5 2. Nf3
+val reduced_game : FsChessPgn.Types.Game = moves: 1. e4 e5
+```
+
 
 * Show a simple ASCII board - *TODO*
 

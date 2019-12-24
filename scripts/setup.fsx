@@ -25,7 +25,8 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Games.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\PgnWriter.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FsChess.fs"
-open FsChessPgn
+open FsChess
 do
-    fsi.AddPrinter<Brd>(Board.ToStr)
-    fsi.AddPrinter<Move>(MoveUtil.Desc)
+    fsi.AddPrinter<FsChessPgn.Types.Brd>(Pretty.Board)
+    fsi.AddPrinter<FsChessPgn.Types.Move>(Pretty.Move)
+    fsi.AddPrinter<FsChessPgn.Types.Game>(Pretty.Game)

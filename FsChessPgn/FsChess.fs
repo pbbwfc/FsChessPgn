@@ -19,3 +19,20 @@ module Board =
 
     ///Creates a PNG image file with the specified name, flipped if specified for the given Board 
     let ToPng = FsChessPgn.Png.BoardToPng
+
+module Game =
+
+    ///The starting Game with no moves
+    let Start = FsChessPgn.Game.Start
+
+    ///Make a SAN Move such as Nf3 for this Game and return the new Game
+    let PushSAN = FsChessPgn.Game.AddSan
+
+    ///Pops a move of the end for this Game and return the new Game
+    let Pop = FsChessPgn.Game.RemoveMoveEntry
+
+module Pretty =
+
+    let Move = FsChessPgn.MoveUtil.Desc
+    let Board = FsChessPgn.Board.ToStr
+    let Game = FsChessPgn.Game.pretty
