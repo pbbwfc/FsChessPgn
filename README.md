@@ -63,7 +63,7 @@ do board|>Board.ToPng "c:/temp/fools.png" false
 ```
 This produces this image:
 
-![fools.png](https://github.com/pbbwfc/FsChessPgn/tree/master/docs/fools.png)
+![fools](https://github.com/pbbwfc/FsChessPgn/tree/master/docs/fools.png)
 
 
 
