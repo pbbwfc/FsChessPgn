@@ -63,8 +63,6 @@ do board|>Board.ToPng "c:/temp/fools.png" false
 ```
 This produces this image:
 
-
-![Screenshot](screenshot.png)
 ![fools](fools.png)
 
 
