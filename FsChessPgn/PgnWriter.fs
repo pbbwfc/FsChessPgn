@@ -1,7 +1,6 @@
 ﻿namespace FsChessPgn
 
 open System.IO
-open FsChessPgn.Data
 
 module PgnWriter =
 

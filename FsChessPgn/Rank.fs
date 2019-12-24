@@ -1,4 +1,4 @@
-﻿namespace FsChessPgn.Data
+﻿namespace FsChessPgn
 
 module Rank = 
     

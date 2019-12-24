@@ -14,6 +14,7 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FEN.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Move.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Board.fs"
+#load @"d:\GitHub\FsChessPgn\FsChessPgn\Png.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\MoveGenerate.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\PgnWrite.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\pMove.fs"
@@ -24,7 +25,7 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Games.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\PgnWriter.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FsChess.fs"
-open FsChessPgn.Data
+open FsChessPgn
 do
     fsi.AddPrinter<Brd>(Board.ToStr)
     fsi.AddPrinter<Move>(MoveUtil.Desc)

@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D95D5E-660B-4DBE-9C0D-3C9FCA10CA2C}"
 	ProjectSection(SolutionItems) = preProject
 		scripts\Readme1.fsx = scripts\Readme1.fsx
+		scripts\Readme2.fsx = scripts\Readme2.fsx
 		scripts\Script1.fsx = scripts\Script1.fsx
 		scripts\setup.fsx = scripts\setup.fsx
 	EndProjectSection

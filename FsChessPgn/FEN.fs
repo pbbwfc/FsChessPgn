@@ -1,4 +1,4 @@
-﻿namespace FsChessPgn.Data
+﻿namespace FsChessPgn
 
 open System.Text
 open System.Text.RegularExpressions

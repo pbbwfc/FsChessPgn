@@ -1,4 +1,4 @@
-﻿namespace FsChessPgn.Data
+﻿namespace FsChessPgn
 
 module PieceType = 
     let Parse(c : char) = 

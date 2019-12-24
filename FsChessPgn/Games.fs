@@ -2,7 +2,6 @@
 
 open System.IO
 open System.Text
-open FsChessPgn.Data
 
 module Games =
 

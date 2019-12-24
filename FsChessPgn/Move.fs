@@ -1,4 +1,4 @@
-﻿namespace FsChessPgn.Data
+﻿namespace FsChessPgn
 
 module Move = 
     let Create (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) = 
