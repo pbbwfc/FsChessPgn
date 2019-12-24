@@ -51,7 +51,21 @@ val ismate : bool = true
 
 * Witten using .NET Core and designed to use the latest version of F# Interactive.
 
-* Generates images of a Board in PNG format - *TODO*
+* Generates images of a Board in PNG format. We can use this script:
+
+```fsharp
+#load "setup.fsx"
+open FsChess
+
+let board = "r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4"|>Board.FromStr
+
+do board|>Board.ToPng "c:/temp/fools.png" false
+```
+This produces this image:
+
+![fools.png](https://github.com/pbbwfc/FsChessPgn/tree/master/docs/fools.png)
+
+
 
 * Can make moves given a Board. Can both make and unmake moves given a Game.
 
