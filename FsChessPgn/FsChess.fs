@@ -20,6 +20,10 @@ module Board =
     ///Creates a PNG image file with the specified name, flipped if specified for the given Board 
     let ToPng = FsChessPgn.Png.BoardToPng
 
+    ///Prints an ASCII version of this Board 
+    let Print = FsChessPgn.Board.PrintAscii
+
+
 module Game =
 
     ///The starting Game with no moves

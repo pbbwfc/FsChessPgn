@@ -231,6 +231,20 @@ module Board =
     
     ///Gets a FEN string for this Board(bd) 
     let ToStr (bd : Brd) = bd|>FEN.FromBd|>FEN.ToStr
-    
+
+    ///Prints an ASCII version of this Board(bd) 
+    let PrintAscii (bd : Brd) = 
+        for irank = 0 to 7 do
+            let getch ifile = 
+                let rank = RANKS.[irank]
+                let file = FILES.[ifile]
+                let piece = bd.PieceAt.[Sq(file,rank)] 
+                if piece = Piece.EMPTY then "." else piece|>Piece.PieceToString
+            let ln =
+                [0..7]
+                |>List.map getch
+                |>List.reduce(fun a b -> a + " " + b)
+            printfn "%s" ("    " + ln)
+
     ///The starting Board at the beginning of a game
     let Start = FEN.Start|>FromFEN
