@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D9
 		scripts\Readme2.fsx = scripts\Readme2.fsx
 		scripts\Readme3.fsx = scripts\Readme3.fsx
 		scripts\Readme4.fsx = scripts\Readme4.fsx
+		scripts\Readme5.fsx = scripts\Readme5.fsx
 		scripts\Script1.fsx = scripts\Script1.fsx
 		scripts\setup.fsx = scripts\setup.fsx
 	EndProjectSection

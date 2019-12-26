@@ -17,6 +17,9 @@ module Board =
     ///Is the current position on the Board checkmate?
     let IsCheckMate = FsChessPgn.MoveGenerate.IsMate 
 
+    ///Is the current position on the Board stalemate?
+    let IsStaleMate = FsChessPgn.MoveGenerate.IsDrawByStalemate 
+
     ///Creates a PNG image file with the specified name, flipped if specified for the given Board 
     let ToPng = FsChessPgn.Png.BoardToPng
 

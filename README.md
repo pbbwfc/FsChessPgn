@@ -114,7 +114,6 @@ board|>Board.Print
 This produces these results in F# Interactive:
 
 ```
-
     r . b q k b . r
     p p p p . Q p p
     . . n . . n . .
@@ -124,10 +123,29 @@ This produces these results in F# Interactive:
     P P P P . P P P
     R N B . K . N R
 val it : unit = ()
+```
+
+* Detects checkmates and stalemates:
+
+```fsharp
+
+#load "setup.fsx"
+open FsChess
+
+let board = Board.FromStr("r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
+let chk1 = board|>Board.IsCheckMate
+let chk2 = board|>Board.IsStaleMate
 
 ```
 
-* Detects checkmates, stalemates and draws by insufficient material.- *TODO*
+This produces these results in F# Interactive:
+
+```
+val board : FsChessPgn.Types.Brd =
+  r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4
+val chk1 : bool = true
+val chk2 : bool = false
+```
 
 * Detects checks and attacks.- *TODO*
 

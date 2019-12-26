@@ -223,8 +223,8 @@ module Board =
                   Fiftymove = fen.Fiftymove
                   Fullmove = fen.Fullmove
                   Checkers = bd
-                             |> AttacksToBoth(if bd.WhosTurn=Player.White then bd.WtKingPos else bd.BkKingPos)
-                             &&& (if (bd.WhosTurn|>Player.PlayerOther)=Player.White then bd.WtPrBds else bd.BkPrBds) }
+                             |> AttacksToBoth(if fen.Whosturn=Player.White then bd.WtKingPos else bd.BkKingPos)
+                             &&& (if fen.Whosturn=Player.Black then bd.WtPrBds else bd.BkPrBds) }
 
     ///Create a new Board given a FEN string(str)
     let FromStr (str: string) = str|>FEN.Parse|>FromFEN 

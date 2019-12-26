@@ -1,7 +1,7 @@
 ﻿// This is s simple sample to load a pgn file
 
 open FsChessPgn
-//open FsChess
+open FsChess
 
 [<EntryPoint>]
 let main argv =
@@ -10,10 +10,9 @@ let main argv =
         1
     else
         //test code
-        //let board = Board.Start
-        //let new_board = board|>Board.PushSAN "e4"|>Board.PushSAN "e5"
-        //let game = Game.Start
-        //let new_game = game|>Game.PushSAN "e4"|>Game.PushSAN "e5"|>Game.PushSAN "Nf3"
+
+        let board = Board.FromStr("r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
+        let chk1 = board|>Board.IsCheckMate
         //end
         let pgnfile = argv.[0]
         let pgn = pgnfile|>Games.ReadFromFile
