@@ -1,5 +1,6 @@
 ﻿namespace FsChessPgn.Test
 
+open FsChess
 open System.IO
 open FsChessPgn
 

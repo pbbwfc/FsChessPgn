@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module Board = 
     
     let private PieceMove (mfrom : Square) mto (bd : Brd) = 
@@ -94,8 +96,11 @@ module Board =
              &&& bd.PieceTypes.[int (PieceType.Pawn)])
     
     ///Gets the Bitboard that defines the squares that attack the specified Square(mto) by the specified Player(by) for this Board(bd) 
-    let internal AttacksTo (mto : Square) (by : Player) (bd : Brd) = bd|> AttacksToBoth(mto) &&& (if by=Player.White then bd.WtPrBds else bd.BkPrBds)
+    let AttacksTo (mto : Square) (by : Player) (bd : Brd) = bd|> AttacksToBoth(mto) &&& (if by=Player.White then bd.WtPrBds else bd.BkPrBds)
     
+    ///Gets the Squares that attack the specified Square(mto) by the specified Player(by) for this Board(bd) 
+    let SquareAttacksTo (mto : Square) (by : Player) (bd : Brd) = (AttacksTo mto by bd)|>Bitboard.ToSquares
+
     ///Is the Square(mto) attacked by the specified Player(by) for this Board(bd)
     let SquareAttacked (mto : Square) (by : Player) (bd : Brd) = bd|> AttacksTo mto by <> Bitboard.Empty
     
@@ -159,7 +164,7 @@ module Board =
         
         let bd = 
             if move |> Move.IsPawnDoubleJump then 
-                let ep = mfrom|>Square.PositionInDirectionUnsafe(move|>Move.MovingPlayer|>Player.MyNorth)
+                let ep = mfrom|>Square.PositionInDirectionUnsafe(move|>Move.MovingPlayer|>Direction.MyNorth)
                 { bd with EnPassant = ep}
             else bd
         
@@ -182,11 +187,11 @@ module Board =
     let IsChk(bd : Brd) = bd.Checkers <> Bitboard.Empty
     
     ///Is there a check on Player(kingplayer) on the Board(bd)
-    let IsCheck (kingplayer : Player) (bd : Brd) = 
+    let IsChck (kingplayer : Player) (bd : Brd) = 
         let kingpos = if kingplayer=Player.White then bd.WtKingPos else bd.BkKingPos
         bd |> SquareAttacked kingpos (kingplayer|>Player.PlayerOther)
     
-    let private PieceInDirection (from : Square) (dir : Direction) (bd : Brd) = 
+    let private PieceInDirection (from : Square) (dir : Dirn) (bd : Brd) = 
         let rec getpospc dist (pos : Square) pc = 
             if not (pos|>Square.IsInBounds) then pc, pos
             else 
@@ -199,7 +204,7 @@ module Board =
         getpospc 1 (from|>Square.PositionInDirection(dir)) Piece.EMPTY
     
     ///Create a new Board given a Fen(fen)
-    let FromFEN (fen : Fen) = 
+    let FromFEN (fen : FsChessPgn.Fen) = 
         let bd = BrdEMP
 
         let rec addpc posl ibd = 

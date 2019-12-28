@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module PieceType = 
     let Parse(c : char) = 
         match c with
@@ -17,6 +19,6 @@ module PieceType =
         | 'k' -> PieceType.King
         | _ -> failwith (c.ToString() + " is not a valid piece")
     
-    let ForPlayer (player : Player) (pt : PieceType) = (int (pt) ||| (int (player) <<< 3)) |> Pc
+    let ForPlayer (player : Player) (pt : PieceType) : Piece = (int (pt) ||| (int (player) <<< 3)) |> Pc
     
 

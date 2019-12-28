@@ -1,5 +1,6 @@
 ﻿namespace FsChessPgn
 
+open FsChess
 open System.IO
 
 module Png =
@@ -32,7 +33,6 @@ module Png =
                  if c = " " then "Chess_" + sqcol + "44.png"
                  else "Chess_" + pc + pccol + sqcol + "44.png"
              let pfn:string = System.IO.Path.Combine(imgsfol, fn) 
-             do printfn "filenm: %s" pfn
              let img:System.Drawing.Bitmap = new System.Drawing.Bitmap(pfn)
              img
      

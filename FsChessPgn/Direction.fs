@@ -1,35 +1,60 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
+type Dirn = 
+    | DirN = -8
+    | DirE = 1
+    | DirS = 8
+    | DirW = -1
+    | DirNE = -7
+    | DirSE = 9
+    | DirSW = 7
+    | DirNW = -9
+    | DirNNE = -15
+    | DirEEN = -6
+    | DirEES = 10
+    | DirSSE = 17
+    | DirSSW = 15
+    | DirWWS = 6
+    | DirWWN = -10
+    | DirNNW = -17
+
 module Direction =
 
     let AllDirectionsKnight = 
-        [| Direction.DirNNE; Direction.DirEEN; Direction.DirEES; Direction.DirSSE; Direction.DirSSW; Direction.DirWWS; 
-           Direction.DirWWN; Direction.DirNNW |]
-    let AllDirectionsRook = [| Direction.DirN; Direction.DirE; Direction.DirS; Direction.DirW |]
-    let AllDirectionsBishop = [| Direction.DirNE; Direction.DirSE; Direction.DirSW; Direction.DirNW |]
+        [| Dirn.DirNNE; Dirn.DirEEN; Dirn.DirEES; Dirn.DirSSE; Dirn.DirSSW; Dirn.DirWWS; 
+           Dirn.DirWWN; Dirn.DirNNW |]
+    let AllDirectionsRook = [| Dirn.DirN; Dirn.DirE; Dirn.DirS; Dirn.DirW |]
+    let AllDirectionsBishop = [| Dirn.DirNE; Dirn.DirSE; Dirn.DirSW; Dirn.DirNW |]
     let AllDirectionsQueen = 
-        [| Direction.DirN; Direction.DirE; Direction.DirS; Direction.DirW; Direction.DirNE; Direction.DirSE; 
-           Direction.DirSW; Direction.DirNW |]
+        [| Dirn.DirN; Dirn.DirE; Dirn.DirS; Dirn.DirW; Dirn.DirNE; Dirn.DirSE; 
+           Dirn.DirSW; Dirn.DirNW |]
     let AllDirections = 
-        [| Direction.DirN; Direction.DirE; Direction.DirS; Direction.DirW; Direction.DirNE; Direction.DirSE; 
-           Direction.DirSW; Direction.DirNW; Direction.DirNNE; Direction.DirEEN; Direction.DirEES; Direction.DirSSE; 
-           Direction.DirSSW; Direction.DirWWS; Direction.DirWWN; Direction.DirNNW |]
+        [| Dirn.DirN; Dirn.DirE; Dirn.DirS; Dirn.DirW; Dirn.DirNE; Dirn.DirSE; 
+           Dirn.DirSW; Dirn.DirNW; Dirn.DirNNE; Dirn.DirEEN; Dirn.DirEES; Dirn.DirSSE; 
+           Dirn.DirSSW; Dirn.DirWWS; Dirn.DirWWN; Dirn.DirNNW |]
 
-    let IsDirectionRook(dir : Direction) = 
+    let IsDirectionRook(dir : Dirn) = 
         match dir with
-        | Direction.DirN | Direction.DirE | Direction.DirS | Direction.DirW -> true
+        | Dirn.DirN | Dirn.DirE | Dirn.DirS | Dirn.DirW -> true
         | _ -> false
 
-    let IsDirectionBishop(dir : Direction) = 
+    let IsDirectionBishop(dir : Dirn) = 
         match dir with
-        | Direction.DirNW | Direction.DirNE | Direction.DirSW | Direction.DirSE -> true
+        | Dirn.DirNW | Dirn.DirNE | Dirn.DirSW | Dirn.DirSE -> true
         | _ -> false
 
-    let IsDirectionKnight(dir : Direction) = 
+    let IsDirectionKnight(dir : Dirn) = 
         match dir with
-        | Direction.DirNNE | Direction.DirEEN | Direction.DirEES | Direction.DirSSE 
-        | Direction.DirSSW | Direction.DirWWS | Direction.DirWWN | Direction.DirNNW -> 
+        | Dirn.DirNNE | Dirn.DirEEN | Dirn.DirEES | Dirn.DirSSE 
+        | Dirn.DirSSW | Dirn.DirWWS | Dirn.DirWWN | Dirn.DirNNW -> 
             true
         | _ -> false
 
-    let Opposite(dir : Direction) = -int (dir) |> Dirn
+    let Opposite(dir : Dirn) :Dirn = -int (dir)|>enum<Dirn>
+
+    let MyNorth(player : Player) = 
+        if player = Player.White then Dirn.DirN
+
+        else Dirn.DirS

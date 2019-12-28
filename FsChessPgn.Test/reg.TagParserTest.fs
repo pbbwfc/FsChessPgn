@@ -1,5 +1,6 @@
 ﻿namespace FsChessPgn.Test
 
+open FsChess
 open FsChessPgn
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
@@ -71,20 +72,17 @@ type TagRegParserTests() =
         let gm = gml.Head
         Assert.AreEqual(true,gm.BoardSetup.IsSome)
         let setup = gm.BoardSetup.Value
-        Assert.AreEqual(Piece.BRook, setup.Pieceat.[Sq(FileA,Rank8)|>int])
-        Assert.AreEqual(Piece.WKnight, setup.Pieceat.[Sq(FileB,Rank1)|>int])
-        Assert.AreEqual(Piece.BBishop, setup.Pieceat.[Sq(FileC,Rank8)|>int])
-        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[Sq(FileC,Rank3)|>int])
-        Assert.AreEqual(Piece.WKing, setup.Pieceat.[Sq(FileE,Rank1)|>int])
+        Assert.AreEqual(Piece.BRook, setup.PieceAt.[Sq(FileA,Rank8)|>int])
+        Assert.AreEqual(Piece.WKnight, setup.PieceAt.[Sq(FileB,Rank1)|>int])
+        Assert.AreEqual(Piece.BBishop, setup.PieceAt.[Sq(FileC,Rank8)|>int])
+        Assert.AreEqual(Piece.EMPTY, setup.PieceAt.[Sq(FileC,Rank3)|>int])
+        Assert.AreEqual(Piece.WKing, setup.PieceAt.[Sq(FileE,Rank1)|>int])
 
-        Assert.AreEqual(Player.White, setup.Whosturn)
+        Assert.AreEqual(Player.White, setup.WhosTurn)
 
-        Assert.AreEqual(true, setup.CastleWS)
-        Assert.AreEqual(true, setup.CastleWL)
-        Assert.AreEqual(true, setup.CastleBS)
-        Assert.AreEqual(true, setup.CastleBL)
+        Assert.AreEqual(CstlFlgs.All, setup.CastleRights)
 
-        Assert.AreEqual(OUTOFBOUNDS, setup.Enpassant)
+        Assert.AreEqual(OUTOFBOUNDS, setup.EnPassant)
 
         Assert.AreEqual(0, setup.Fiftymove)
         Assert.AreEqual(1, setup.Fullmove)
@@ -97,21 +95,18 @@ type TagRegParserTests() =
         let gm = gml.Head
         Assert.AreEqual(true,gm.BoardSetup.IsSome)
         let setup = gm.BoardSetup.Value
-        Assert.AreEqual(Piece.BRook, setup.Pieceat.[Sq(FileA,Rank8)|>int])
-        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[Sq(FileB,Rank7)|>int])
-        Assert.AreEqual(Piece.BPawn, setup.Pieceat.[Sq(FileC,Rank5)|>int])
-        Assert.AreEqual(Piece.WPawn, setup.Pieceat.[Sq(FileE,Rank4)|>int])
-        Assert.AreEqual(Piece.EMPTY, setup.Pieceat.[Sq(FileE,Rank2)|>int])
-        Assert.AreEqual(Piece.WKing, setup.Pieceat.[Sq(FileE,Rank1)|>int])
+        Assert.AreEqual(Piece.BRook, setup.PieceAt.[Sq(FileA,Rank8)|>int])
+        Assert.AreEqual(Piece.BPawn, setup.PieceAt.[Sq(FileB,Rank7)|>int])
+        Assert.AreEqual(Piece.BPawn, setup.PieceAt.[Sq(FileC,Rank5)|>int])
+        Assert.AreEqual(Piece.WPawn, setup.PieceAt.[Sq(FileE,Rank4)|>int])
+        Assert.AreEqual(Piece.EMPTY, setup.PieceAt.[Sq(FileE,Rank2)|>int])
+        Assert.AreEqual(Piece.WKing, setup.PieceAt.[Sq(FileE,Rank1)|>int])
 
-        Assert.AreEqual(Player.Black, setup.Whosturn)
+        Assert.AreEqual(Player.Black, setup.WhosTurn)
 
-        Assert.AreEqual(true, setup.CastleWS)
-        Assert.AreEqual(false, setup.CastleWL)
-        Assert.AreEqual(false, setup.CastleBS)
-        Assert.AreEqual(true, setup.CastleBL)
+        Assert.AreEqual(CstlFlgs.WhiteShort|||CstlFlgs.BlackLong, setup.CastleRights)
 
-        Assert.AreEqual(C6, setup.Enpassant)
+        Assert.AreEqual(C6, setup.EnPassant)
 
         Assert.AreEqual(1, setup.Fiftymove)
         Assert.AreEqual(2, setup.Fullmove)

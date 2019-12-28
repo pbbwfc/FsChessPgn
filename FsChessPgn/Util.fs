@@ -1,8 +1,9 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 [<AutoOpen>]
 module Util =
-    let Dirn i = enum<Direction> (i)
     let CasFlg i = enum<CstlFlgs> (i)
     let PcTp i = enum<PieceType> (i)
     let Pc i = enum<Piece> (i)

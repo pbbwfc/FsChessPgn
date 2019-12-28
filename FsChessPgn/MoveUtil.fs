@@ -1,5 +1,6 @@
 ﻿namespace FsChessPgn
 
+open FsChess
 open System.Text
 
 module MoveUtil = 
@@ -63,7 +64,7 @@ module MoveUtil =
             
             let pu, fu, ru = 
                 getuniqs true true true 
-                    ((board|>Board.AttacksTo (move|>Move.To) (piece|>Piece.PieceToPlayer))|>Bitboard.ToPositions)
+                    ((board|>Board.AttacksTo (move|>Move.To) (piece|>Piece.PieceToPlayer))|>Bitboard.ToSquares)
             sb.Append(sPiece) |> ignore
             if pu then ()
             elif fu then sb.Append(sFile) |> ignore

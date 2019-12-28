@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module Piece = 
     
     let Parse(c : char) = 

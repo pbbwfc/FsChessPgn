@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module Move = 
     let Create (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) = 
         (int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16))

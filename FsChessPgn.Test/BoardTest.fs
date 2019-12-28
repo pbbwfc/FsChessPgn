@@ -1,5 +1,6 @@
 ﻿namespace FsChessPgn.Test
 
+open FsChess
 open FsChessPgn
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
@@ -24,7 +25,7 @@ type BoardTest()=
     [<TestMethod>]
     member this.Board_IsCheck() =
         let ic = brd1|>Board.IsChk
-        let ic2 = brd1|>Board.IsCheck Player.White
+        let ic2 = brd1|>Board.IsChck Player.White
         Assert.AreEqual(false,ic)
         Assert.AreEqual(false,ic2)
 

@@ -32,12 +32,12 @@ let ismate = nbd|>Board.IsCheckMate
 This produces these results in F# Interactive:
 
 ```
-val board : FsChessPgn.Types.Brd =
+val board : FsChess.Types.Brd =
   rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-val mvs : FsChessPgn.Types.Move list =
+val mvs : FsChess.Types.Move list =
   [h2h4; g2g4; f2f4; e2e4; d2d4; c2c4; b2b4; a2a4; h2h3; g2g3; f2f3; e2e3;
    d2d3; c2c3; b2b3; a2a3; g1h3; g1f3; b1c3; b1a3]
-val nbd : FsChessPgn.Types.Brd =
+val nbd : FsChess.Types.Brd =
   r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4
 val ismate : bool = true
 ```
@@ -89,13 +89,13 @@ let reduced_game = new_game|>Game.Pop
 This produces these results in F# Interactive:
 
 ```
-val board : FsChessPgn.Types.Brd =
+val board : FsChess.Types.Brd =
   rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-val new_board : FsChessPgn.Types.Brd =
+val new_board : FsChess.Types.Brd =
   rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2
-val game : FsChessPgn.Types.Game = No moves
-val new_game : FsChessPgn.Types.Game = moves: 1. e4 e5 2. Nf3
-val reduced_game : FsChessPgn.Types.Game = moves: 1. e4 e5
+val game : FsChess.Types.Game = No moves
+val new_game : FsChess.Types.Game = moves: 1. e4 e5 2. Nf3
+val reduced_game : FsChess.Types.Game = moves: 1. e4 e5
 ```
 
 
@@ -141,13 +141,35 @@ let chk2 = board|>Board.IsStaleMate
 This produces these results in F# Interactive:
 
 ```
-val board : FsChessPgn.Types.Brd =
+val board : Brd =
   r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4
 val chk1 : bool = true
 val chk2 : bool = false
 ```
 
-* Detects checks and attacks.- *TODO*
+* Detects checks and attacks:
+
+```fsharp
+
+#load "setup.fsx"
+open FsChess
+
+let board = Board.FromStr("r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
+let chk1 = board|>Board.IsCheck
+let chk2 = board|>Board.SquareAttacked E8 Player.White
+let attackers = board|>Board.SquareAttackers F3 Player.White
+
+```
+
+This produces these results in F# Interactive:
+
+```
+val board : FsChess.Types.Brd =
+  r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4
+val chk1 : bool = true
+val chk2 : bool = true
+val attackers : FsChess.Types.Square list = [g2; g1]
+```
 
 * Parses and creates SAN representation of moves.- *TODO*
 

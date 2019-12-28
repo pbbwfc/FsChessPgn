@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module GameResult = 
     
     let Parse(s : string) = 

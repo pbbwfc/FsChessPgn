@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module Square = 
     
     let Parse(s : string) = 
@@ -46,11 +48,11 @@ module Square =
         let rankto = int (pto |> ToRank)
         let fileto = int (pto |> ToFile)
         if fileto = filefrom then 
-            if rankfrom < rankto then Direction.DirS
-            else Direction.DirN
+            if rankfrom < rankto then Dirn.DirS
+            else Dirn.DirN
         elif rankfrom = rankto then 
-            if filefrom > fileto then Direction.DirW
-            else Direction.DirE
+            if filefrom > fileto then Dirn.DirW
+            else Dirn.DirE
         else 
             let rankchange = rankto - rankfrom
             let filechange = fileto - filefrom
@@ -64,17 +66,17 @@ module Square =
                 else -filechange
             
             if (rankchangeabs = 1 && filechangeabs = 2) || (rankchangeabs = 2 && filechangeabs = 1) then 
-                ((rankchange * 8) + filechange) |> Dirn
-            elif rankchangeabs <> filechangeabs then 0 |> Dirn
+                ((rankchange * 8) + filechange) |> enum<Dirn>
+            elif rankchangeabs <> filechangeabs then 0 |> enum<Dirn>
             elif rankchange < 0 then 
-                if filechange > 0 then Direction.DirNE
-                else Direction.DirNW
-            else if filechange > 0 then Direction.DirSE
-            else Direction.DirSW
+                if filechange > 0 then Dirn.DirNE
+                else Dirn.DirNW
+            else if filechange > 0 then Dirn.DirSE
+            else Dirn.DirSW
     
-    let PositionInDirectionUnsafe (dir : Direction) (pos : Square) :Square= ((int) pos + (int) dir)
+    let PositionInDirectionUnsafe (dir : Dirn) (pos : Square) :Square= ((int) pos + (int) dir)
     
-    let PositionInDirection (dir : Direction) (pos : Square) = 
+    let PositionInDirection (dir : Dirn) (pos : Square) = 
         if not (pos |> IsInBounds) then OUTOFBOUNDS
         else 
             let f = pos |> ToFile
@@ -82,22 +84,22 @@ module Square =
             
             let nr, nf = 
                 match dir with
-                | Direction.DirN -> r -! 1, f
-                | Direction.DirE -> r, f ++ 1
-                | Direction.DirS -> r +! 1, f
-                | Direction.DirW -> r, f -- 1
-                | Direction.DirNE -> r -! 1, f ++ 1
-                | Direction.DirSE -> r +! 1, f ++ 1
-                | Direction.DirSW -> r +! 1, f -- 1
-                | Direction.DirNW -> r -! 1, f -- 1
-                | Direction.DirNNE -> r -! 2, f ++ 1
-                | Direction.DirEEN -> r -! 1, f ++ 2
-                | Direction.DirEES -> r +! 1, f ++ 2
-                | Direction.DirSSE -> r +! 2, f ++ 1
-                | Direction.DirSSW -> r +! 2, f -- 1
-                | Direction.DirWWS -> r +! 1, f -- 2
-                | Direction.DirWWN -> r -! 1, f -- 2
-                | Direction.DirNNW -> r -! 2, f -- 1
+                | Dirn.DirN -> r -! 1, f
+                | Dirn.DirE -> r, f ++ 1
+                | Dirn.DirS -> r +! 1, f
+                | Dirn.DirW -> r, f -- 1
+                | Dirn.DirNE -> r -! 1, f ++ 1
+                | Dirn.DirSE -> r +! 1, f ++ 1
+                | Dirn.DirSW -> r +! 1, f -- 1
+                | Dirn.DirNW -> r -! 1, f -- 1
+                | Dirn.DirNNE -> r -! 2, f ++ 1
+                | Dirn.DirEEN -> r -! 1, f ++ 2
+                | Dirn.DirEES -> r +! 1, f ++ 2
+                | Dirn.DirSSE -> r +! 2, f ++ 1
+                | Dirn.DirSSW -> r +! 2, f -- 1
+                | Dirn.DirWWS -> r +! 1, f -- 2
+                | Dirn.DirWWN -> r -! 1, f -- 2
+                | Dirn.DirNNW -> r -! 2, f -- 1
                 | _ -> RANK_EMPTY, FILE_EMPTY
             if nr = RANK_EMPTY && nf = FILE_EMPTY then OUTOFBOUNDS
             elif (nr |> Rank.IsInBounds) && (nf |> File.IsInBounds) then Sq(nf,nr)

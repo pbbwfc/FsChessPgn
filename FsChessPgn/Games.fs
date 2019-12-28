@@ -1,5 +1,6 @@
 ﻿namespace FsChessPgn
 
+open FsChess
 open System.IO
 open System.Text
 

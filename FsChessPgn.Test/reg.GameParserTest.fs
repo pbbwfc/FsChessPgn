@@ -1,6 +1,7 @@
 ﻿#nowarn "25"
 namespace FsChessPgn.Test
 
+open FsChess
 open FsChessPgn
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
@@ -97,15 +98,12 @@ type GameRegParserTest() =
         Assert.AreEqual(1, gml.Length)
         let game = gml.Head
         let setup= game.BoardSetup.Value
-        Assert.AreEqual(Piece.BKing, setup.Pieceat.[Sq(FileE,Rank8)|>int])
-        Assert.AreEqual(Piece.WPawn, setup.Pieceat.[Sq(FileE,Rank2)|>int])
-        Assert.AreEqual(Piece.WKing, setup.Pieceat.[Sq(FileE,Rank1)|>int])
-        Assert.AreEqual(Player.White, setup.Whosturn)
-        Assert.AreEqual(false, setup.CastleWS)
-        Assert.AreEqual(false, setup.CastleWL)
-        Assert.AreEqual(false, setup.CastleBS)
-        Assert.AreEqual(false, setup.CastleBL)
-        Assert.AreEqual(OUTOFBOUNDS, setup.Enpassant)
+        Assert.AreEqual(Piece.BKing, setup.PieceAt.[Sq(FileE,Rank8)|>int])
+        Assert.AreEqual(Piece.WPawn, setup.PieceAt.[Sq(FileE,Rank2)|>int])
+        Assert.AreEqual(Piece.WKing, setup.PieceAt.[Sq(FileE,Rank1)|>int])
+        Assert.AreEqual(Player.White, setup.WhosTurn)
+        Assert.AreEqual(CstlFlgs.EMPTY, setup.CastleRights)
+        Assert.AreEqual(OUTOFBOUNDS, setup.EnPassant)
         Assert.AreEqual(5, setup.Fiftymove)
         Assert.AreEqual(39, setup.Fullmove)
 

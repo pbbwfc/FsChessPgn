@@ -14,11 +14,20 @@ module Board =
     ///Make a SAN Move such as Nf3 for this Board and return the new Board
     let PushSAN = FsChessPgn.MoveUtil.ApplySAN
 
+    ///Is there a check on the Board
+    let IsCheck = FsChessPgn.Board.IsChk
+    
     ///Is the current position on the Board checkmate?
     let IsCheckMate = FsChessPgn.MoveGenerate.IsMate 
 
     ///Is the current position on the Board stalemate?
     let IsStaleMate = FsChessPgn.MoveGenerate.IsDrawByStalemate 
+
+    ///Is the Square attacked by the specified Player for this Board
+    let SquareAttacked = FsChessPgn.Board.SquareAttacked
+    
+    ///The Squares that attack the specified Square by the specified Player for this Board
+    let SquareAttackers = FsChessPgn.Board.SquareAttacksTo
 
     ///Creates a PNG image file with the specified name, flipped if specified for the given Board 
     let ToPng = FsChessPgn.Png.BoardToPng
@@ -40,6 +49,7 @@ module Game =
 
 module Pretty =
 
+    let Square = FsChessPgn.Square.Name
     let Move = FsChessPgn.MoveUtil.Desc
     let Board = FsChessPgn.Board.ToStr
     let Game = FsChessPgn.Game.pretty

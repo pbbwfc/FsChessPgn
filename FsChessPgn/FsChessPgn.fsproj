@@ -89,6 +89,7 @@
     </Content>
     <Compile Include="Types.fs" />
     <Compile Include="Util.fs" />
+    <Compile Include="Direction.fs" />
     <Compile Include="Player.fs" />
     <Compile Include="PieceType.fs" />
     <Compile Include="Piece.fs" />
@@ -98,7 +99,6 @@
     <Compile Include="GameResult.fs" />
     <Compile Include="Annotation.fs" />
     <Compile Include="Bitboard.fs" />
-    <Compile Include="Direction.fs" />
     <Compile Include="Attacks.fs" />
     <Compile Include="FEN.fs" />
     <Compile Include="Move.fs" />

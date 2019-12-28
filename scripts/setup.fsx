@@ -1,5 +1,6 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Types.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Util.fs"
+#load @"d:\GitHub\FsChessPgn\FsChessPgn\Direction.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Player.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\PieceType.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Piece.fs"
@@ -9,7 +10,6 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\GameResult.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Annotation.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Bitboard.fs"
-#load @"d:\GitHub\FsChessPgn\FsChessPgn\Direction.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Attacks.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FEN.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Move.fs"
@@ -27,6 +27,7 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FsChess.fs"
 open FsChess
 do
-    fsi.AddPrinter<FsChessPgn.Types.Brd>(Pretty.Board)
-    fsi.AddPrinter<FsChessPgn.Types.Move>(Pretty.Move)
-    fsi.AddPrinter<FsChessPgn.Types.Game>(Pretty.Game)
+    fsi.AddPrinter<Brd>(Pretty.Board)
+    fsi.AddPrinter<Move>(Pretty.Move)
+    fsi.AddPrinter<Square>(Pretty.Square)
+    fsi.AddPrinter<Game>(Pretty.Game)

@@ -1,10 +1,21 @@
 ﻿namespace FsChessPgn
 
+open FsChess
 open System.Text
 open System.Text.RegularExpressions
 
+type Fen = 
+    { Pieceat : Piece list
+      Whosturn : Player
+      CastleWS : bool
+      CastleWL : bool
+      CastleBS : bool
+      CastleBL : bool
+      Enpassant : Square
+      Fiftymove : int
+      Fullmove : int }
+
 module FEN = 
-    
     let ToStr(fen : Fen) = 
         let sb = new StringBuilder(50)
         for irank = 0 to 7 do

@@ -1,9 +1,11 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module Attacks =
 
     let Combinations(mask : Bitboard) = 
-        let posl = mask |> Bitboard.ToPositions
+        let posl = mask |> Bitboard.ToSquares
         let possCombs = 1 <<< (posl.Length)
     
         let getc i = 
@@ -15,7 +17,7 @@ module Attacks =
         [ 0..possCombs - 1 ] |> List.map getc
 
     let RookMaskCalc(position : Square) = 
-        let rec getr d (p : Square) rv = 
+        let rec getr (d:Dirn) (p : Square) rv = 
             if p
                |> Square.PositionInDirection(d)
                = OUTOFBOUNDS then rv
@@ -242,11 +244,11 @@ module Attacks =
         let getp pr sq = 
             let board = 
                 Bitboard.Empty 
-                ||| (((sq |> Square.PositionInDirection(pr |> Player.MyNorth)) 
-                      |> Square.PositionInDirection(Direction.DirE)) |> Square.ToBitboard) 
-                ||| (((sq |> Square.PositionInDirection(pr |> Player.MyNorth)) 
-                      |> Square.PositionInDirection(Direction.DirW)) |> Square.ToBitboard)
-            board, (board |> Bitboard.Flood(pr |> Player.MyNorth))
+                ||| (((sq |> Square.PositionInDirection(pr |> Direction.MyNorth)) 
+                      |> Square.PositionInDirection(Dirn.DirE)) |> Square.ToBitboard) 
+                ||| (((sq |> Square.PositionInDirection(pr |> Direction.MyNorth)) 
+                      |> Square.PositionInDirection(Dirn.DirW)) |> Square.ToBitboard)
+            board, (board |> Bitboard.Flood(pr |> Direction.MyNorth))
     
         let getps pr = 
             SQUARES

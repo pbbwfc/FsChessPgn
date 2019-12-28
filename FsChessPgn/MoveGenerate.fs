@@ -1,15 +1,23 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module MoveGenerate = 
     
-    let private legal(bd: Brd) (mvs:Move list) =
+    let private legal (bd: Brd) (mvs:Move list) =
         let me = bd.WhosTurn
 
-        let filt mv = 
-            let bd = bd |> Board.MoveApply(mv)
-            let resultsInCheck = bd |> Board.IsCheck(me)
-            not resultsInCheck
-        mvs |> List.filter filt
+        let rec filt (imvl:Move list) omvl = 
+            if imvl.IsEmpty then omvl|>List.rev
+            else
+                let mv = imvl.Head
+                let nbd = bd |> Board.MoveApply(mv)
+                let inchk:bool = (nbd |> Board.IsChck me)
+                if inchk then filt imvl.Tail omvl
+                else filt imvl.Tail (mv::omvl)
+
+        let lmvs = filt mvs []
+        lmvs
 
     let KingMoves (bd : Brd) :Move list = 
         let me = bd.WhosTurn
@@ -177,20 +185,20 @@ module MoveGenerate =
         else
 
             let mypawnwest = 
-                if bd.WhosTurn = Player.White then Direction.DirNW
-                else Direction.DirSW
+                if bd.WhosTurn = Player.White then Dirn.DirNW
+                else Dirn.DirSW
 
             let mypawneast = 
-                if bd.WhosTurn = Player.White then Direction.DirNE
-                else Direction.DirSE
+                if bd.WhosTurn = Player.White then Dirn.DirNE
+                else Dirn.DirSE
 
             let mypawnnorth = 
-                if bd.WhosTurn = Player.White then Direction.DirN
-                else Direction.DirS
+                if bd.WhosTurn = Player.White then Dirn.DirN
+                else Dirn.DirS
 
             let mypawnsouth = 
-                if bd.WhosTurn = Player.White then Direction.DirS
-                else Direction.DirN
+                if bd.WhosTurn = Player.White then Dirn.DirS
+                else Dirn.DirN
 
             let myrank8 = 
                 if bd.WhosTurn = Player.White then Rank8
@@ -257,7 +265,7 @@ module MoveGenerate =
                         getPcaps capDir natt imvl
             
             let attacks = (piecePositions |> Bitboard.Shift(mypawneast)) &&& targLocations
-            let pcaps = getPcaps mypawneast attacks []
+            let pcaps:Move list = getPcaps mypawneast attacks []
             
             let rec getPones att imvl = 
                 if att = Bitboard.Empty then imvl
@@ -291,7 +299,7 @@ module MoveGenerate =
             
             let moveLocations = (~~~bd.PieceLocationsAll) &&& evasionTargets
             let attacks = (moveLocations |> Bitboard.Shift(mypawnsouth)) &&& piecePositions
-            let pones = getPones attacks []
+            let pones:Move list = getPones attacks []
             
             let rec getPtwos att imvl = 
                 if att = Bitboard.Empty then imvl
@@ -313,7 +321,7 @@ module MoveGenerate =
                 (myrank2 |> Rank.ToBitboard) &&& piecePositions 
                 &&& ((moveLocations |> Bitboard.Shift(mypawnsouth)) |> Bitboard.Shift(mypawnsouth)) 
                 &&& (~~~bd.PieceLocationsAll |> Bitboard.Shift(mypawnsouth))
-            let ptwos = getPtwos attacks []
+            let ptwos:Move list = getPtwos attacks []
 
             (ptwos@pones@pcaps)|>legal(bd)
 

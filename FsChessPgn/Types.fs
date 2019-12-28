@@ -1,4 +1,4 @@
-﻿namespace FsChessPgn
+﻿namespace FsChess
 
 module AssemblyInfo=
 
@@ -81,35 +81,6 @@ module Types =
         ] 
     let SQUARE_NAMES = [for r in RANK_NAMES do for f in FILE_NAMES -> f+r]
     let Sq(f:File,r:Rank) :Square = (int (r) * 8 + int (f))
-    
-    type Direction = 
-        | DirN = -8
-        | DirE = 1
-        | DirS = 8
-        | DirW = -1
-        | DirNE = -7
-        | DirSE = 9
-        | DirSW = 7
-        | DirNW = -9
-        | DirNNE = -15
-        | DirEEN = -6
-        | DirEES = 10
-        | DirSSE = 17
-        | DirSSW = 15
-        | DirWWS = 6
-        | DirWWN = -10
-        | DirNNW = -17
-    
-    type Fen = 
-        { Pieceat : Piece list
-          Whosturn : Player
-          CastleWS : bool
-          CastleWL : bool
-          CastleBS : bool
-          CastleBL : bool
-          Enpassant : Square
-          Fiftymove : int
-          Fullmove : int }
     
     [<System.Flags>]
     type CstlFlgs = 
@@ -291,7 +262,7 @@ module Types =
             WhitePlayer : string
             BlackPlayer : string
             Result : GameResult
-            BoardSetup : Fen option
+            BoardSetup : Brd option
             AdditionalInfo : Map<string,string>
             MoveText : MoveTextEntry list
         }

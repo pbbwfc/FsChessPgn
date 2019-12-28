@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module MoveTextEntry =
 
     let Parse(s : string) =

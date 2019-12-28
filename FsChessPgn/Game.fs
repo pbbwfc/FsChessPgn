@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module Game =
 
     let Start = GameEMP
@@ -42,7 +44,7 @@ module Game =
         | "White" -> {gm with WhitePlayer = v}
         | "Black" -> {gm with BlackPlayer = v}
         | "Result" -> {gm with Result = v|>GameResult.Parse}
-        | "FEN" -> {gm with BoardSetup = v|>FEN.Parse|>Some}
+        | "FEN" -> {gm with BoardSetup = v|>FEN.Parse|>Board.FromFEN|>Some}
         | _ ->
             {gm with AdditionalInfo=gm.AdditionalInfo.Add(k,v)}
     
@@ -94,7 +96,7 @@ module Game =
                     setamv pmvl.Tail amv.PostBrd (nmte::opmvl)
                 |_ -> setamv pmvl.Tail bd (mte::opmvl)
         
-        let ibd = if gm.BoardSetup.IsSome then gm.BoardSetup.Value|>Board.FromFEN else Board.Start
+        let ibd = if gm.BoardSetup.IsSome then gm.BoardSetup.Value else Board.Start
         let nmt = setamv gm.MoveText ibd []
         {gm with MoveText=nmt}
 

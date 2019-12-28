@@ -1,5 +1,7 @@
 ﻿namespace FsChessPgn
 
+open FsChess
+
 module Bitboard =
 
     let DebrujinPositions = 
@@ -64,43 +66,43 @@ module Bitboard =
     
     let Shift dir (ibb : Bitboard) = 
         match dir with
-        | Direction.DirN -> ibb |> ShiftDirN
-        | Direction.DirE -> ibb |> ShiftDirE
-        | Direction.DirS -> ibb |> ShiftDirS
-        | Direction.DirW -> ibb |> ShiftDirW
-        | Direction.DirNE -> ibb |> ShiftDirNE
-        | Direction.DirSE -> ibb |> ShiftDirSE
-        | Direction.DirSW -> ibb |> ShiftDirSW
-        | Direction.DirNW -> ibb |> ShiftDirNW
-        | Direction.DirNNE -> 
+        | Dirn.DirN -> ibb |> ShiftDirN
+        | Dirn.DirE -> ibb |> ShiftDirE
+        | Dirn.DirS -> ibb |> ShiftDirS
+        | Dirn.DirW -> ibb |> ShiftDirW
+        | Dirn.DirNE -> ibb |> ShiftDirNE
+        | Dirn.DirSE -> ibb |> ShiftDirSE
+        | Dirn.DirSW -> ibb |> ShiftDirSW
+        | Dirn.DirNW -> ibb |> ShiftDirNW
+        | Dirn.DirNNE -> 
             ibb
             |> ShiftDirNE
             |> ShiftDirN
-        | Direction.DirEEN -> 
+        | Dirn.DirEEN -> 
             ibb
             |> ShiftDirNE
             |> ShiftDirE
-        | Direction.DirEES -> 
+        | Dirn.DirEES -> 
             ibb
             |> ShiftDirSE
             |> ShiftDirE
-        | Direction.DirSSE -> 
+        | Dirn.DirSSE -> 
             ibb
             |> ShiftDirSE
             |> ShiftDirS
-        | Direction.DirSSW -> 
+        | Dirn.DirSSW -> 
             ibb
             |> ShiftDirSW
             |> ShiftDirS
-        | Direction.DirWWS -> 
+        | Dirn.DirWWS -> 
             ibb
             |> ShiftDirSW
             |> ShiftDirW
-        | Direction.DirWWN -> 
+        | Dirn.DirWWN -> 
             ibb
             |> ShiftDirNW
             |> ShiftDirW
-        | Direction.DirNNW -> 
+        | Dirn.DirNNW -> 
             ibb
             |> ShiftDirNW
             |> ShiftDirN
@@ -117,7 +119,7 @@ module Bitboard =
     let Contains (other : Bitboard) ibb = (ibb &&& other) <> Bitboard.Empty
     let IsEmpty ibb = ibb = Bitboard.Empty
     
-    let ToPositions(ibb : Bitboard) = 
+    let ToSquares(ibb : Bitboard) = 
         let rec getp (bb : Bitboard) ol = 
             if bb = Bitboard.Empty then ol |> List.rev
             else 
