@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D9
 		scripts\Readme6.fsx = scripts\Readme6.fsx
 		scripts\Readme7.fsx = scripts\Readme7.fsx
 		scripts\Readme8.fsx = scripts\Readme8.fsx
+		scripts\Readme9.fsx = scripts\Readme9.fsx
 		scripts\setup.fsx = scripts\setup.fsx
 		scripts\setupdll.fsx = scripts\setupdll.fsx
 	EndProjectSection
@@ -28,6 +29,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{10919F05-44B1-433C-B3EC-228542F970B0}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{7C063F59-7940-4793-8D18-BAD44C939B50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pgn", "pgn", "{C578B2C6-1132-47A2-BD82-3E48691F13E2}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\data\pgn\anastasian-lewis.pgn = scripts\data\pgn\anastasian-lewis.pgn
+		scripts\data\pgn\antichess-programfox.pgn = scripts\data\pgn\antichess-programfox.pgn
+		scripts\data\pgn\cutechess-fischerrandom.pgn = scripts\data\pgn\cutechess-fischerrandom.pgn
+		scripts\data\pgn\kasparov-deep-blue-1997.pgn = scripts\data\pgn\kasparov-deep-blue-1997.pgn
+		scripts\data\pgn\knightvuillaume-jannlee-zh-lichess.pgn = scripts\data\pgn\knightvuillaume-jannlee-zh-lichess.pgn
+		scripts\data\pgn\molinari-bordais-1979.pgn = scripts\data\pgn\molinari-bordais-1979.pgn
+		scripts\data\pgn\saturs-jannlee-zh-lichess.pgn = scripts\data\pgn\saturs-jannlee-zh-lichess.pgn
+		scripts\data\pgn\stockfish-learning.pgn = scripts\data\pgn\stockfish-learning.pgn
 	EndProjectSection
 EndProject
 Global
@@ -54,6 +69,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CF025AEB-706B-4EF3-B204-EE69BC61B297} = {7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}
+		{7C063F59-7940-4793-8D18-BAD44C939B50} = {19D95D5E-660B-4DBE-9C0D-3C9FCA10CA2C}
+		{C578B2C6-1132-47A2-BD82-3E48691F13E2} = {7C063F59-7940-4793-8D18-BAD44C939B50}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EFBBF18-81E9-4F01-A431-E58B2EB70F3E}

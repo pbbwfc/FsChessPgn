@@ -25,6 +25,7 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Games.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\PgnWriter.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FsChess.fs"
+#load @"d:\GitHub\FsChessPgn\FsChessPgn\FsChess.Pgn.fs"
 open FsChess
 do
     fsi.AddPrinter<Move>(Pretty.Move)

@@ -227,7 +227,40 @@ val pc : FsChess.Types.Piece = BKing
 ```
 
 
-* Reads and writes PGNs. Supports headers, comments, NAGs and a tree of variations. - *TODO*
+* Reads and writes PGNs. Supports headers, comments, NAGs and a tree of variations:
+
+
+```fsharp
+
+#load "setup.fsx"
+open FsChess
+open FsChess.Pgn
+
+let fn = __SOURCE_DIRECTORY__ + "/data/pgn/molinari-bordais-1979.pgn"
+let games = fn|>Games.ReadFromFile
+let first_game = games.Head
+let white = first_game.WhitePlayer
+let black = first_game.BlackPlayer
+let mvs = first_game.MoveText|>Game.MovesStr
+let result = first_game.Result 
+
+```
+
+This produces these results in F# Interactive:
+
+```
+val fn : string =
+  "D:\GitHub\FsChessPgn\scripts/data/pgn/molinari-bordais-1979.pgn"
+val games : FsChess.Types.Game list = [moves: ...3. Ne2 Nc6 2. c4 c5 1. e4]
+val first_game : FsChess.Types.Game = moves: ...3. Ne2 Nc6 2. c4 c5 1. e4
+val white : string = "Molinari"
+val black : string = "Bordais"
+val mvs : string = "1. e4 c5 2. c4 Nc6 3. Ne2 Nf6 4. Nbc3 Nb4 5. g3 Nd3# 0-1"
+val result : FsChess.Types.GameResult = BlackWins
+```
+
+
+
 
 ## Installing
 

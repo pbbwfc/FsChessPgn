@@ -114,9 +114,8 @@
     <Compile Include="Games.fs" />
     <Compile Include="PgnWriter.fs" />
     <Compile Include="FsChess.fs" />
+    <Compile Include="FsChess.Pgn.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />

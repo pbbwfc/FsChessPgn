@@ -63,6 +63,9 @@ module Game =
     ///Pops a move of the end for this Game and return the new Game
     let Pop = FsChessPgn.Game.RemoveMoveEntry
 
+    ///Gets the moves text as a string given the Game.MoveText
+    let MovesStr = FsChessPgn.PgnWrite.MoveTextStr
+
 module Pretty =
 
     let Square = FsChessPgn.Square.Name
