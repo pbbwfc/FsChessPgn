@@ -16,8 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D9
 		scripts\Readme5.fsx = scripts\Readme5.fsx
 		scripts\Readme6.fsx = scripts\Readme6.fsx
 		scripts\Readme7.fsx = scripts\Readme7.fsx
-		scripts\Script1.fsx = scripts\Script1.fsx
+		scripts\Readme8.fsx = scripts\Readme8.fsx
 		scripts\setup.fsx = scripts\setup.fsx
+		scripts\setupdll.fsx = scripts\setupdll.fsx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}"

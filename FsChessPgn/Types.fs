@@ -218,6 +218,8 @@ module Types =
           Fullmove : int
           MovesSinceNull : int
           }
+         member this.Item with get(sq:Square) = this.PieceAt.[int(sq)]
+              
 
     let BrdEMP = 
         { PieceAt = Array.create 64 Piece.EMPTY|>List.ofArray

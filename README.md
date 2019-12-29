@@ -201,7 +201,31 @@ val uci2 : string = "g1f3"
 val san2 : string = "Nf3"
 ```
 
-* Parses and creates FENs- *TODO*
+* Parses and creates FENs:
+
+```fsharp
+
+#load "setup.fsx"
+open FsChess
+
+let board = Board.Start
+let fen = board|>Board.ToStr
+
+let bd = "8/8/8/2k5/4K3/8/8/8 w - - 4 45"|>Board.FromStr
+let pc = bd.[C5]
+
+```
+
+This produces these results in F# Interactive:
+
+```
+val board : FsChess.Types.Brd =
+  rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+val fen : string = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+val bd : FsChess.Types.Brd = 8/8/8/2k5/4K3/8/8/8 w - - 4 45
+val pc : FsChess.Types.Piece = BKing
+```
+
 
 * Reads and writes PGNs. Supports headers, comments, NAGs and a tree of variations. - *TODO*
 

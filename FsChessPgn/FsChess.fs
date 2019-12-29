@@ -5,6 +5,9 @@ module Board =
     ///Create a new Board given a FEN string
     let FromStr = FsChessPgn.Board.FromStr
     
+    ///Create a FEN string from this Board 
+    let ToStr = FsChessPgn.Board.ToStr
+
     ///The starting Board at the beginning of a game
     let Start = FsChessPgn.Board.Start
 
