@@ -27,7 +27,7 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FsChess.fs"
 open FsChess
 do
-    fsi.AddPrinter<Brd>(Pretty.Board)
     fsi.AddPrinter<Move>(Pretty.Move)
     fsi.AddPrinter<Square>(Pretty.Square)
+    fsi.AddPrinter<Brd>(Pretty.Board)
     fsi.AddPrinter<Game>(Pretty.Game)

@@ -35,6 +35,19 @@ module Board =
     ///Prints an ASCII version of this Board 
     let Print = FsChessPgn.Board.PrintAscii
 
+module Move =
+
+    ///Get an encoded move from a SAN string such as Nf3 for this Board
+    let FromSan = FsChessPgn.MoveUtil.fromSAN
+
+    ///Get an encoded move from a UCI string such as g1f3 for thsi Board
+    let FromUci = FsChessPgn.MoveUtil.fromUci
+
+    ///Get the UCI string such as g1f3 for a move
+    let ToUci = FsChessPgn.MoveUtil.toUci
+
+    ///Get the SAN string such as Nf3 for a move for this board
+    let ToSan = FsChessPgn.MoveUtil.toPgn
 
 module Game =
 
@@ -50,6 +63,6 @@ module Game =
 module Pretty =
 
     let Square = FsChessPgn.Square.Name
-    let Move = FsChessPgn.MoveUtil.Desc
+    let Move = FsChessPgn.MoveUtil.toUci
     let Board = FsChessPgn.Board.ToStr
     let Game = FsChessPgn.Game.pretty

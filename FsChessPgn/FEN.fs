@@ -24,7 +24,7 @@ module FEN =
                 else 
                     let rank = RANKS.[irank]
                     let file = FILES.[ifile]
-                    let piece = fen.Pieceat.[Sq(file,rank)] 
+                    let piece = fen.Pieceat.[int(Sq(file,rank))] 
                     if piece = Piece.EMPTY then getect (ect + 1) (ifile + 1)
                     else 
                         if ect > 0 then sb.Append(ect.ToString()) |> ignore
@@ -94,7 +94,7 @@ module FEN =
                     let c = cl.Head
                     if "1234567890".IndexOf(c) >= 0 then getpc cl.Tail (ifl + System.Int32.Parse(c.ToString()))
                     else 
-                        pieceat.[Sq(FILES.[ifl],rank)] <- Piece.Parse(c)//OK
+                        pieceat.[int(Sq(FILES.[ifl],rank))] <- Piece.Parse(c)//OK
                         getpc cl.Tail (ifl + 1)
             
             let srank = sRanks.[System.Int32.Parse(rank |> Rank.RankToString) - 1]

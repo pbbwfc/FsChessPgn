@@ -29,17 +29,14 @@ module PgnWrite =
             
     let MoveTarget(move:pMove) =
         if move.TargetSquare <> OUTOFBOUNDS then
-            SQUARE_NAMES.[move.TargetSquare]
+            SQUARE_NAMES.[int(move.TargetSquare)]
         else ""
 
     let MoveOrigin(move:pMove) =
         let piece = Piece(move.Piece)
-        if move.OriginSquare <> OUTOFBOUNDS then
-            piece + SQUARE_NAMES.[move.OriginSquare]
-        else 
-            let origf = if move.OriginFile.IsSome then FILE_NAMES.[move.OriginFile.Value] else ""
-            let origr = if move.OriginRank.IsSome then RANK_NAMES.[move.OriginRank.Value] else ""
-            piece + origf + origr    
+        let origf = if move.OriginFile.IsSome then FILE_NAMES.[int(move.OriginFile.Value)] else ""
+        let origr = if move.OriginRank.IsSome then RANK_NAMES.[int(move.OriginRank.Value)] else ""
+        piece + origf + origr    
     
     let CheckAndMateAnnotation(move:pMove) =
         if move.IsCheckMate then "#"

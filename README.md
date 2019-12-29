@@ -171,7 +171,35 @@ val chk2 : bool = true
 val attackers : FsChess.Types.Square list = [g2; g1]
 ```
 
-* Parses and creates SAN representation of moves.- *TODO*
+* Parses and creates SAN representation of moves:
+
+
+```fsharp
+
+#load "setup.fsx"
+open FsChess
+
+let board = Board.Start
+let mv = "e4"|>Move.FromSan board
+let uci = mv|>Move.ToUci
+let san = mv|>Move.ToSan board
+let mv2 = "Nf3"|>Move.FromSan board
+let uci2 = mv2|>Move.ToUci
+let san2 = mv2|>Move.ToSan board
+
+```
+
+This produces these results in F# Interactive:
+
+```
+val board : Brd = rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+val mv : Move = e2e4
+val uci : string = "e2e4"
+val san : string = "e4"
+val mv2 : Move = g1f3
+val uci2 : string = "g1f3"
+val san2 : string = "Nf3"
+```
 
 * Parses and creates FENs- *TODO*
 

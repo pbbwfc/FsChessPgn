@@ -8,8 +8,8 @@ module Move =
     let CreateProm (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) (promoteType : PieceType) = 
         (int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16) 
          ||| (int (promoteType) <<< 20))
-    let From(move : Move) :Square = (int(move) &&& 0x3F)
-    let To(move : Move) :Square = (int(move) >>> 6 &&& 0x3F)
+    let From(move : Move) :Square = int16(int(move) &&& 0x3F)
+    let To(move : Move) :Square = int16(int(move) >>> 6 &&& 0x3F)
     let MovingPiece(move : Move) = (int(move) >>> 12 &&& 0xF) |> Pc
     let IsW(move : Move) = move|>MovingPiece|>int<9
     let MovingPieceType(move : Move) = (int(move) >>> 12 &&& 0x7) |> PcTp

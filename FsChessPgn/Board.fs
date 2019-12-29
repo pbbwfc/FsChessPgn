@@ -5,7 +5,7 @@ open FsChess
 module Board = 
     
     let private PieceMove (mfrom : Square) mto (bd : Brd) = 
-        let piece = bd.PieceAt.[mfrom]
+        let piece = bd.PieceAt.[int(mfrom)]
         let player = piece|>Piece.PieceToPlayer
         let pieceType = piece|>Piece.ToPieceType
         let pieceat = bd.PieceAt|>List.mapi(fun i p -> if i=int(mto) then piece elif i = int(mfrom) then Piece.EMPTY else p)
@@ -211,7 +211,7 @@ module Board =
             if List.isEmpty posl then ibd
             else 
                 let pos = posl.Head
-                let pc = fen.Pieceat.[pos]
+                let pc = fen.Pieceat.[int(pos)]
                 if pc = Piece.EMPTY then addpc posl.Tail ibd
                 else addpc posl.Tail (ibd |> PieceAdd pos pc)
         
@@ -243,7 +243,7 @@ module Board =
             let getch ifile = 
                 let rank = RANKS.[irank]
                 let file = FILES.[ifile]
-                let piece = bd.PieceAt.[Sq(file,rank)] 
+                let piece = bd.PieceAt.[int(Sq(file,rank))] 
                 if piece = Piece.EMPTY then "." else piece|>Piece.PieceToString
             let ln =
                 [0..7]

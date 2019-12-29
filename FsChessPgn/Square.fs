@@ -12,8 +12,8 @@ module Square =
             Sq(file,rank)
     
     let IsInBounds(pos : Square) = int (pos) >= 0 && int (pos) <= 63
-    let ToRank(pos : Square) :Rank = (int (pos) / 8)
-    let ToFile(pos : Square) :File = (int (pos) % 8)
+    let ToRank(pos : Square) :Rank = pos / 8s
+    let ToFile(pos : Square) :File = pos % 8s
     
     let Name(pos : Square) = 
         (pos
@@ -74,7 +74,7 @@ module Square =
             else if filechange > 0 then Dirn.DirSE
             else Dirn.DirSW
     
-    let PositionInDirectionUnsafe (dir : Dirn) (pos : Square) :Square= ((int) pos + (int) dir)
+    let PositionInDirectionUnsafe (dir : Dirn) (pos : Square) :Square= pos + int16(dir)
     
     let PositionInDirection (dir : Dirn) (pos : Square) = 
         if not (pos |> IsInBounds) then OUTOFBOUNDS
@@ -84,22 +84,22 @@ module Square =
             
             let nr, nf = 
                 match dir with
-                | Dirn.DirN -> r -! 1, f
-                | Dirn.DirE -> r, f ++ 1
-                | Dirn.DirS -> r +! 1, f
-                | Dirn.DirW -> r, f -- 1
-                | Dirn.DirNE -> r -! 1, f ++ 1
-                | Dirn.DirSE -> r +! 1, f ++ 1
-                | Dirn.DirSW -> r +! 1, f -- 1
-                | Dirn.DirNW -> r -! 1, f -- 1
-                | Dirn.DirNNE -> r -! 2, f ++ 1
-                | Dirn.DirEEN -> r -! 1, f ++ 2
-                | Dirn.DirEES -> r +! 1, f ++ 2
-                | Dirn.DirSSE -> r +! 2, f ++ 1
-                | Dirn.DirSSW -> r +! 2, f -- 1
-                | Dirn.DirWWS -> r +! 1, f -- 2
-                | Dirn.DirWWN -> r -! 1, f -- 2
-                | Dirn.DirNNW -> r -! 2, f -- 1
+                | Dirn.DirN -> r -! 1s, f
+                | Dirn.DirE -> r, f ++ 1s
+                | Dirn.DirS -> r +! 1s, f
+                | Dirn.DirW -> r, f -- 1s
+                | Dirn.DirNE -> r -! 1s, f ++ 1s
+                | Dirn.DirSE -> r +! 1s, f ++ 1s
+                | Dirn.DirSW -> r +! 1s, f -- 1s
+                | Dirn.DirNW -> r -! 1s, f -- 1s
+                | Dirn.DirNNE -> r -! 2s, f ++ 1s
+                | Dirn.DirEEN -> r -! 1s, f ++ 2s
+                | Dirn.DirEES -> r +! 1s, f ++ 2s
+                | Dirn.DirSSE -> r +! 2s, f ++ 1s
+                | Dirn.DirSSW -> r +! 2s, f -- 1s
+                | Dirn.DirWWS -> r +! 1s, f -- 2s
+                | Dirn.DirWWN -> r -! 1s, f -- 2s
+                | Dirn.DirNNW -> r -! 2s, f -- 1s
                 | _ -> RANK_EMPTY, FILE_EMPTY
             if nr = RANK_EMPTY && nf = FILE_EMPTY then OUTOFBOUNDS
             elif (nr |> Rank.IsInBounds) && (nf |> File.IsInBounds) then Sq(nf,nr)

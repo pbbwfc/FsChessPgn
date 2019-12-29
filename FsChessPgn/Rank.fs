@@ -8,10 +8,10 @@ module Rank =
         let Rankdesclookup = RANK_NAMES|>List.reduce(+)
         let idx = Rankdesclookup.IndexOf(c.ToString().ToLower())
         if idx < 0 then failwith (c.ToString() + " is not a valid rank")
-        else idx 
+        else int16(idx) 
     
-    let RankToString(rank : Rank) = RANK_NAMES.[rank]
-    let IsInBounds(rank : Rank) = rank >= 0 && rank <= 7
+    let RankToString(rank : Rank) = RANK_NAMES.[int(rank)]
+    let IsInBounds(rank : Rank) = rank >= 0s && rank <= 7s
     
     let ToBitboard(rank : Rank) = 
         if rank=Rank1 then Bitboard.Rank1

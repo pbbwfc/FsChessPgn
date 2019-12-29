@@ -28,8 +28,8 @@ type BoardSetupTest () =
             else p
         let sut = {isut with Pieceat=isut.Pieceat|>List.mapi upd}
 
-        Assert.AreEqual(Piece.BPawn, sut.Pieceat.[Sq(FileA, Rank8)])
-        Assert.AreEqual(Piece.WKing, sut.Pieceat.[Sq(FileB, Rank8)])
-        Assert.AreEqual(Piece.BRook, sut.Pieceat.[Sq(FileD, Rank1)])
-        Assert.AreEqual(Piece.WQueen, sut.Pieceat.[Sq(FileE, Rank4)])
-        Assert.AreEqual(Piece.BBishop, sut.Pieceat.[Sq(FileH, Rank1)])
+        Assert.AreEqual(Piece.BPawn, sut.Pieceat.[int(Sq(FileA, Rank8))])
+        Assert.AreEqual(Piece.WKing, sut.Pieceat.[int(Sq(FileB, Rank8))])
+        Assert.AreEqual(Piece.BRook, sut.Pieceat.[int(Sq(FileD, Rank1))])
+        Assert.AreEqual(Piece.WQueen, sut.Pieceat.[int(Sq(FileE, Rank4))])
+        Assert.AreEqual(Piece.BBishop, sut.Pieceat.[int(Sq(FileH, Rank1))])

@@ -5,8 +5,8 @@ open FsChess
 module Bitboard =
 
     let DebrujinPositions = 
-        [| 0; 1; 28; 2; 29; 14; 24; 3; 30; 22; 20; 15; 25; 17; 4; 8; 31; 27; 13; 23; 21; 19; 16; 7; 26; 12; 18; 6; 11; 5; 
-           10; 9 |]
+        [| 0s; 1s; 28s; 2s; 29s; 14s; 24s; 3s; 30s; 22s; 20s; 15s; 25s; 17s; 4s; 8s; 31s; 27s; 13s; 23s; 21s; 19s; 16s; 7s; 26s; 12s; 18s; 6s; 11s; 5s; 
+           10s; 9s |]
     
     let DebrujinLSB num = 
         let ind1 = uint32 (num &&& -num) * 0x077CB531u
@@ -38,7 +38,7 @@ module Bitboard =
             DebrujinLSB(int (x)) 
         else 
             let x = uint64 (ibb) >>> 32
-            (DebrujinLSB(int (x)) + 32)
+            (DebrujinLSB(int (x)) + 32s)
     
     let SouthMostPosition(ibb : Bitboard) = 
         let x = uint64 (ibb)
@@ -135,7 +135,7 @@ module Bitboard =
             DebrujinPositions.[int ((uint32 (number &&& -number) * 0x077CB531u) >>> 27)] 
         else 
             let number = int (uint64 (ibb) >>> 32)
-            (DebrujinPositions.[int ((uint32 (number &&& -number) * 0x077CB531u) >>> 27)] + 32) 
+            (DebrujinPositions.[int ((uint32 (number &&& -number) * 0x077CB531u) >>> 27)] + 32s) 
 
     let GetRemainPos first ibb = ibb &&& ~~~(first |> Square.ToBitboard)
     

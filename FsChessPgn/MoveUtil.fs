@@ -5,78 +5,76 @@ open System.Text
 
 module MoveUtil = 
     
-    let Desc(move : Move) = 
+    let toUci(move : Move) = 
         (move|>Move.From|>Square.Name).ToLower() + (move|>Move.To|>Square.Name).ToLower() 
         + (if move|>Move.Promote <> Piece.EMPTY then (move|>Move.Promote|>Piece.PieceToString).ToLower() else "")
     
-    let DescBd (move : Move) (board : Brd) = 
-        let sb = new StringBuilder()
+    let topMove (board : Brd) (move : Move) = 
         let piece = board.PieceAt.[int(move|>Move.From)]
+        let pct = piece|>Piece.ToPieceType
         let fromrank = move|>Move.From|>Square.ToRank
         let fromfile = move|>Move.From|>Square.ToFile
-        let isprom = move|>Move.Promote <> Piece.EMPTY
-        let sTo = move|>Move.To|>Square.Name
-        let sPiece = (piece|>Piece.PieceToString).ToUpper()
-        let sRank = (fromrank|>Rank.RankToString).ToLower()
-        let sFile = (fromfile|>File.FileToString).ToLower()
-        
+        let pcprom = move|>Move.Promote
+        let isprom = pcprom <> Piece.EMPTY
+        let ptprom = pcprom|>Piece.ToPieceType
+        let sTo = move|>Move.To
+        let sFrom = move|>Move.From
+    
         let iscap = 
-            if (move|>Move.To = board.EnPassant && (piece = Piece.WPawn || piece = Piece.BPawn)) then true
-            else board.PieceAt.[int(move|>Move.To)] <> Piece.EMPTY
-        
-        let sProm = 
-            if isprom then ((move|>Move.Promote)|>Piece.PieceToString).ToUpper()
-            else ""
-        
-        if piece = Piece.WPawn || piece = Piece.BPawn then 
-            if iscap then sb.Append(sFile + "x") |> ignore
-            sb.Append(sTo) |> ignore
-            if isprom then sb.Append(sProm) |> ignore
-        elif piece = Piece.WKing && (move|>Move.From) = E1 && (move|>Move.To) = G1 then 
-            sb.Append("O-O") |> ignore
-        elif piece = Piece.BKing && (move|>Move.From) = E8 && (move|>Move.To) = G8 then 
-            sb.Append("O-O") |> ignore
-        elif piece = Piece.WKing && (move|>Move.From) = E1 && (move|>Move.To) = C1 then 
-            sb.Append("O-O-O") |> ignore
-        elif piece = Piece.BKing && (move|>Move.From) = E8 && (move|>Move.To) = C8 then 
-            sb.Append("O-O-O") |> ignore
+            if (sTo = board.EnPassant && (piece = Piece.WPawn || piece = Piece.BPawn)) then true
+            else board.PieceAt.[int(sTo)] <> Piece.EMPTY
+
+        let nbd = board|>Board.MoveApply(move)
+        let ischk = nbd|>Board.IsChk
+        let ismt = nbd|>MoveGenerate.IsMate
+
+    
+        if piece = Piece.WKing && sFrom = E1 && sTo = G1 then 
+            pMove.CreateCastle(MoveType.CastleKingSide)
+        elif piece = Piece.BKing && sFrom = E8 && sTo = G8 then 
+            pMove.CreateCastle(MoveType.CastleKingSide)
+        elif piece = Piece.WKing && sFrom = E1 && sTo = C1 then 
+            pMove.CreateCastle(MoveType.CastleQueenSide)
+        elif piece = Piece.BKing && sFrom = E8 && sTo = C8 then 
+            pMove.CreateCastle(MoveType.CastleQueenSide)
         else 
             let rec getuniqs pu fu ru attl = 
                 if List.isEmpty attl then pu, fu, ru
                 else 
                     let att = attl.Head
-                    if att = (move|>Move.From) then getuniqs pu fu ru attl.Tail
+                    if att = sFrom then getuniqs pu fu ru attl.Tail
                     else 
                         let otherpiece = board.PieceAt.[int(att)]
                         if otherpiece = piece then 
                             let npu = false
-                            
                             let nru = 
                                 if (att|>Square.ToRank) = fromrank then false
                                 else ru
-                            
+                        
                             let nfu = 
                                 if (att|>Square.ToFile) = fromfile then false
                                 else fu
-                            
+                        
                             getuniqs npu nfu nru attl.Tail
                         else getuniqs pu fu ru attl.Tail
-            
+        
             let pu, fu, ru = 
-                getuniqs true true true 
-                    ((board|>Board.AttacksTo (move|>Move.To) (piece|>Piece.PieceToPlayer))|>Bitboard.ToSquares)
-            sb.Append(sPiece) |> ignore
-            if pu then ()
-            elif fu then sb.Append(sFile) |> ignore
-            elif ru then sb.Append(sRank) |> ignore
-            else sb.Append(sFile + sRank) |> ignore
-            if iscap then sb.Append("x") |> ignore
-            sb.Append(sTo) |> ignore
-        let board = board|>Board.MoveApply(move)
-        if board|>Board.IsChk then 
-            if MoveGenerate.AllMoves(board) |> Seq.isEmpty then sb.Append("#") |> ignore
-            else sb.Append("+") |> ignore
-        sb.ToString()
+                getuniqs true true true ((board|>Board.AttacksTo sTo (piece|>Piece.PieceToPlayer))|>Bitboard.ToSquares)
+
+            let uf,ur =
+                if pu then None,None
+                else
+                    if fu then Some(fromfile), None
+                    elif ru then None,Some(fromrank)
+                    else Some(fromfile),Some(fromrank)
+            let mt = if iscap then MoveType.Capture else MoveType.Simple
+            pMove.CreateAll(mt,sTo,Some(pct),uf,ur,(if isprom then Some(ptprom) else None),ischk,false,ismt,None)
+
+
+    let toPgn (board : Brd) (move : Move) = 
+        let pmv = move|>topMove board
+        let pgn = pmv|>PgnWrite.MoveStr
+        pgn
     
     let Descs moves (board : Brd) isVariation = 
         let sb = new StringBuilder()
@@ -85,20 +83,24 @@ module MoveUtil =
             else
                 let mv = mvl.Head
                 if isVariation && ibd.WhosTurn = Player.White then sb.Append(ibd.Fullmove.ToString() + ". ") |> ignore
-                sb.Append((DescBd mv ibd) + " ") |> ignore
+                sb.Append((toPgn ibd mv) + " ") |> ignore
                 if isVariation then getsb mvl.Tail (ibd|>Board.MoveApply mv)
                 else getsb mvl.Tail ibd
         board|>getsb moves|>ignore
         sb.ToString()
 
-    let FindMv uci bd =
+    let FindMv bd uci =
         let mvs = MoveGenerate.AllMoves bd
-        let fmvs = mvs|>List.filter(fun m -> m|>Desc=uci)
+        let fmvs = mvs|>List.filter(fun m -> m|>toUci=uci)
         if fmvs.Length=1 then Some(fmvs.Head) else None
 
-    ///Get a n encoded move from a SAN Move(move) such as Nf3 for this Board(bd)
+    let fromUci bd uci = (FindMv bd uci).Value
+
+    ///Get an encoded move from a SAN Move(move) such as Nf3 for this Board(bd)
     let fromSAN (bd : Brd) (move : string) = 
-        move|>pMove.Parse|>pMove.ToMove bd
+        let pmv = move|>pMove.Parse
+        let mv = pmv|>pMove.ToMove bd
+        mv
 
     ///Make a SAN Move(move) such as Nf3 for this Board(bd) and return the new Board
     let ApplySAN (move : string) (bd : Brd) = 

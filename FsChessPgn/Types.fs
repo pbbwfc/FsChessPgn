@@ -47,28 +47,28 @@ module Types =
         | BlackWins = -1
         | Open = 9
     
-    type File = int
-    let FileA, FileB, FileC, FileD, FileE, FileF, FileG, FileH :File * File * File * File * File * File * File * File = 0,1,2,3,4,5,6,7
+    type File = int16
+    let FileA, FileB, FileC, FileD, FileE, FileF, FileG, FileH :File * File * File * File * File * File * File * File = 0s,1s,2s,3s,4s,5s,6s,7s
     let FILES = [ FileA; FileB; FileC; FileD; FileE; FileF; FileG; FileH ]
     let FILE_NAMES = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"]
-    let FILE_EMPTY :File = 8
+    let FILE_EMPTY :File = 8s
 
-    type Rank = int
-    let Rank8, Rank7, Rank6, Rank5, Rank4, Rank3, Rank2, Rank1 :Rank * Rank * Rank * Rank * Rank * Rank * Rank * Rank = 0,1,2,3,4,5,6,7
+    type Rank = int16
+    let Rank8, Rank7, Rank6, Rank5, Rank4, Rank3, Rank2, Rank1 :Rank * Rank * Rank * Rank * Rank * Rank * Rank * Rank = 0s,1s,2s,3s,4s,5s,6s,7s
     let RANKS = [Rank8; Rank7; Rank6; Rank5; Rank4; Rank3; Rank2; Rank1]
     let RANK_NAMES = ["8"; "7"; "6"; "5"; "4"; "3"; "2"; "1"]
-    let RANK_EMPTY :Rank = 8
+    let RANK_EMPTY :Rank = 8s
 
-    type Square = int
-    let A1, B1, C1, D1, E1, F1, G1, H1 :Square * Square * Square * Square * Square * Square * Square * Square =  56,57,58,59,60,61,62,63
-    let A2, B2, C2, D2, E2, F2, G2, H2 = A1-8, B1-8, C1-8, D1-8, E1-8, F1-8, G1-8, H1-8 
-    let A3, B3, C3, D3, E3, F3, G3, H3 = A2-8, B2-8, C2-8, D2-8, E2-8, F2-8, G2-8, H2-8 
-    let A4, B4, C4, D4, E4, F4, G4, H4 = A3-8, B3-8, C3-8, D3-8, E3-8, F3-8, G3-8, H3-8 
-    let A5, B5, C5, D5, E5, F5, G5, H5 = A4-8, B4-8, C4-8, D4-8, E4-8, F4-8, G4-8, H4-8 
-    let A6, B6, C6, D6, E6, F6, G6, H6 = A5-8, B5-8, C5-8, D5-8, E5-8, F5-8, G5-8, H5-8 
-    let A7, B7, C7, D7, E7, F7, G7, H7 = A6-8, B6-8, C6-8, D6-8, E6-8, F6-8, G6-8, H6-8 
-    let A8, B8, C8, D8, E8, F8, G8, H8 = A7-8, B7-8, C7-8, D7-8, E7-8, F7-8, G7-8, H7-8
-    let OUTOFBOUNDS:Square = 64
+    type Square = int16
+    let A1, B1, C1, D1, E1, F1, G1, H1 :Square * Square * Square * Square * Square * Square * Square * Square =  56s,57s,58s,59s,60s,61s,62s,63s
+    let A2, B2, C2, D2, E2, F2, G2, H2 = A1-8s, B1-8s, C1-8s, D1-8s, E1-8s, F1-8s, G1-8s, H1-8s 
+    let A3, B3, C3, D3, E3, F3, G3, H3 = A2-8s, B2-8s, C2-8s, D2-8s, E2-8s, F2-8s, G2-8s, H2-8s 
+    let A4, B4, C4, D4, E4, F4, G4, H4 = A3-8s, B3-8s, C3-8s, D3-8s, E3-8s, F3-8s, G3-8s, H3-8s 
+    let A5, B5, C5, D5, E5, F5, G5, H5 = A4-8s, B4-8s, C4-8s, D4-8s, E4-8s, F4-8s, G4-8s, H4-8s 
+    let A6, B6, C6, D6, E6, F6, G6, H6 = A5-8s, B5-8s, C5-8s, D5-8s, E5-8s, F5-8s, G5-8s, H5-8s 
+    let A7, B7, C7, D7, E7, F7, G7, H7 = A6-8s, B6-8s, C6-8s, D6-8s, E6-8s, F6-8s, G6-8s, H6-8s 
+    let A8, B8, C8, D8, E8, F8, G8, H8 = A7-8s, B7-8s, C7-8s, D7-8s, E7-8s, F7-8s, G7-8s, H7-8s
+    let OUTOFBOUNDS:Square = 64s
     let SQUARES = [
         A8; B8; C8; D8; E8; F8; G8; H8
         A7; B7; C7; D7; E7; F7; G7; H7;
@@ -80,7 +80,7 @@ module Types =
         A1; B1; C1; D1; E1; F1; G1; H1;
         ] 
     let SQUARE_NAMES = [for r in RANK_NAMES do for f in FILE_NAMES -> f+r]
-    let Sq(f:File,r:Rank) :Square = (int (r) * 8 + int (f))
+    let Sq(f:File,r:Rank) :Square = r * 8s + f
     
     [<System.Flags>]
     type CstlFlgs = 
@@ -194,7 +194,6 @@ module Types =
         {Mtype:MoveType 
          TargetSquare:Square 
          Piece: PieceType option
-         OriginSquare:Square
          OriginFile:File option
          OriginRank:Rank option
          PromotedPiece: PieceType option

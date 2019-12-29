@@ -8,7 +8,7 @@ module File =
         let Filedesclookup = FILE_NAMES|>List.reduce(+)
         let idx = Filedesclookup.IndexOf(c.ToString().ToLower())
         if idx < 0 then failwith (c.ToString() + " is not a valid file")
-        else idx
+        else int16(idx)
     
-    let FileToString(file : File) = FILE_NAMES.[file]
-    let IsInBounds(file : File) = file >= 0 && file <= 7
+    let FileToString(file : File) = FILE_NAMES.[int(file)]
+    let IsInBounds(file : File) = file >= 0s && file <= 7s

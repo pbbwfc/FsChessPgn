@@ -10,9 +10,18 @@ let main argv =
         1
     else
         //test code
+        let board = Board.Start
 
-        let board = Board.FromStr("r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
-        let chk1 = board|>Board.IsCheckMate
+        let nbd = 
+            board
+            |>Board.PushSAN "e4"
+            |>Board.PushSAN "e5"
+            |>Board.PushSAN "Nc3"
+            |>Board.PushSAN "Nc6"
+
+        let mv3 = "g1e2"|>Move.FromUci nbd
+        let uci3 = mv3|>Move.ToUci
+        let san3 = mv3|>Move.ToSan nbd
         //end
         let pgnfile = argv.[0]
         let pgn = pgnfile|>Games.ReadFromFile
