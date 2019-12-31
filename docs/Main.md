@@ -7,20 +7,32 @@
 
 These are provided as an enumeration **PieceType** with these values:
 
-<dl>
-<dt>Name</dt>
-<dd>Godzilla</dd>
-<dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
-<dt>Color</dt>
-<dd>Green</dd>
-</dl>
+| Label  | Value |
+|:-------|:------|
+| EMPTY  | 0     | 
+| Pawn   | 1     | 
+| Knight | 2     | 
+| Bishop | 3     | 
+| Rook   | 4     | 
+| Queen  | 5     | 
+| King   | 6     | 
 
-| head1        | head two          | three |
-|:-------------|:------------------|:------|
-| ok           | good swedish fish | nice  |
-| out of stock | good and plenty   | nice  |
-| ok           | good `oreos`      | hmm   |
-| ok           | good `zoute` drop | yumm  |
+## Pieces
+
+These are for each colour and are provided as an enumeration **Piece** with these values:
+
+| Label   | Value |
+|:--------|:------|
+| EMPTY   | 0     | 
+| WPawn   | 1     | 
+| WKnight | 2     | 
+| WBishop | 3     | 
+| WRook   | 4     | 
+| WQueen  | 5     | 
+| WKing   | 6     | 
+| BPawn   | 9     | 
+| BKnight | 10    | 
+| BBishop | 11    | 
+| BRook   | 12    | 
+| BQueen  | 13    | 
+| BKing   | 14    | 
