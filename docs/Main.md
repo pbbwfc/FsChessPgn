@@ -36,3 +36,29 @@ These are for each colour and are provided as an enumeration **Piece** with thes
 | BRook   | 12    | 
 | BQueen  | 13    | 
 | BKing   | 14    | 
+
+## Player
+
+These are for each colour and are provided as an enumeration **Player** with these values:
+
+| Label   | Value |
+|:--------|:------|
+| White   | 0     | 
+| Black   | 1     | 
+
+## Game Result
+
+These are provided as an enumeration **GameResult** with these values:
+
+| Label     | Value |
+|:----------|:------|
+| Draw      |  0    | 
+| WhiteWins |  1    | 
+| BlackWins | -1    | 
+| Open      |  9    | 
+
+## Files
+
+These are _aliased_ to a _short_, with values 0s to 7s for **FileA** to **FileH**.
+
+As an example, **FileC** equals 2s. 

@@ -37,7 +37,6 @@ module Types =
         | EMPTY = 0
     
     type Player = 
-        | None = -1
         | White = 0
         | Black = 1
     
