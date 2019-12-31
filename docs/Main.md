@@ -66,7 +66,9 @@ As an example, **FileC** equals 2s.
 Also provided are:
 
 FILES = [FileA; FileB; FileC; FileD; FileE; FileF; FileG; FileH]
+
 and
+
 FILE_NAMES = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"]
 
 ## Rankss
@@ -78,5 +80,7 @@ As an example, **Rank3** equals 5s.
 Also provided are:
 
 RANKS = [Rank8; Rank7; Rank6; Rank5; Rank4; Rank3; Rank2; Rank1]
+
 and
+
 RANK_NAMES = ["8"; "7"; "6"; "5"; "4"; "3"; "2"; "1"]
