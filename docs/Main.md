@@ -59,6 +59,24 @@ These are provided as an enumeration **GameResult** with these values:
 
 ## Files
 
-These are _aliased_ to a _short_, with values 0s to 7s for **FileA** to **FileH**.
+These are _aliased_ to a _short_, with values 0s to 7s for **FileA** to **FileH**. FILE_EMPTY is given a value 8s.
 
-As an example, **FileC** equals 2s. 
+As an example, **FileC** equals 2s.
+
+Also provided are:
+
+FILES = [FileA; FileB; FileC; FileD; FileE; FileF; FileG; FileH]
+and
+FILE_NAMES = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"]
+
+## Rankss
+
+These are _aliased_ to a _short_, with values 7s to 0s for **Rank1** to **Rank8**. RANK_EMPTY is given a value 8s.
+
+As an example, **Rank3** equals 5s. 
+
+Also provided are:
+
+RANKS = [Rank8; Rank7; Rank6; Rank5; Rank4; Rank3; Rank2; Rank1]
+and
+RANK_NAMES = ["8"; "7"; "6"; "5"; "4"; "3"; "2"; "1"]

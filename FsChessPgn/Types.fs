@@ -48,7 +48,7 @@ module Types =
     
     type File = int16
     let FileA, FileB, FileC, FileD, FileE, FileF, FileG, FileH :File * File * File * File * File * File * File * File = 0s,1s,2s,3s,4s,5s,6s,7s
-    let FILES = [ FileA; FileB; FileC; FileD; FileE; FileF; FileG; FileH ]
+    let FILES = [FileA; FileB; FileC; FileD; FileE; FileF; FileG; FileH]
     let FILE_NAMES = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"]
     let FILE_EMPTY :File = 8s
 
