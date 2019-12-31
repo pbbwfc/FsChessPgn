@@ -256,8 +256,8 @@ val result : FsChess.Types.GameResult = BlackWins
 
 ## Function Documentation
 
-* [Main Chess Features](https://github.com/pbbwfc/FsChessPgn) - *TODO*
-* [PGN parsing and writing](https://github.com/pbbwfc/FsChessPgn) - *TODO*
+* [Main Chess Features](https://pbbwfc.github.io/FsChessPgn/Main)
+* [PGN parsing and writing](https://pbbwfc.github.io/FsChessPgn/Pgn) - *TODO*
 1
 
 
