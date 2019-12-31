@@ -78,7 +78,7 @@ module Game =
             "moves: " + mvstr
         else
             let rl = mtel|>List.rev
-            let l5 = mtel.[0..4]|>List.rev
+            let l5 = rl.[0..4]|>List.rev
             let mvstr = l5|>List.map PgnWrite.MoveTextEntryStr|>List.reduce(fun a b -> a + " " + b)
             "moves: ..." + mvstr
    

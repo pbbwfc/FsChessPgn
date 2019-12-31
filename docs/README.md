@@ -42,6 +42,11 @@ val nbd : FsChess.Types.Brd =
 val ismate : bool = true
 ```
 
+## Detailed Documentation
+
+* [Core](https://github.com/pbbwfc/FsChessPgn) - *TODO*
+* [PGN parsing and writing](https://github.com/pbbwfc/FsChessPgn) - *TODO*
+
 ## Features
 
 * Witten using .NET Core and designed to use the latest version of F# Interactive.
@@ -253,12 +258,6 @@ val black : string = "Bordais"
 val mvs : string = "1. e4 c5 2. c4 Nc6 3. Ne2 Nf6 4. Nbc3 Nb4 5. g3 Nd3# 0-1"
 val result : FsChess.Types.GameResult = BlackWins
 ```
-
-## Function Documentation
-
-* [Main Chess Features](https://github.com/pbbwfc/FsChessPgn) - *TODO*
-* [PGN parsing and writing](https://github.com/pbbwfc/FsChessPgn) - *TODO*
-1
 
 
 ## Installing
