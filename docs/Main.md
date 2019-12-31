@@ -104,3 +104,16 @@ A utility function **Sq** is provided, defined as:
 ```fsharp
 let Sq(f:File,r:Rank) :Square = r * 8s + f
 ```
+
+## Castle Flags
+
+These are a means of storing the castling writes for a board position. They are provided as an enumeration **CstlFlgs** with these values:
+
+| Label      | Value |
+|:-----------|:------|
+| EMPTY      | 0     | 
+| WhiteShort | 1     | 
+| WhiteLong  | 2     |
+| BlackShort | 4     |
+| BlackLong  | 8     |
+| All        | 15    |
