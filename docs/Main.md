@@ -150,3 +150,22 @@ These are a means of storing the annotation such as _??_ for a SAN move. They ar
  - Dubious
  - Mistake
  - Blunder
+
+ ## SAN Moves
+
+These are a means of storing a move in SAN format such as _Nxg6+!_. They are provided as a record type **pMove** with these fields:
+
+| Field         | Type              | Description                                 |
+|:--------------|:------------------|:--------------------------------------------|
+| Mtype         | MoveType          | The broad type of the move                  |
+| TargetSquare  | Square            | The square to which you move the piece      |
+| Piece         | PieceType option  | The piece moved, but it could be None       |
+| OriginFile    | File option       | The file moved from, but it could be None   |
+| OriginRank    | Rank option       | The rank moved from, but it could be None   |
+| PromotedPiece | PieceType option  | The piece promoted to, but it could be None |
+| IsCheck       | bool              | Does the move check the king?               |
+| IsDoubleCheck | bool              | Does the move double check the king?        |
+| IsCheckMate   | bool              | Does the move mate the king?                |
+| Annotation    | MoveAnnotation    | Anny annotation such as ?? for the move     |
+
+
