@@ -105,6 +105,12 @@ A utility function **Sq** is provided, defined as:
 let Sq(f:File,r:Rank) :Square = r * 8s + f
 ```
 
+## Moves
+
+These are three types of move supported. The main one is _aliased_ to an _int_ and encodes details of the move.
+
+
+
 ## Castle Flags
 
 These are a means of storing the castling writes for a board position. They are provided as an enumeration **CstlFlgs** with these values:
@@ -194,3 +200,44 @@ This also provides and Indexer so that you can get a piece on a square using cod
 ```fsharp
 let pc = board.[C3]
 ```
+
+## Board Related Moves
+
+These are a means of storing a move with the associated board position. They are provided as a record type **aMove** with these fields:
+
+| Field             | Type              | Description                                 |
+|:------------------|:------------------|:--------------------------------------------|
+| PreBrd            | Brd               | The position before the move                |
+| Mv                | Move              | The encoded move                            |
+| PostBrd           | Brd               | The position after the move                 |
+
+## Move Entries
+
+These are a means of storing the various type of move entry in a game. They are provided as a complex discriminated union **MoveTextEntry** with these choices:
+
+| Choice        | Type                                     | Description                                                                                             |
+|:--------------|:-----------------------------------------|:--------------------------------------------------------------------------------------------------------|
+| HalfMoveEntry | int option * bool * pMove * aMove option | The main option: optional move counter, whether a continuation, the SAN move and the board related move |
+| CommentEntry  | string                                   | Holds a comment in a game                                                                               |
+| GameEndEntry  | GameResult                               | Holds the result at the end of a game                                                                   |
+| NAGEntry      | int                                      | Holds a NAG entry such as += in a game                                                                  |
+| RAVEntry      | MoveTextEntry list                       | Holds a RAV entry for variations in a game                                                              |
+
+## Games
+
+These are a means of storing a game. They are provided as a record type **Game** with these fields:
+
+| Field             | Type               | Description                                       |
+|:------------------|:-------------------|:--------------------------------------------------|
+| Event             | string             | The game was in this event                        |
+| Site              | string             | The game was at this site                         |
+| Year              | int option         | The game was played in this year but may be None  |
+| Month             | int option         | The game was played in this month but may be None |
+| Day               | int option         | The game was played in this day but may be None   |
+| Round             | string             | The game was in this round                        |
+| WhitePlayer       | string             | The game had this player as white                 |
+| BlackPlayer       | string             | The game had this player as black                 |
+| Result            | GameResult         | The game had this result                          |
+| BoardSetup        | Brd option         | The game optionally had this as a starting board  |
+| AdditionalInfo    | Map<string,string> | The game had these as extra headers               |
+| MoveText          | MoveTextEntry list | The game had these move entries                   |
