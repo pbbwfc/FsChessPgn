@@ -8,6 +8,13 @@ module Square =
     ///Gets the Rank for a Square
     let ToRank = FsChessPgn.Square.ToRank
 
+module Piece =
+
+    ///Gets the string symbol for a Piece
+    let ToStr = FsChessPgn.Piece.PieceToString
+
+    ///Gets the player for a Piece
+    let ToPlayer = FsChessPgn.Piece.PieceToPlayer
 
 module Board =
 
@@ -48,6 +55,15 @@ module Board =
     let Print = FsChessPgn.Board.PrintAscii
 
 module Move =
+
+    ///Get the source Square for an encoded Move
+    let From = FsChessPgn.Move.From
+
+    ///Get the target Square for an encoded Move
+    let To = FsChessPgn.Move.To
+
+    ///Get the promoted PieceType for an encoded Move
+    let PromPcTp = FsChessPgn.Move.PromoteType
 
     ///Get an encoded move from a SAN string such as Nf3 for this Board
     let FromSan = FsChessPgn.MoveUtil.fromSAN

@@ -12,6 +12,15 @@ The following Square related functions are provided in the module Square:
 | ToFile          | Square -> File                  | Gets the File for a Square                                                          |
 | ToRank          | Square -> Rank                  | Gets the Rank for a Square                                                          |
 
+## Piece
+
+The following Piece related functions are provided in the module Piece:
+
+| Function        | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| ToStr           | Piece -> string                 | Gets the string symbol for a Piece                                                  |
+| ToPlayer        | Piece -> Player                 | Gets the player for a Piece                                                         |
+
 ## Board
 
 The following Board related functions are provided in the module Board:
@@ -37,6 +46,9 @@ The following Move related functions are provided in the module Move:
 
 | Function      | Type                  | Description                                                       |
 |:--------------|:----------------------|:------------------------------------------------------------------|
+| From          | Move -> Square        | Get the source Square for an encoded Move                         |
+| To            | Move -> Square        | Get the target Square for an encoded Move                         |
+| PromPcTp      | Move -> PieceType     | Get the promoted PieceType for an encoded Move                    |
 | FromSan       | Brd -> string -> Move | Get an encoded move from a SAN string such as Nf3 for this Board  |
 | FromUci       | Brd -> string -> Move | Get an encoded move from a UCI string such as g1f3 for this Board |
 | ToUci         | Move -> string        | Get the UCI string such as g1f3 for a move                        |
