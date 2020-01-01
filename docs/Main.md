@@ -117,3 +117,36 @@ These are a means of storing the castling writes for a board position. They are 
 | BlackShort | 4     |
 | BlackLong  | 8     |
 | All        | 15    |
+
+## Bitboards
+
+This is used internally for efficent storage of squares and moves and calculations of possible moves. They are provided as an enumeration **Bitboard** of 64-bit unsigned integers.
+
+Here are some sample values:
+
+| Label    | Value                 |
+|:---------|:----------------------|
+| A8       | 1UL                   | 
+| H1       | 9223372036854775808UL | 
+| FileA    | 72340172838076673UL   |
+| Rank4    | 1095216660480UL       |
+
+## Move Types
+
+These are a means of storing the broad type of each move for a SAN move. They are provided as a simple discriminated union **MoveType** with these choices:
+
+ - Simple
+ - Capture
+ - CastleKingSide
+ - CastleQueenSide
+
+## Move Annotations
+
+These are a means of storing the annotation such as _??_ for a SAN move. They are provided as a simple discriminated union **MoveAnnotation** with these choices:
+
+ - Brilliant
+ - Good
+ - Interesting
+ - Dubious
+ - Mistake
+ - Blunder
