@@ -257,12 +257,6 @@ val mvs : string = "1. e4 c5 2. c4 Nc6 3. Ne2 Nf6 4. Nbc3 Nb4 5. g3 Nd3# 0-1"
 val result : FsChess.Types.GameResult = BlackWins
 ```
 
-## Function Documentation
-
-* [Main Chess Features](https://pbbwfc.github.io/FsChessPgn/Main)
-* [PGN parsing and writing](https://pbbwfc.github.io/FsChessPgn/Pgn)
-
-
 ## Installing
 
 Please just download a copy of the code from GitHub and then start using any of the sample scripts. 
