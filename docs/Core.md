@@ -3,6 +3,15 @@
 
 # Core Chess Functions
 
+## Square
+
+The following Square related functions are provided in the module Square:
+
+| Function        | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| ToFile          | Square -> File                  | Gets the File for a Square                                                          |
+| ToRank          | Square -> Rank                  | Gets the Rank for a Square                                                          |
+
 ## Board
 
 The following Board related functions are provided in the module Board:

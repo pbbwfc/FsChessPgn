@@ -1,5 +1,14 @@
 ﻿namespace FsChess
 
+module Square =
+
+    ///Gets the File for a Square
+    let ToFile = FsChessPgn.Square.ToFile
+
+    ///Gets the Rank for a Square
+    let ToRank = FsChessPgn.Square.ToRank
+
+
 module Board =
 
     ///Create a new Board given a FEN string
