@@ -29,10 +29,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{10919F05-44B1-433C-B3EC-228542F970B0}"
 	ProjectSection(SolutionItems) = preProject
 		docs\_config.yml = docs\_config.yml
+		docs\Core.md = docs\Core.md
 		docs\index.md = docs\index.md
-		docs\Main.md = docs\Main.md
 		docs\Pgn.md = docs\Pgn.md
 		README.md = README.md
+		docs\Types.md = docs\Types.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{7C063F59-7940-4793-8D18-BAD44C939B50}"

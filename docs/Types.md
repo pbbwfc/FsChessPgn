@@ -1,7 +1,7 @@
 
-[Home](https://pbbwfc.github.io/FsChessPgn)  [Main Chess Features](https://pbbwfc.github.io/FsChessPgn/Main)  [PGN parsing and writing](https://pbbwfc.github.io/FsChessPgn/Pgn)
+[Home](https://pbbwfc.github.io/FsChessPgn)  [Types](https://pbbwfc.github.io/FsChessPgn/Types)  [Core Functions](https://pbbwfc.github.io/FsChessPgn/Core)  [PGN Functions](https://pbbwfc.github.io/FsChessPgn/Pgn)
 
-# Main Chess Features
+# Chess Types
 
 ## Piece types
 
