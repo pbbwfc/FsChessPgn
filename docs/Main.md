@@ -151,7 +151,7 @@ These are a means of storing the annotation such as _??_ for a SAN move. They ar
  - Mistake
  - Blunder
 
- ## SAN Moves
+## SAN Moves
 
 These are a means of storing a move in SAN format such as _Nxg6+!_. They are provided as a record type **pMove** with these fields:
 
@@ -168,4 +168,29 @@ These are a means of storing a move in SAN format such as _Nxg6+!_. They are pro
 | IsCheckMate   | bool              | Does the move mate the king?                |
 | Annotation    | MoveAnnotation    | Anny annotation such as ?? for the move     |
 
+## Boards
 
+These are a means of storing a position on board. They are provided as a record type **Brd** with these fields:
+
+| Field             | Type              | Description                                 |
+|:------------------|:------------------|:--------------------------------------------|
+| PieceAt           | Piece list        | The pieces on each square                   |
+| WtKingPos         | Square            | The square of the white king                |
+| BkKingPos         | Square            | The square of the black king                |
+| PieceTypes        | Bitboard list     | Keeps track of the piece types on the board |
+| WtPrBds           | Bitboard          | Keeps track of the white pieces             |
+| BkPrBds           | Bitboard          | Keeps track of the black pieces             |
+| PieceLocationsAll | Bitboard          | Keeps track of all pieces                   |
+| Checkers          | Bitboard          | Keeps track of all pieces giving check      |
+| WhosTurn          | Player            | Holds the player whose turn it is           |
+| CastleRights      | CstlFlgs          | Holds the castling rights still available   |
+| EnPassant         | Square            | Holds the possible square to take e.p.      |
+| Fiftymove         | int               | Keeps track of moves for draw in 50         |
+| Fullmove          | int               | Keeps track of overall double moves         |
+
+This also provides and Indexer so that you can get a piece on a square using code like:
+
+
+```fsharp
+let pc = board.[C3]
+```

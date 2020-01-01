@@ -215,7 +215,6 @@ module Types =
           EnPassant : Square
           Fiftymove : int
           Fullmove : int
-          MovesSinceNull : int
           }
          member this.Item with get(sq:Square) = this.PieceAt.[int(sq)]
               
@@ -234,7 +233,6 @@ module Types =
           EnPassant = OUTOFBOUNDS
           Fiftymove = 0
           Fullmove = 0
-          MovesSinceNull = 100
           }
 
     type aMove =

@@ -112,9 +112,6 @@ module Board =
         let capture = move|>Move.CapturedPiece
 
         let bd = 
-            { bd with MovesSinceNull = bd.MovesSinceNull + 1 }
-        
-        let bd = 
             if capture <> Piece.EMPTY then bd |> PieceRemove(mto)
             else bd
         
