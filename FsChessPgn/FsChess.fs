@@ -32,7 +32,7 @@ module Board =
     ///The Squares that attack the specified Square by the specified Player for this Board
     let SquareAttackers = FsChessPgn.Board.SquareAttacksTo
 
-    ///Creates a PNG image file with the specified name, flipped if specified for the given Board 
+    ///Creates a PNG image ith specified name, flipped if specified for the given Board 
     let ToPng = FsChessPgn.Png.BoardToPng
 
     ///Prints an ASCII version of this Board 
@@ -43,7 +43,7 @@ module Move =
     ///Get an encoded move from a SAN string such as Nf3 for this Board
     let FromSan = FsChessPgn.MoveUtil.fromSAN
 
-    ///Get an encoded move from a UCI string such as g1f3 for thsi Board
+    ///Get an encoded move from a UCI string such as g1f3 for this Board
     let FromUci = FsChessPgn.MoveUtil.fromUci
 
     ///Get the UCI string such as g1f3 for a move
