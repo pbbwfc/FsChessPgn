@@ -33,6 +33,9 @@ module Board =
     ///Gets all possible moves for this Board from the specified Square
     let PossMoves = FsChessPgn.MoveGenerate.PossMoves
 
+    ///Make an encoded Move for this Board and return the new Board
+    let Push = FsChessPgn.Board.MoveApply
+
     ///Make a SAN Move such as Nf3 for this Board and return the new Board
     let PushSAN = FsChessPgn.MoveUtil.ApplySAN
 

@@ -79,6 +79,32 @@ module Library =
             | "q" -> img "BlackQueen.png"
             | _ -> failwith "invalid piece"
 
+        ///set pieces on squares
+        let setpcsmvs (p : Brd) =
+            let setpcsmvs() =
+                p.PieceAt
+                |>List.map Piece.ToStr
+                |> List.iteri (fun i c -> sqs.[i].Image <- if c = " " then null else getim c)
+                //mvstb.Text <- stt.GetMvsStr()
+            if (bd.InvokeRequired) then 
+                try 
+                    bd.Invoke(MethodInvoker(setpcsmvs)) |> ignore
+                with _ -> ()
+            else setpcsmvs()
+
+        ///highlight possible squares
+        let highlightsqs sl =
+            sqs
+            |> Array.iteri (fun i sq -> 
+                   sqs.[i].BackColor <- if (i % 8 + i / 8) % 2 = 1 then 
+                                            Color.Green
+                                        else Color.PaleGreen)
+            sl
+            |> List.iter (fun s -> 
+                   sqs.[s].BackColor <- if (s % 8 + s / 8) % 2 = 1 then 
+                                            Color.YellowGreen
+                                        else Color.Yellow)
+
         /// Action for GiveFeedback
         let giveFeedback (e : GiveFeedbackEventArgs) =
             e.UseDefaultCursors <- false
@@ -96,18 +122,25 @@ module Library =
         let mouseDown (p : PictureBox, e : MouseEventArgs) =
             if e.Button = MouseButtons.Left then 
                 let sqFrom = System.Convert.ToInt32(p.Tag)
-                //stt.GetPossSqs(sqFrom)
+                let sqf:Square = sqFrom|>int16
+                let psmvs = sqf|>Board.PossMoves board
+                let pssqs = psmvs|>List.map(fun m -> m|>Move.To|>int)
+                pssqs|>highlightsqs
                 let oimg = p.Image
                 p.Image <- null
                 p.Refresh()
                 let c = board.PieceAt.[sqFrom]|>Piece.ToStr
                 cCur <- getcur c
                 sqpnl.Cursor <- cCur
-                //if stt.PsSqs.Length > 0 
-                //   && (p.DoDragDrop(oimg, DragDropEffects.Move) = DragDropEffects.Move) then 
-                //    stt.Move(sqFrom, sqTo)
-                //else p.Image <- oimg
-                //sqpnl.Cursor <- Cursors.Default
+                if pssqs.Length > 0 && (p.DoDragDrop(oimg, DragDropEffects.Move) = DragDropEffects.Move) then 
+                    let mvl = psmvs|>List.filter(fun m ->m|>Move.To|>int=sqTo)
+                    if mvl.Length=1 then
+                        board <- board|>Board.Push mvl.Head
+                        board|>setpcsmvs
+                    else p.Image <- oimg
+                else p.Image <- oimg
+                sqpnl.Cursor <- Cursors.Default
+                []|>highlightsqs
 
         /// creates file label
         let flbl i lbli =
@@ -156,24 +189,6 @@ module Library =
             sq.DragOver.Add(dragOver)
             sq.GiveFeedback.Add(giveFeedback)
             sqs.[i] <- sq
-        
-        ///set pieces on squares
-        let setpcsmvs (p : Brd) =
-            let setpcsmvs() =
-                p.PieceAt
-                |>List.map Piece.ToStr
-                |> List.iteri (fun i c -> sqs.[i].Image <- if c = " " then null else getim c)
-                //mvstb.Text <- stt.GetMvsStr()
-            if (bd.InvokeRequired) then 
-                try 
-                    bd.Invoke(MethodInvoker(setpcsmvs)) |> ignore
-                with _ -> ()
-            else setpcsmvs()
-        
-        
-        
-        
-        
         
         do 
             //mvstb |> mvspnl.Controls.Add
