@@ -338,6 +338,21 @@ module MoveGenerate =
             (bd|>QueenMoves) @
             (bd|>KingMoves)
 
+    let PossMoves (bd: Brd) (sq: Square) =
+        let pc = bd.[sq]
+        let plr = pc|>Piece.PieceToPlayer
+        if plr<>bd.WhosTurn then []
+        else
+            let pt = pc|>Piece.ToPieceType
+            match pt with
+            |PieceType.Pawn -> bd|>PawnMoves|>List.filter(fun m -> m|>Move.From=sq)
+            |PieceType.Knight -> bd|>KnightMoves|>List.filter(fun m -> m|>Move.From=sq)
+            |PieceType.Bishop -> bd|>BishopMoves|>List.filter(fun m -> m|>Move.From=sq)
+            |PieceType.Rook -> bd|>RookMoves|>List.filter(fun m -> m|>Move.From=sq)
+            |PieceType.Queen -> bd|>QueenMoves|>List.filter(fun m -> m|>Move.From=sq)
+            |PieceType.King -> ((bd|>KingMoves)@(bd|>CastleMoves))|>List.filter(fun m -> m|>Move.From=sq)
+            |_ -> []
+    
     let IsDrawByStalemate(bd : Brd) = 
         if not (bd |> Board.IsChk) then AllMoves(bd) |> List.isEmpty
         else false

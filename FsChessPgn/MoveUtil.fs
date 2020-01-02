@@ -70,7 +70,6 @@ module MoveUtil =
             let mt = if iscap then MoveType.Capture else MoveType.Simple
             pMove.CreateAll(mt,sTo,Some(pct),uf,ur,(if isprom then Some(ptprom) else None),ischk,false,ismt,None)
 
-
     let toPgn (board : Brd) (move : Move) = 
         let pmv = move|>topMove board
         let pgn = pmv|>PgnWrite.MoveStr

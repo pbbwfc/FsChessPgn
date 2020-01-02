@@ -31,6 +31,7 @@ The following Board related functions are provided in the module Board:
 | ToStr           | Brd -> string                   | Create a FEN string from this Board                                                 |
 | Start           | Brd                             | The starting Board at the beginning of a game                                       |
 | AllMoves        | Brd -> Move list                | Gets all legal moves for this Board                                                 |
+| PossMoves       | Brd -> Square -> Move list      | Gets all possible moves for this Board from the specified Square                    |
 | PushSAN         | string -> Brd -> Brd            | Make a SAN Move such as Nf3 for this Board and return the new Board                 |
 | IsCheck         | Brd -> bool                     | Is there a check on the Board                                                       |
 | IsCheckMate     | Brd -> bool                     | Is the current position on the Board checkmate?                                     |

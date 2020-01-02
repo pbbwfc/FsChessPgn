@@ -30,6 +30,9 @@ module Board =
     ///Gets all legal moves for this Board
     let AllMoves = FsChessPgn.MoveGenerate.AllMoves
 
+    ///Gets all possible moves for this Board from the specified Square
+    let PossMoves = FsChessPgn.MoveGenerate.PossMoves
+
     ///Make a SAN Move such as Nf3 for this Board and return the new Board
     let PushSAN = FsChessPgn.MoveUtil.ApplySAN
 
