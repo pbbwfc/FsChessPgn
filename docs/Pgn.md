@@ -1,7 +1,7 @@
 
 [Home](https://pbbwfc.github.io/FsChessPgn)  [Types](https://pbbwfc.github.io/FsChessPgn/Types)  [Core Functions](https://pbbwfc.github.io/FsChessPgn/Core)  [PGN Functions](https://pbbwfc.github.io/FsChessPgn/Pgn)
 
-# PGN reading and writing
+# PGN reading, writing and statistics
 
 The PGN related facilities are included in the namespace _FSChess.Pgn_ in the module _Games_. 
 
@@ -95,3 +95,9 @@ val it : unit = ()
 ```
 
 A file containing the first 2 games is created as _test.pgn_.
+
+## Statistics
+
+Working with individual games from a PGN file is done using the finctions in _FsChess_ in module _Game_. In additiona functions relating to all the games in a PGN file are documented here.
+
+TODO
