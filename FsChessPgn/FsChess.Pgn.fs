@@ -3,5 +3,7 @@
 module Games =
 
     ///Get a list of Games from a file
-    let ReadFromFile = FsChessPgn.Games.ReadFromFile
+    let ReadListFromFile = FsChessPgn.Games.ReadFromFile
     
+    ///Get a Sequence of Games from a file
+    let ReadSeqFromFile = FsChessPgn.Games.ReadSeqFromFile

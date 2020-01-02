@@ -9,7 +9,7 @@ module AssemblyInfo=
 
 [<AutoOpen>]
 module Types = 
-    type Move = int
+    type Move = uint32
     let MoveEmpty = 0
     
     type PieceType = 

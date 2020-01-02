@@ -11,6 +11,11 @@ module Games =
         let db = RegParse.AllGamesRdr(sr)
         db
 
+    let ReadSeqFromFile(file : string) = 
+        let stream = new FileStream(file, FileMode.Open)
+        let db = ReadFromStream(stream)
+        db
+
     let ReadFromFile(file : string) = 
         let stream = new FileStream(file, FileMode.Open)
         let result = ReadFromStream(stream) |> Seq.toList

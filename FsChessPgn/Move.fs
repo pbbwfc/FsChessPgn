@@ -3,11 +3,11 @@
 open FsChess
 
 module Move = 
-    let Create (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) = 
-        (int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16))
-    let CreateProm (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) (promoteType : PieceType) = 
-        (int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16) 
-         ||| (int (promoteType) <<< 20))
+    let Create (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) :Move = 
+        (uint32 (pfrom) ||| (uint32 (pto) <<< 6) ||| (uint32 (piece) <<< 12) ||| (uint32 (captured) <<< 16))
+    let CreateProm (pfrom : Square) (pto : Square) (piece : Piece) (captured : Piece) (promoteType : PieceType) :Move = 
+        (uint32 (pfrom) ||| (uint32 (pto) <<< 6) ||| (uint32 (piece) <<< 12) ||| (uint32 (captured) <<< 16) 
+         ||| (uint32 (promoteType) <<< 20))
     let From(move : Move) :Square = int16(int(move) &&& 0x3F)
     let To(move : Move) :Square = int16(int(move) >>> 6 &&& 0x3F)
     let MovingPiece(move : Move) = (int(move) >>> 12 &&& 0xF) |> Pc
