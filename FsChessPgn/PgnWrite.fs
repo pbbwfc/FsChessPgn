@@ -153,6 +153,7 @@ module PgnWrite =
 
         writer.WriteLine();
         MoveText(game.MoveText, writer)
+        writer.WriteLine();
 
     let GameStr(game:Game) =
         let writer = new StringWriter()

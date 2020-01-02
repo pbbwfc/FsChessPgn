@@ -21,7 +21,8 @@ type MoveFormatterTest()=
 [Black ""Mendelsohn, J.""]
 [Result ""1-0""]
 
-{some moves} 1-0"
+{some moves} 1-0
+"
 
     let _testGame = 
         {GameEMP with Event="Breslau";Site="Breslau";Year=Some(1879);WhitePlayer="Tarrasch, Siegbert";BlackPlayer="Mendelsohn, J.";Result=GameResult.WhiteWins;MoveText=[CommentEntry("some moves");GameEndEntry(GameResult.WhiteWins)]}

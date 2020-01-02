@@ -50,3 +50,48 @@ val gms : seq<FsChess.Types.Game>
 val first_game : FsChess.Types.Game = moves: ...Rd5 44. f6 Rd1 45. g7 1-0
 val event : string = "IBM Man-Machine, New York USA"
 ```
+
+## Writing
+
+When you have a list of games you can write it to a file using this function:
+
+
+| Function         | Type                            | Description                                                                         |
+|:-----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| WriteFile        | string -> Game list-> unit      | Given a PGN file name, write this list of Games to that file                        |
+
+Here is some sample code illustrating how to use this function:
+
+```fsharp
+
+#load "setup.fsx"
+open FsChess.Pgn
+
+let pgn = __SOURCE_DIRECTORY__ + "/data/pgn/kasparov-deep-blue-1997.pgn"
+
+//loads all games
+let gml = Games.ReadListFromFile(pgn)
+
+let gml2 = gml.[0..1]
+let pgn2 = "c:/temp/test.pgn"
+
+gml2|>Games.WriteFile pgn2
+
+```
+
+This produces these results:
+
+```
+val gml : FsChess.Types.Game list =
+  [moves: ...Rd5 44. f6 Rd1 45. g7 1-0; moves: ...Qb6+ 44. Kf1 Rb8 45. Ra6 1-0;
+   moves: ...Kh7 47. Ra3 Kh8 48. Ra6 1/2-1/2;
+   moves: ...Re4 55. a4 Kb3 56. Kc1 1/2-1/2;
+   moves: ...48. g6 Kxb5 49. g7 Kb4 1/2-1/2;
+   moves: ...exf5 18. Rxe7 Bxe7 19. c4 1-0]
+val gml2 : FsChess.Types.Game list =
+  [moves: ...Rd5 44. f6 Rd1 45. g7 1-0; moves: ...Qb6+ 44. Kf1 Rb8 45. Ra6 1-0]
+val pgn2 : string = "c:/temp/test.pgn"
+val it : unit = ()
+```
+
+A file containing the first 2 games is created as _test.pgn_.

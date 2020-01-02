@@ -9,8 +9,9 @@ module PgnWriter =
         use writer = new StreamWriter(stream)
         for game in pgnDatabase do
             PgnWrite.Game(game, writer)
+            writer.WriteLine()
 
-    let WriteFile(file:string, pgnDatabase:Game list) =
+    let WriteFile (file:string) (pgnDatabase:Game list) =
         let stream = new FileStream(file, FileMode.OpenOrCreate)
         WriteStream(stream,pgnDatabase)
 
@@ -18,5 +19,6 @@ module PgnWriter =
         use writer = new StringWriter()
         for game in pgnDatabase do
             PgnWrite.Game(game, writer)
+            writer.WriteLine()
         writer.ToString()
  
