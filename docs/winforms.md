@@ -12,3 +12,5 @@ The first component provided is a chess board panel that allows you to make lega
 It keeps track of a Board type and a list of Moves.
 
 There is a simple example of its use - see the sample application _ShowBoard_.
+
+![showboard](showboard.png)
