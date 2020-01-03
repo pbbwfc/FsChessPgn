@@ -8,7 +8,7 @@ module Main =
     Application.EnableVisualStyles()
     
     type FrmMain() as this =
-        inherit Form(Text = "Show Board", Width = 500, Height = 500)
+        inherit Form(Text = "Show Board", Width = 410, Height = 420)
 
         let bd = new PnlBoard()
 

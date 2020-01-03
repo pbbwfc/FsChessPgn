@@ -35,7 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{10919F05-4
 		docs\index.md = docs\index.md
 		docs\Pgn.md = docs\Pgn.md
 		README.md = README.md
+		docs\showboard.png = docs\showboard.png
 		docs\Types.md = docs\Types.md
+		docs\winforms.md = docs\winforms.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{7C063F59-7940-4793-8D18-BAD44C939B50}"
@@ -52,9 +54,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pgn", "pgn", "{C578B2C6-113
 		scripts\data\pgn\stockfish-learning.pgn = scripts\data\pgn\stockfish-learning.pgn
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsChess.WinForms", "FsChess.WinForms\FsChess.WinForms.fsproj", "{2E095225-55E7-4DD8-9A36-4F8F8D96AC62}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FsChess.WinForms", "FsChess.WinForms\FsChess.WinForms.fsproj", "{2E095225-55E7-4DD8-9A36-4F8F8D96AC62}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ShowBoard", "Samples\ShowBoard\ShowBoard.fsproj", "{4B0629AA-8D4B-4936-92F4-EE5AEAD4D33B}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowBoard", "Samples\ShowBoard\ShowBoard.fsproj", "{4B0629AA-8D4B-4936-92F4-EE5AEAD4D33B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
