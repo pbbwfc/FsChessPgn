@@ -17,7 +17,7 @@ There is a simple example of its use - see the sample application _ShowBoard_.
 
 # Pgn Game Panel
 
-This component is a panel holding teh moves of a game in PGn format.
+This component is a panel holding the moves of a game in PGN format.
 
 It keeps track of a Game including headers, moves and comments.
 
