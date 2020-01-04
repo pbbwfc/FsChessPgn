@@ -50,17 +50,19 @@ val ismate : bool = true
 
 * Can make moves given a Board. Can both make and unmake moves given a Game.
 
-* Show a simple ASCII board:
+* Show a simple ASCII board
 
-* Detects checkmates and stalemates:
+* Detects checkmates and stalemates
 
-* Detects checks and attacks:
+* Detects checks and attacks
 
-* Parses and creates SAN representation of moves:
+* Parses and creates SAN representation of moves
 
-* Parses and creates FENs:
+* Parses and creates FENs
 
-* Reads and writes PGNs. Supports headers, comments, NAGs and a tree of variations:
+* Reads and writes PGNs. Supports headers, comments, NAGs and a tree of variations
+
+* Also provides Chess realted components for WinForms
 
 ## Installing
 

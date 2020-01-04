@@ -18,7 +18,6 @@ module Library =
         let file = thisExe.GetManifestResourceStream("FsChess.WinForms.Cursors." + nm)
         new Cursor(file)
  
-
     type PnlBoard() as bd =
         inherit Panel(Width = 400, Height = 450)
 
@@ -204,3 +203,7 @@ module Library =
             sqpnl |> bdpnl.Controls.Add
             bdpnl |> bd.Controls.Add
 
+    type RchPgn() as pgn =
+        inherit RichTextBox()
+
+        let mutable game = Game.Start
