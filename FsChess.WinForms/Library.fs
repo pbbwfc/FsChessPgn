@@ -207,3 +207,12 @@ module Library =
         inherit RichTextBox()
 
         let mutable game = Game.Start
+
+        do
+            pgn.Text <- game.MoveText|>Game.MovesStr
+
+        member val Game = game with get,set
+
+        member pgn.SetGame(gm:Game) = 
+            game <- gm
+            pgn.Text <- game.MoveText|>Game.MovesStr

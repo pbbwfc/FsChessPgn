@@ -2,7 +2,7 @@
 
 open System
 open System.Windows.Forms
-open System.Drawing
+open FsChess.Pgn
 
 module Main =
     [<STAThread>]
@@ -10,6 +10,9 @@ module Main =
     
     type FrmMain() as this =
         inherit Form(Text = "Show Pgn", Width = 910, Height = 420)
+
+        let mutable gms = []
+        let mutable ct = 0
 
         let bd = new PnlBoard(Dock=DockStyle.Left)
         let rtpnl = new Panel(Dock=DockStyle.Fill)
@@ -19,6 +22,22 @@ module Main =
         let pvbtn = new Button(Text="Prev",Dock = DockStyle.Right)
         let pgn = new RchPgn(Dock=DockStyle.Fill)
 
+        let ldpgn() =
+            let dlg = new OpenFileDialog(InitialDirectory = "c:\\",Filter = "pgn files (*.pgn)|*.pgn")
+            if dlg.ShowDialog() = DialogResult.OK then
+                let pgnfil = dlg.FileName
+                gms <- Games.ReadListFromFile(pgnfil)
+                ct <- 0
+                pgn.SetGame(gms.[ct])  
+        let nxt() =
+            if ct<gms.Length-1 then
+                ct <- ct+1
+                pgn.SetGame(gms.[ct])
+        let prv() =
+            if ct>0 then
+                ct <- ct-1
+                pgn.SetGame(gms.[ct])
+        
         do
             pgn|>rtpnl.Controls.Add
             ldbtn |>rbpnl.Controls.Add
@@ -27,6 +46,10 @@ module Main =
             rbpnl|>rtpnl.Controls.Add
             rtpnl|>this.Controls.Add
             bd|>this.Controls.Add
+            //Buttons
+            ldbtn.Click.Add(fun e -> ldpgn())
+            nxbtn.Click.Add(fun e -> nxt())
+            pvbtn.Click.Add(fun e -> prv())
     
     let frm = new FrmMain()
     
