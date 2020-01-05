@@ -203,16 +203,51 @@ module Library =
             sqpnl |> bdpnl.Controls.Add
             bdpnl |> bd.Controls.Add
 
-    type RchPgn() as pgn =
-        inherit RichTextBox()
+    type WbPgn() as pgn =
+        inherit WebBrowser(AllowWebBrowserDrop = false,IsWebBrowserContextMenuEnabled = false,WebBrowserShortcutsEnabled = false)
 
         let mutable game = Game.Start
+        let hdr = "<html><body>"
+        let ftr = "</body></html>"
+        let mvtag i (mte:MoveTextEntry) =
+            //TODO: do different for each move type add class...
+            let idstr = "id = \"" + i.ToString() + "\""
+            match mte with
+            |HalfMoveEntry(_,_,_,_) ->
+                let str = mte|>Game.MoveStr
+                "<span " + idstr + " class=\"mv\">" + str + "</span>"
+            |CommentEntry(_) ->
+                let str = mte|>Game.MoveStr
+                "<div " + idstr + " class=\"cm\">" + str + "</div>"
+            |_ ->
+                let str = mte|>Game.MoveStr
+                "<span " + idstr + ">" + str + "</span>"
+
+        let mvtags() = 
+            let mt = game.MoveText
+            if mt.IsEmpty then hdr+ftr
+            else
+                hdr +
+                (game.MoveText|>List.mapi mvtag|>List.reduce(fun a b -> a + " " + b))
+                + ftr
+        
+        let onclick(mv:HtmlElement) = 
+            //TODO: create event to raise with a board after this click
+            //use this event to change the related board ui.
+            MessageBox.Show("id=" + mv.Id + ";class=" + mv.GetAttribute("className"))|>ignore
+        
+        let setclicks e = 
+            for el in pgn.Document.GetElementsByTagName("span") do
+                    el.Click.Add(fun _ -> onclick(el))
+        
 
         do
-            pgn.Text <- game.MoveText|>Game.MovesStr
+            pgn.DocumentText <- mvtags()
+            pgn.DocumentCompleted.Add(setclicks)
+            pgn.ObjectForScripting <- pgn
 
         member val Game = game with get,set
 
         member pgn.SetGame(gm:Game) = 
             game <- gm
-            pgn.Text <- game.MoveText|>Game.MovesStr
+            pgn.DocumentText <- mvtags()

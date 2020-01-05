@@ -65,4 +65,5 @@ The following Game related functions are provided in the module Game:
 | Start           | Game                            | The starting Game with no moves                                                     |
 | PushSAN         | string -> Game -> Game          | Make a SAN Move such as Nf3 for this Game and return the new Game                   |
 | Pop             | Game -> Game                    | Pops a move of the end for this Game and return the new Game                        |
+| MoveStr         | MoveTextEntry -> string         | Gets a single move as a string given one of the list from Game.MoveText             |
 | MovesStr        | MoveTextEntry list -> string    | Gets the moves text as a string given the Game.MoveText                             |

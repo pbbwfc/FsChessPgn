@@ -20,10 +20,10 @@ module Main =
         let ldbtn = new Button(Text="Load",Dock = DockStyle.Right)
         let nxbtn = new Button(Text="Next",Dock = DockStyle.Right)
         let pvbtn = new Button(Text="Prev",Dock = DockStyle.Right)
-        let pgn = new RchPgn(Dock=DockStyle.Fill)
+        let pgn = new WbPgn(Dock=DockStyle.Fill)
 
         let ldpgn() =
-            let dlg = new OpenFileDialog(InitialDirectory = "c:\\",Filter = "pgn files (*.pgn)|*.pgn")
+            let dlg = new OpenFileDialog(Filter = "pgn files (*.pgn)|*.pgn")
             if dlg.ShowDialog() = DialogResult.OK then
                 let pgnfil = dlg.FileName
                 gms <- Games.ReadListFromFile(pgnfil)

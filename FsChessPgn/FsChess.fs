@@ -94,6 +94,9 @@ module Game =
     ///Pops a move of the end for this Game and return the new Game
     let Pop = FsChessPgn.Game.RemoveMoveEntry
 
+    ///Gets a single move as a string given one of the list from Game.MoveText
+    let MoveStr = FsChessPgn.PgnWrite.MoveTextEntryStr
+
     ///Gets the moves text as a string given the Game.MoveText
     let MovesStr = FsChessPgn.PgnWrite.MoveTextStr
 
