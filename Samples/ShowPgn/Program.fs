@@ -18,8 +18,9 @@ module Main =
         let rtpnl = new Panel(Dock=DockStyle.Fill)
         let rbpnl = new Panel(Dock=DockStyle.Bottom,Height=30)
         let ldbtn = new Button(Text="Load",Dock = DockStyle.Right)
-        let nxbtn = new Button(Text="Next",Dock = DockStyle.Right)
-        let pvbtn = new Button(Text="Prev",Dock = DockStyle.Right)
+        let nxbtn = new Button(Text="Game >",Dock = DockStyle.Right)
+        let pvbtn = new Button(Text="< Game",Dock = DockStyle.Right)
+        let nxmbtn = new Button(Text="Move >",Dock = DockStyle.Right)
         let pgn = new WbPgn(Dock=DockStyle.Fill)
 
         let ldpgn() =
@@ -37,12 +38,15 @@ module Main =
             if ct>0 then
                 ct <- ct-1
                 pgn.SetGame(gms.[ct])
+        let nxtm() =
+            pgn.NextMove()
         
         do
             pgn|>rtpnl.Controls.Add
             ldbtn |>rbpnl.Controls.Add
-            nxbtn |>rbpnl.Controls.Add
             pvbtn |>rbpnl.Controls.Add
+            nxbtn |>rbpnl.Controls.Add
+            nxmbtn |>rbpnl.Controls.Add
             rbpnl|>rtpnl.Controls.Add
             rtpnl|>this.Controls.Add
             bd|>this.Controls.Add
@@ -50,6 +54,7 @@ module Main =
             ldbtn.Click.Add(fun e -> ldpgn())
             nxbtn.Click.Add(fun e -> nxt())
             pvbtn.Click.Add(fun e -> prv())
+            nxmbtn.Click.Add(fun e -> nxtm())
             //events
             pgn.BdChng |> Observable.add bd.SetBoard
 

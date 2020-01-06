@@ -212,6 +212,8 @@ module Library =
         //mutables
         let mutable game = Game.Start
         let mutable board = Board.Start
+        let mutable oldstyle:(HtmlElement*string) option = None
+        let mutable irs = [-1]
 
         //events
         let bdchngEvt = new Event<_>()
@@ -220,13 +222,29 @@ module Library =
         let hdr = "<html><body>"
         let ftr = "</body></html>"
         //given a rav id get then list of indexes to locate
-        //[2;,3;5] indicates go to RAV at index 2, withing this go to RAV at index 3 and then get item at index 5
+        //[2;3;5] indicates go to RAV at index 2, withing this go to RAV at index 3 and then get item at index 5
         let rec getirs ir irl =
             if ir<256 then ir::irl
             else
                 let nir = ir >>> 8
                 let i = ir &&& 0x3F
                 getirs nir (i::irl)
+        //get a rav id from a list of indexes to locate
+        //[2;,3;5] indicates go to RAV at index 2, withing this go to RAV at index 3 and then get item at index 5
+        let rec getir (irl:int list) ir =
+            if irl.IsEmpty then ir
+            else
+                let nir = irl.Head|||(ir<<<8)
+                getir irl.Tail nir
+        
+        let highlight (mve:HtmlElement) =
+            if oldstyle.IsSome then
+                let omve,ostyle = oldstyle.Value
+                omve.Style <- ostyle
+            let curr = mve.Style
+            oldstyle <- Some(mve,curr)
+            mve.Style <- "BACKGROUND-COLOR: powderblue"
+
         
         let rec mvtag ravno i (mte:MoveTextEntry) =
             let ir = i|||(ravno<<<8)
@@ -234,7 +252,7 @@ module Library =
             match mte with
             |HalfMoveEntry(_,_,_,_) ->
                 let str = mte|>Game.MoveStr
-                if ravno=0 then " <span " + idstr + " class=\"mv\">" + str + "</span>"
+                if ravno=0 then " <span " + idstr + " class=\"mv\" style=\"color:black\">" + str + "</span>"
                 else " <span " + idstr + " class=\"mv\" style=\"color:darkslategray\">" + str + "</span>"
             |CommentEntry(_) ->
                 let str = (mte|>Game.MoveStr).Trim([|'{';'}'|])
@@ -259,7 +277,7 @@ module Library =
         
         let onclick(mve:HtmlElement) = 
             let i = mve.Id|>int
-            let irs = getirs i []
+            irs <- getirs i []
             let mv =
                 if irs.Length>1 then 
                     let rec getmv (mtel:MoveTextEntry list) (intl:int list) =
@@ -279,6 +297,8 @@ module Library =
                 else
                     board <- amv.Value.PostBrd
                     board|>bdchngEvt.Trigger
+                    mve|>highlight
+
             |_ -> failwith "not done yet"
         
         let setclicks e = 
@@ -292,11 +312,53 @@ module Library =
             pgn.DocumentCompleted.Add(setclicks)
             pgn.ObjectForScripting <- pgn
 
-        member val Game = game with get,set
+        //member val Game = game with get,set
 
         member pgn.SetGame(gm:Game) = 
             game <- gm|>Game.GetaMoves
             pgn.DocumentText <- mvtags()
+
+        member pgn.NextMove() = 
+            let rec getnxt oi ci (mtel:MoveTextEntry list) =
+                if ci=mtel.Length then oi
+                else
+                    let mte = mtel.[ci]
+                    match mte with
+                    |HalfMoveEntry(_,_,_,amv) ->
+                        if amv.IsNone then failwith "should have valid aMove"
+                        else
+                            board <- amv.Value.PostBrd
+                            board|>bdchngEvt.Trigger
+                        ci
+                    |_ -> getnxt oi (ci+1) mtel
+            if irs.Length>1 then 
+                let rec getmv (mtel:MoveTextEntry list) (intl:int list) =
+                    if intl.Length=1 then
+                        let oi = intl.Head
+                        let ni = getnxt oi (oi+1) mtel
+                        let st = irs|>List.rev|>List.tail|>List.rev
+                        irs <- st@[ni]
+                    else
+                        let ih = intl.Head
+                        let mte = mtel.[ih]
+                        match mte with
+                        |RAVEntry(nmtel) -> getmv nmtel intl.Tail
+                        |_ -> failwith "should be a RAV"
+                getmv game.MoveText irs
+            else
+                let ni = getnxt irs.Head (irs.Head+1) game.MoveText
+                irs <- [ni]
+            //now need to select the element
+            let id = getir irs 0
+            for el in pgn.Document.GetElementsByTagName("span") do
+                if el.GetAttribute("className") = "mv" then
+                    if el.Id=id.ToString() then
+                        el|>highlight
+                        
+
+
+
+
 
         //publish
         member __.BdChng = bdchngEvt.Publish
