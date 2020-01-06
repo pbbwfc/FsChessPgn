@@ -110,7 +110,6 @@ let Sq(f:File,r:Rank) :Square = r * 8s + f
 These are three types of move supported. The main one is _aliased_ to an _int_ and encodes details of the move.
 
 
-
 ## Castle Flags
 
 These are a means of storing the castling writes for a board position. They are provided as an enumeration **CstlFlgs** with these values:
@@ -146,20 +145,9 @@ These are a means of storing the broad type of each move for a SAN move. They ar
  - CastleKingSide
  - CastleQueenSide
 
-## Move Annotations
-
-These are a means of storing the annotation such as _??_ for a SAN move. They are provided as a simple discriminated union **MoveAnnotation** with these choices:
-
- - Brilliant
- - Good
- - Interesting
- - Dubious
- - Mistake
- - Blunder
-
 ## SAN Moves
 
-These are a means of storing a move in SAN format such as _Nxg6+!_. They are provided as a record type **pMove** with these fields:
+These are a means of storing a move in SAN format such as _Nxg6+_. They are provided as a record type **pMove** with these fields:
 
 | Field         | Type              | Description                                 |
 |:--------------|:------------------|:--------------------------------------------|
@@ -172,7 +160,6 @@ These are a means of storing a move in SAN format such as _Nxg6+!_. They are pro
 | IsCheck       | bool              | Does the move check the king?               |
 | IsDoubleCheck | bool              | Does the move double check the king?        |
 | IsCheckMate   | bool              | Does the move mate the king?                |
-| Annotation    | MoveAnnotation    | Anny annotation such as ?? for the move     |
 
 ## Boards
 
@@ -220,7 +207,7 @@ These are a means of storing the various type of move entry in a game. They are 
 | HalfMoveEntry | int option * bool * pMove * aMove option | The main option: optional move counter, whether a continuation, the SAN move and the board related move |
 | CommentEntry  | string                                   | Holds a comment in a game                                                                               |
 | GameEndEntry  | GameResult                               | Holds the result at the end of a game                                                                   |
-| NAGEntry      | int                                      | Holds a NAG entry such as += in a game                                                                  |
+| NAGEntry      | int                                      | Holds a NAG entry such as ?? or += in a game                                                            |
 | RAVEntry      | MoveTextEntry list                       | Holds a RAV entry for variations in a game                                                              |
 
 ## Games
