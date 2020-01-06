@@ -219,13 +219,23 @@ module Library =
         //functions
         let hdr = "<html><body>"
         let ftr = "</body></html>"
-        let mvtag i (mte:MoveTextEntry) =
-            //TODO: do different for each move type add class...
-            let idstr = "id = \"" + i.ToString() + "\""
+        //given a rav id get then list of indexes to locate
+        //[2;,3;5] indicates go to RAV at index 2, withing this go to RAV at index 3 and then get item at index 5
+        let rec getirs ir irl =
+            if ir<256 then ir::irl
+            else
+                let nir = ir >>> 8
+                let i = ir &&& 0x3F
+                getirs nir (i::irl)
+        
+        let rec mvtag ravno i (mte:MoveTextEntry) =
+            let ir = i|||(ravno<<<8)
+            let idstr = "id = \"" + ir.ToString() + "\""
             match mte with
             |HalfMoveEntry(_,_,_,_) ->
                 let str = mte|>Game.MoveStr
-                " <span " + idstr + " class=\"mv\">" + str + "</span>"
+                if ravno=0 then " <span " + idstr + " class=\"mv\">" + str + "</span>"
+                else " <span " + idstr + " class=\"mv\" style=\"color:darkslategray\">" + str + "</span>"
             |CommentEntry(_) ->
                 let str = (mte|>Game.MoveStr).Trim([|'{';'}'|])
                 "<div " + idstr + " class=\"cm\" style=\"color:green\">" + str + "</div>"
@@ -236,20 +246,33 @@ module Library =
                 let str = ng|>Game.NAGStr
                 "<span " + idstr + " class=\"ng\" style=\"color:darkred\">" + str + "</span>"
             |RAVEntry(mtel) ->
-                let str = mte|>Game.MoveStr
-                "<div " + idstr + ">" + str + "</div>"
+                let str = mtel|>List.mapi (mvtag ir)|>List.reduce(+)
+                "<div style=\"color:darkslategray\">(" + str + ")</div>"
 
         let mvtags() = 
             let mt = game.MoveText
             if mt.IsEmpty then hdr+ftr
             else
                 hdr +
-                (game.MoveText|>List.mapi mvtag|>List.reduce(+))
+                (game.MoveText|>List.mapi (mvtag 0)|>List.reduce(+))
                 + ftr
         
         let onclick(mve:HtmlElement) = 
             let i = mve.Id|>int
-            let mv = game.MoveText.[i]
+            let irs = getirs i []
+            let mv =
+                if irs.Length>1 then 
+                    let rec getmv (mtel:MoveTextEntry list) (intl:int list) =
+                        if intl.Length=1 then mtel.[intl.Head]
+                        else
+                            let ih = intl.Head
+                            let mte = mtel.[ih]
+                            match mte with
+                            |RAVEntry(nmtel) -> getmv nmtel intl.Tail
+                            |_ -> failwith "should be a RAV"
+                    getmv game.MoveText irs
+                else
+                    game.MoveText.[i]
             match mv with
             |HalfMoveEntry(_,_,_,amv) ->
                 if amv.IsNone then failwith "should have valid aMove"

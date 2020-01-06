@@ -85,7 +85,7 @@ module Game =
     
     //TODO
     let SetaMoves(gm:Game) =
-        let rec setamv (pmvl:MoveTextEntry list) bd opmvl =
+        let rec setamv (pmvl:MoveTextEntry list) prebd bd opmvl =
             if pmvl|>List.isEmpty then opmvl|>List.rev
             else
                 let mte = pmvl.Head
@@ -93,10 +93,14 @@ module Game =
                 |HalfMoveEntry(mn,ic,mv,_) -> 
                     let amv = mv|>pMove.ToaMove bd
                     let nmte = HalfMoveEntry(mn,ic,mv,Some(amv))
-                    setamv pmvl.Tail amv.PostBrd (nmte::opmvl)
-                |_ -> setamv pmvl.Tail bd (mte::opmvl)
+                    setamv pmvl.Tail amv.PreBrd amv.PostBrd (nmte::opmvl)
+                |RAVEntry(mtel) -> 
+                    let nmtel = setamv mtel prebd prebd []
+                    let nmte = RAVEntry(nmtel)
+                    setamv pmvl.Tail prebd bd (nmte::opmvl)
+                |_ -> setamv pmvl.Tail prebd bd (mte::opmvl)
         
         let ibd = if gm.BoardSetup.IsSome then gm.BoardSetup.Value else Board.Start
-        let nmt = setamv gm.MoveText ibd []
+        let nmt = setamv gm.MoveText ibd ibd []
         {gm with MoveText=nmt}
 
