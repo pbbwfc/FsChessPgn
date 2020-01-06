@@ -225,26 +225,26 @@ module Library =
             match mte with
             |HalfMoveEntry(_,_,_,_) ->
                 let str = mte|>Game.MoveStr
-                "<span " + idstr + " class=\"mv\">" + str + "</span>"
+                " <span " + idstr + " class=\"mv\">" + str + "</span>"
             |CommentEntry(_) ->
                 let str = (mte|>Game.MoveStr).Trim([|'{';'}'|])
                 "<div " + idstr + " class=\"cm\" style=\"color:green\">" + str + "</div>"
             |GameEndEntry(_) ->
                 let str = mte|>Game.MoveStr
-                "<span " + idstr + " class=\"ge\" style=\"color:blue\">" + str + "</span>"
-            |NAGEntry(_) ->
+                " <span " + idstr + " class=\"ge\" style=\"color:blue\">" + str + "</span>"
+            |NAGEntry(ng) ->
+                let str = ng|>Game.NAGStr
+                "<span " + idstr + " class=\"ng\" style=\"color:darkred\">" + str + "</span>"
+            |RAVEntry(mtel) ->
                 let str = mte|>Game.MoveStr
-                "<span " + idstr + " class=\"ge\" style=\"color:blue\">" + str + "</span>"
-            |_ ->
-                let str = mte|>Game.MoveStr
-                "<span " + idstr + ">" + str + "</span>"
+                "<div " + idstr + ">" + str + "</div>"
 
         let mvtags() = 
             let mt = game.MoveText
             if mt.IsEmpty then hdr+ftr
             else
                 hdr +
-                (game.MoveText|>List.mapi mvtag|>List.reduce(fun a b -> a + " " + b))
+                (game.MoveText|>List.mapi mvtag|>List.reduce(+))
                 + ftr
         
         let onclick(mve:HtmlElement) = 
