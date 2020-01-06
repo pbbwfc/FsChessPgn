@@ -68,7 +68,7 @@ module MoveUtil =
                     elif ru then None,Some(fromrank)
                     else Some(fromfile),Some(fromrank)
             let mt = if iscap then MoveType.Capture else MoveType.Simple
-            pMove.CreateAll(mt,sTo,Some(pct),uf,ur,(if isprom then Some(ptprom) else None),ischk,false,ismt,None)
+            pMove.CreateAll(mt,sTo,Some(pct),uf,ur,(if isprom then Some(ptprom) else None),ischk,false,ismt)
 
     let toPgn (board : Brd) (move : Move) = 
         let pmv = move|>topMove board

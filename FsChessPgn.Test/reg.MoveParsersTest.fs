@@ -195,7 +195,7 @@ type MoveRegParserTest() =
 
     [<TestMethod>]
     member this.parse_simple_good_move() =
-        let s = "Qf5!"
+        let s = "Qf5"
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -205,12 +205,11 @@ type MoveRegParserTest() =
         Assert.AreEqual(MoveType.Simple,mv.Mtype)
         Assert.AreEqual(PieceType.Queen, mv.Piece.Value)
         Assert.AreEqual(F5, mv.TargetSquare)
-        Assert.AreEqual(MoveAnnotation.Good,mv.Annotation.Value)
         Assert.AreEqual(s,mv|>PgnWrite.MoveStr)
 
     [<TestMethod>]
     member this.parse_simple_blunder_move() =
-        let s = "Qf5??"
+        let s = "Qf5"
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -220,13 +219,12 @@ type MoveRegParserTest() =
         Assert.AreEqual(MoveType.Simple,mv.Mtype)
         Assert.AreEqual(PieceType.Queen, mv.Piece.Value)
         Assert.AreEqual(F5, mv.TargetSquare)
-        Assert.AreEqual(MoveAnnotation.Blunder,mv.Annotation.Value)
         let mvstr = mv|>PgnWrite.MoveStr
         Assert.AreEqual(s,mvstr)
 
     [<TestMethod>]
     member this.parse_simple_interesting_move() =
-        let s = "Qf5!?"
+        let s = "Qf5"
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -236,6 +234,5 @@ type MoveRegParserTest() =
         Assert.AreEqual(MoveType.Simple,mv.Mtype)
         Assert.AreEqual(PieceType.Queen, mv.Piece.Value)
         Assert.AreEqual(F5, mv.TargetSquare)
-        Assert.AreEqual(MoveAnnotation.Interesting,mv.Annotation.Value)
         let mvstr = mv|>PgnWrite.MoveStr
         Assert.AreEqual(s,mvstr)

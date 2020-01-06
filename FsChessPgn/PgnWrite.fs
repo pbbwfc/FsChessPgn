@@ -44,17 +44,6 @@ module PgnWrite =
         elif move.IsCheck then "+"
         else ""
 
-    let Annotation(move:pMove) =
-        if move.Annotation.IsNone then ""
-        else
-            match move.Annotation.Value with
-            | Brilliant -> "!!"
-            | Good -> "!"
-            | Interesting -> "!?"
-            | Dubious -> "?!"
-            | Mistake -> "?"
-            | Blunder -> "??"
-
     let Move(mv:pMove, writer:TextWriter) =
         match mv.Mtype with
         | Simple -> 
@@ -66,7 +55,6 @@ module PgnWrite =
                 writer.Write("=")
                 writer.Write(Piece(mv.PromotedPiece))
             writer.Write(CheckAndMateAnnotation(mv))
-            writer.Write(Annotation(mv))
         | Capture -> 
             let origin = MoveOrigin(mv)
             let target = MoveTarget(mv)
@@ -77,15 +65,12 @@ module PgnWrite =
                 writer.Write("=")
                 writer.Write(Piece(mv.PromotedPiece))
             writer.Write(CheckAndMateAnnotation(mv))
-            writer.Write(Annotation(mv))
         | CastleKingSide -> 
             writer.Write("O-O")
             writer.Write(CheckAndMateAnnotation(mv))
-            writer.Write(Annotation(mv))
         | CastleQueenSide ->
             writer.Write("O-O-O")
             writer.Write(CheckAndMateAnnotation(mv))
-            writer.Write(Annotation(mv))
 
     let MoveStr(mv:pMove) =
         let writer = new StringWriter()

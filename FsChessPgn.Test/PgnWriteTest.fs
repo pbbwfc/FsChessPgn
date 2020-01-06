@@ -124,31 +124,31 @@ type MoveFormatterTest()=
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_piece_promotion() =
-        let move = pMove.CreateAll(MoveType.Simple,Sq(FileE,Rank8),PieceType.Pawn|>Some,None,None,PieceType.Queen|>Some,false,false,false,None)
+        let move = pMove.CreateAll(MoveType.Simple,Sq(FileE,Rank8),PieceType.Pawn|>Some,None,None,PieceType.Queen|>Some,false,false,false)
         let str = PgnWrite.MoveStr(move)
 
         Assert.AreEqual("e8=Q", str)
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_piece_promotion_after_capture() =
-        let move = pMove.CreateAll(MoveType.Capture,Sq(FileE,Rank8),PieceType.Pawn|>Some,Some(FileD),Some(Rank7),PieceType.Queen|>Some,false,false,false,None)
+        let move = pMove.CreateAll(MoveType.Capture,Sq(FileE,Rank8),PieceType.Pawn|>Some,Some(FileD),Some(Rank7),PieceType.Queen|>Some,false,false,false)
         let str = PgnWrite.MoveStr(move)
 
         Assert.AreEqual("d7xe8=Q", str)
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_check_annotation() =
-        let move = pMove.CreateAll(MoveType.Capture,Sq(FileC,Rank5),PieceType.Knight|>Some,Some(FileB),Some(Rank7),None,true,false,false,None)
+        let move = pMove.CreateAll(MoveType.Capture,Sq(FileC,Rank5),PieceType.Knight|>Some,Some(FileB),Some(Rank7),None,true,false,false)
         let str = PgnWrite.MoveStr(move)
 
         Assert.AreEqual("Nb7xc5+", str)
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_any_annotation() =
-        let move = pMove.CreateAll(MoveType.Capture,Sq(FileB,Rank8),PieceType.Rook|>Some,Some(FileB),Some(Rank1),None,false,false,true,MoveAnnotation.Brilliant|>Some)
+        let move = pMove.CreateAll(MoveType.Capture,Sq(FileB,Rank8),PieceType.Rook|>Some,Some(FileB),Some(Rank1),None,false,false,true)
         let str = PgnWrite.MoveStr(move)
 
-        Assert.AreEqual("Rb1xb8#!!", str)
+        Assert.AreEqual("Rb1xb8#", str)
 
     [<TestMethod>]
     member this.PgnWrite_should_ommit_redudant_piece_definition___N7c5_and_not_N7Nc5() =
@@ -228,10 +228,10 @@ type MoveFormatterTest()=
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_move_text() =
-        let entry1 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Capture,Sq(FileE, Rank5),PieceType.Knight|>Some,None,None,None,false,false,false,MoveAnnotation.Good|>Some),None)
+        let entry1 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Capture,Sq(FileE, Rank5),PieceType.Knight|>Some,None,None,None,false,false,false),None)
         let entry2 = NAGEntry(13)
         let rav1 = CommentEntry("comment")
-        let rav2 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Simple,Sq(FileE, Rank3),PieceType.Knight|>Some,None,None,None,false,false,false,MoveAnnotation.Blunder|>Some),None)
+        let rav2 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Simple,Sq(FileE, Rank3),PieceType.Knight|>Some,None,None,None,false,false,false),None)
         let entry3 = RAVEntry([rav1;rav2])
         let entry4 = HalfMoveEntry(Some(37),true,pMove.Create(MoveType.Simple,Sq(FileD, Rank8),PieceType.Rook|>Some),None)
         let entry5a = HalfMoveEntry(Some(38),false,pMove.Create(MoveType.Simple,Sq(FileH, Rank4),PieceType.Pawn|>Some),None)
@@ -240,7 +240,7 @@ type MoveFormatterTest()=
         let entry7 = CommentEntry("game ends in win, whooot")
 
         let ml = [entry1;entry2;entry3;entry4;entry5a;entry5b;entry6;entry7]
-        Assert.AreEqual("37. Nxe5! $13 ({comment} 37. Ne3??) 37... Rd8 38. h4 Rd5 1-0 {game ends in win, whooot}", PgnWrite.MoveTextStr(ml))
+        Assert.AreEqual("37. Nxe5 $13 ({comment} 37. Ne3) 37... Rd8 38. h4 Rd5 1-0 {game ends in win, whooot}", PgnWrite.MoveTextStr(ml))
 
     [<TestMethod>]
     member this.ormat_should_deal_with_empty_move_text() =

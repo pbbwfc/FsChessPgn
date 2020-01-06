@@ -5,7 +5,7 @@ open System.Text.RegularExpressions
 
 module pMove =
 
-    let CreateAll(mt,tgs,pc,orf,orr,pp,ic,id,im,an) =
+    let CreateAll(mt,tgs,pc,orf,orr,pp,ic,id,im) =
         {Mtype=mt 
          TargetSquare=tgs
          Piece=pc
@@ -14,10 +14,9 @@ module pMove =
          PromotedPiece=pp
          IsCheck=ic
          IsDoubleCheck=id
-         IsCheckMate=im
-         Annotation=an}
+         IsCheckMate=im}
 
-    let CreateOrig(mt,tgs,pc,orf,orr) = CreateAll(mt,tgs,pc,orf,orr,None,false,false,false,None)
+    let CreateOrig(mt,tgs,pc,orf,orr) = CreateAll(mt,tgs,pc,orf,orr,None,false,false,false)
 
     let Create(mt,tgs,pc) = CreateOrig(mt,tgs,pc,None,None)
 
@@ -52,14 +51,12 @@ module pMove =
                 if Seq.exists ((=) c) chars then ""
                 else string c)
           
-        let s1,an = s|>Annotation.Get
-        
-        let m = s1 |> strip "+x#="|>fun x ->x.Replace("e.p.", "")
+        let m = s |> strip "+x#="|>fun x ->x.Replace("e.p.", "")
         
         let mv0 =
             match m with
             | SimpleMove(p, sq) -> 
-                Create((if s1.Contains("x") then MoveType.Capture else MoveType.Simple),sq,Some(p))
+                Create((if s.Contains("x") then MoveType.Capture else MoveType.Simple),sq,Some(p))
             | Castle(c) ->
                 CreateCastle(if c='K' then MoveType.CastleKingSide else MoveType.CastleQueenSide)
             | PawnCapture(f, sq) -> 
@@ -69,17 +66,17 @@ module pMove =
             | AmbiguousRank(p, r, sq) -> 
                 CreateOrig(MoveType.Simple,sq,Some(p),None,Some(r))
             | Promotion(sq, p) -> 
-                CreateAll(MoveType.Simple,sq,Some(PieceType.Pawn),None,None,Some(p),false,false,false,None)
+                CreateAll(MoveType.Simple,sq,Some(PieceType.Pawn),None,None,Some(p),false,false,false)
             | PromCapture(f, sq, p) -> 
-                CreateAll(MoveType.Capture,sq,Some(PieceType.Pawn),Some(f),None,Some(p),false,false,false,None)
+                CreateAll(MoveType.Capture,sq,Some(PieceType.Pawn),Some(f),None,Some(p),false,false,false)
       
         let mv1 =
-            if s1.Contains("++") then {mv0 with IsDoubleCheck=true} 
-            elif s1.Contains("+") then {mv0 with IsCheck=true}
-            elif s1.Contains("#") then {mv0 with IsCheckMate=true}
+            if s.Contains("++") then {mv0 with IsDoubleCheck=true} 
+            elif s.Contains("+") then {mv0 with IsCheck=true}
+            elif s.Contains("#") then {mv0 with IsCheckMate=true}
             else mv0
         
-        {mv1 with Annotation=an}
+        mv1
     
     let ToMove (bd:Brd) (pmv:pMove) =
         if pmv.Mtype=MoveType.CastleKingSide then

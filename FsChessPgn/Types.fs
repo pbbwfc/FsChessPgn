@@ -181,16 +181,18 @@ module Types =
         | CastleKingSide
         | CastleQueenSide
 
-    type MoveAnnotation =
-        |Brilliant
-        |Good
-        |Interesting
-        |Dubious
-        |Mistake
-        |Blunder
+    type NAG =
+        |Null = 0
+        |Good = 1
+        |Poor = 2
+        |VeryGood = 3
+        |VeryPoor = 4
+        |Speculative = 5
+        |Questionable = 6
 
     type pMove = 
-        {Mtype:MoveType 
+        {
+         Mtype:MoveType 
          TargetSquare:Square 
          Piece: PieceType option
          OriginFile:File option
@@ -199,7 +201,7 @@ module Types =
          IsCheck:bool
          IsDoubleCheck:bool
          IsCheckMate:bool
-         Annotation:MoveAnnotation option}
+         }
 
     type Brd = 
         { PieceAt : Piece list
