@@ -79,9 +79,9 @@ module Library =
             | _ -> failwith "invalid piece"
 
         ///set pieces on squares
-        let setpcsmvs (p : Brd) =
+        let setpcsmvs () =
             let setpcsmvs() =
-                p.PieceAt
+                board.PieceAt
                 |>List.map Piece.ToStr
                 |> List.iteri (fun i c -> sqs.[i].Image <- if c = " " then null else getim c)
                 //mvstb.Text <- stt.GetMvsStr()
@@ -135,7 +135,7 @@ module Library =
                     let mvl = psmvs|>List.filter(fun m ->m|>Move.To|>int=sqTo)
                     if mvl.Length=1 then
                         board <- board|>Board.Push mvl.Head
-                        board|>setpcsmvs
+                        setpcsmvs()
                     else p.Image <- oimg
                 else p.Image <- oimg
                 sqpnl.Cursor <- Cursors.Default
@@ -194,7 +194,7 @@ module Library =
             //mvspnl |> bd.Controls.Add
             sqs |> Array.iteri setsq
             sqs |> Array.iter sqpnl.Controls.Add
-            board |> setpcsmvs
+            setpcsmvs()
             edges |> List.iter bdpnl.Controls.Add
             flbls |> Array.iteri flbl
             flbls |> Array.iter bdpnl.Controls.Add
@@ -203,10 +203,20 @@ module Library =
             sqpnl |> bdpnl.Controls.Add
             bdpnl |> bd.Controls.Add
 
+        member bd.SetBoard(ibd:Brd) =
+            board<-ibd
+            setpcsmvs()
+
     type WbPgn() as pgn =
         inherit WebBrowser(AllowWebBrowserDrop = false,IsWebBrowserContextMenuEnabled = false,WebBrowserShortcutsEnabled = false)
-
+        //mutables
         let mutable game = Game.Start
+        let mutable board = Board.Start
+
+        //events
+        let bdchngEvt = new Event<_>()
+        
+        //functions
         let hdr = "<html><body>"
         let ftr = "</body></html>"
         let mvtag i (mte:MoveTextEntry) =
@@ -217,8 +227,14 @@ module Library =
                 let str = mte|>Game.MoveStr
                 "<span " + idstr + " class=\"mv\">" + str + "</span>"
             |CommentEntry(_) ->
+                let str = (mte|>Game.MoveStr).Trim([|'{';'}'|])
+                "<div " + idstr + " class=\"cm\" style=\"color:green\">" + str + "</div>"
+            |GameEndEntry(_) ->
                 let str = mte|>Game.MoveStr
-                "<div " + idstr + " class=\"cm\">" + str + "</div>"
+                "<span " + idstr + " class=\"ge\" style=\"color:blue\">" + str + "</span>"
+            |NAGEntry(_) ->
+                let str = mte|>Game.MoveStr
+                "<span " + idstr + " class=\"ge\" style=\"color:blue\">" + str + "</span>"
             |_ ->
                 let str = mte|>Game.MoveStr
                 "<span " + idstr + ">" + str + "</span>"
@@ -231,13 +247,20 @@ module Library =
                 (game.MoveText|>List.mapi mvtag|>List.reduce(fun a b -> a + " " + b))
                 + ftr
         
-        let onclick(mv:HtmlElement) = 
-            //TODO: create event to raise with a board after this click
-            //use this event to change the related board ui.
-            MessageBox.Show("id=" + mv.Id + ";class=" + mv.GetAttribute("className"))|>ignore
+        let onclick(mve:HtmlElement) = 
+            let i = mve.Id|>int
+            let mv = game.MoveText.[i]
+            match mv with
+            |HalfMoveEntry(_,_,_,amv) ->
+                if amv.IsNone then failwith "should have valid aMove"
+                else
+                    board <- amv.Value.PostBrd
+                    board|>bdchngEvt.Trigger
+            |_ -> failwith "not done yet"
         
         let setclicks e = 
             for el in pgn.Document.GetElementsByTagName("span") do
+                if el.GetAttribute("className") = "mv" then
                     el.Click.Add(fun _ -> onclick(el))
         
 
@@ -249,5 +272,8 @@ module Library =
         member val Game = game with get,set
 
         member pgn.SetGame(gm:Game) = 
-            game <- gm
+            game <- gm|>Game.GetaMoves
             pgn.DocumentText <- mvtags()
+
+        //publish
+        member __.BdChng = bdchngEvt.Publish

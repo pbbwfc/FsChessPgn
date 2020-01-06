@@ -100,6 +100,9 @@ module Game =
     ///Gets the moves text as a string given the Game.MoveText
     let MovesStr = FsChessPgn.PgnWrite.MoveTextStr
 
+    //Gets the aMoves for the Game
+    let GetaMoves = FsChessPgn.Game.SetaMoves
+
 module Pretty =
 
     let Square = FsChessPgn.Square.Name

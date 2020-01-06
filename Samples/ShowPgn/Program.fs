@@ -50,6 +50,9 @@ module Main =
             ldbtn.Click.Add(fun e -> ldpgn())
             nxbtn.Click.Add(fun e -> nxt())
             pvbtn.Click.Add(fun e -> prv())
+            //events
+            pgn.BdChng |> Observable.add bd.SetBoard
+
     
     let frm = new FrmMain()
     
