@@ -27,7 +27,7 @@ type MoveTextEntryListTest()=
     member this.FullMoveCount_should_return_move_count_without_comments() =
         let mtel =
             [CommentEntry("foo");
-             NAGEntry(1);
+             NAGEntry(NAG.Good);
              RAVEntry([HalfMoveEntry(None,false,mv,None); HalfMoveEntry(None,false,mv,None)]);
              HalfMoveEntry(None,false,mv,None);
              HalfMoveEntry(None,false,mv,None);

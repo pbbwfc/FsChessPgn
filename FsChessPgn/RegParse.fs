@@ -29,7 +29,7 @@ module RegParse =
                     let ngm = {gm with MoveText=mte::gm.MoveText}
                     Unknown,"",ngm
                 |InNAG ->
-                    let mte = NAGEntry(cstr|>int)
+                    let mte = NAGEntry(cstr|>int|>Ng)
                     let ngm = {gm with MoveText=mte::gm.MoveText}
                     Unknown,"",ngm
                 |InSingleLineComment ->
@@ -85,7 +85,7 @@ module RegParse =
                         proclin st (cstr+hd.ToString()) tl gm
                 |InNAG -> 
                     if hd=' ' then
-                        let mte = NAGEntry(cstr|>int)
+                        let mte = NAGEntry(cstr|>int|>Ng)
                         let ngm = {gm with MoveText=mte::gm.MoveText}
                         proclin Unknown "" tl ngm
                     else

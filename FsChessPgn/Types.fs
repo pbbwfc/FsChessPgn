@@ -248,7 +248,7 @@ module Types =
         |HalfMoveEntry of int option * bool * pMove * aMove option
         |CommentEntry of string
         |GameEndEntry of GameResult
-        |NAGEntry of int
+        |NAGEntry of NAG
         |RAVEntry of MoveTextEntry list
  
     type Game =

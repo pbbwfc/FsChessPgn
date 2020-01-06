@@ -86,7 +86,7 @@ module PgnWrite =
             Move(mv, writer)
         |CommentEntry(str) -> writer.Write("{" + str + "}")
         |GameEndEntry(gr) -> writer.Write(ResultString(gr))
-        |NAGEntry(cd) -> writer.Write("$" + cd.ToString())
+        |NAGEntry(cd) -> writer.Write("$" + (cd|>int).ToString())
         |RAVEntry(ml) -> 
             writer.Write("(")
             MoveText(ml, writer)

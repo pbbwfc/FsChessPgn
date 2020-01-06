@@ -238,7 +238,7 @@ type MoveSeriesRegParserTest() =
         let mt = gm.MoveText
         Assert.AreEqual(5, mt.Length)
         let (NAGEntry(cd)) = mt.[2]
-        Assert.AreEqual(6,cd)
+        Assert.AreEqual(NAG.Questionable,cd)
         let (HalfMoveEntry (mn,ic,mv,_)) = mt.Head
         Assert.AreEqual(1,mn.Value)
         Assert.AreEqual(false,ic)
@@ -246,7 +246,7 @@ type MoveSeriesRegParserTest() =
         Assert.AreEqual(PieceType.Pawn, mv.Piece.Value)
         Assert.AreEqual(E4, mv.TargetSquare)
         let (NAGEntry(cd)) = mt.[4]
-        Assert.AreEqual(5,cd)
+        Assert.AreEqual(NAG.Speculative,cd)
         Assert.AreEqual(s,mt|>PgnWrite.MoveTextStr)
 
     [<TestMethod>]

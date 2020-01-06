@@ -97,6 +97,9 @@ module Game =
     ///Gets a single move as a string given one of the list from Game.MoveText
     let MoveStr = FsChessPgn.PgnWrite.MoveTextEntryStr
 
+    ///Gets a NAG as a string such as ?? given one of the list from Game.MoveText
+    let NAGStr = FsChessPgn.NAG.ToStr
+
     ///Gets the moves text as a string given the Game.MoveText
     let MovesStr = FsChessPgn.PgnWrite.MoveTextStr
 

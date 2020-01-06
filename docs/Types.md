@@ -207,7 +207,7 @@ These are a means of storing the various type of move entry in a game. They are 
 | HalfMoveEntry | int option * bool * pMove * aMove option | The main option: optional move counter, whether a continuation, the SAN move and the board related move |
 | CommentEntry  | string                                   | Holds a comment in a game                                                                               |
 | GameEndEntry  | GameResult                               | Holds the result at the end of a game                                                                   |
-| NAGEntry      | int                                      | Holds a NAG entry such as ?? or += in a game                                                            |
+| NAGEntry      | NAG                                      | Holds a NAG entry such as ?? or += in a game                                                            |
 | RAVEntry      | MoveTextEntry list                       | Holds a RAV entry for variations in a game                                                              |
 
 ## Games

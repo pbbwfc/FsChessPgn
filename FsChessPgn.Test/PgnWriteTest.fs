@@ -218,7 +218,7 @@ type MoveFormatterTest()=
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_a_NAGEntry() =
-        Assert.AreEqual("$5", PgnWrite.MoveTextEntryStr(NAGEntry(5)))
+        Assert.AreEqual("$5", PgnWrite.MoveTextEntryStr(NAGEntry(NAG.Speculative)))
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_a_RAVEntry() =
@@ -229,7 +229,7 @@ type MoveFormatterTest()=
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_move_text() =
         let entry1 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Capture,Sq(FileE, Rank5),PieceType.Knight|>Some,None,None,None,false,false,false),None)
-        let entry2 = NAGEntry(13)
+        let entry2 = NAGEntry(NAG.VeryGood)
         let rav1 = CommentEntry("comment")
         let rav2 = HalfMoveEntry(Some(37),false,pMove.CreateAll(MoveType.Simple,Sq(FileE, Rank3),PieceType.Knight|>Some,None,None,None,false,false,false),None)
         let entry3 = RAVEntry([rav1;rav2])
@@ -240,7 +240,7 @@ type MoveFormatterTest()=
         let entry7 = CommentEntry("game ends in win, whooot")
 
         let ml = [entry1;entry2;entry3;entry4;entry5a;entry5b;entry6;entry7]
-        Assert.AreEqual("37. Nxe5 $13 ({comment} 37. Ne3) 37... Rd8 38. h4 Rd5 1-0 {game ends in win, whooot}", PgnWrite.MoveTextStr(ml))
+        Assert.AreEqual("37. Nxe5 $3 ({comment} 37. Ne3) 37... Rd8 38. h4 Rd5 1-0 {game ends in win, whooot}", PgnWrite.MoveTextStr(ml))
 
     [<TestMethod>]
     member this.ormat_should_deal_with_empty_move_text() =
