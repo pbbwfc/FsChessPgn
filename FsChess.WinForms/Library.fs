@@ -355,6 +355,42 @@ module Library =
                     if el.Id=id.ToString() then
                         el|>highlight
                         
+        member pgn.PrevMove() = 
+            let rec getprv oi ci (mtel:MoveTextEntry list) =
+                if ci<0 then oi
+                else
+                    let mte = mtel.[ci]
+                    match mte with
+                    |HalfMoveEntry(_,_,_,amv) ->
+                        if amv.IsNone then failwith "should have valid aMove"
+                        else
+                            board <- amv.Value.PostBrd
+                            board|>bdchngEvt.Trigger
+                        ci
+                    |_ -> getprv oi (ci-1) mtel
+            if irs.Length>1 then 
+                let rec getmv (mtel:MoveTextEntry list) (intl:int list) =
+                    if intl.Length=1 then
+                        let oi = intl.Head
+                        let ni = getprv oi (oi-1) mtel
+                        let st = irs|>List.rev|>List.tail|>List.rev
+                        irs <- st@[ni]
+                    else
+                        let ih = intl.Head
+                        let mte = mtel.[ih]
+                        match mte with
+                        |RAVEntry(nmtel) -> getmv nmtel intl.Tail
+                        |_ -> failwith "should be a RAV"
+                getmv game.MoveText irs
+            else
+                let ni = getprv irs.Head (irs.Head-1) game.MoveText
+                irs <- [ni]
+            //now need to select the element
+            let id = getir irs 0
+            for el in pgn.Document.GetElementsByTagName("span") do
+                if el.GetAttribute("className") = "mv" then
+                    if el.Id=id.ToString() then
+                        el|>highlight
 
 
 
