@@ -114,6 +114,10 @@ module Library2 =
         member pgn.SetGame(gm:Game) = 
             game <- gm|>Game.GetaMoves
             pgn.DocumentText <- mvtags()
+            board <- Board.Start
+            oldstyle <- None
+            irs <- [-1]
+            board|>bdchngEvt.Trigger
 
         member pgn.NextMove() = 
             let rec getnxt oi ci (mtel:MoveTextEntry list) =
@@ -208,8 +212,9 @@ module Library2 =
                         if intl.Length=1 then
                             let oi = intl.Head
                             let ni,fnd = getnxt oi (oi+1) mtel
-                            let st = irs|>List.rev|>List.tail|>List.rev
-                            irs <- st@[ni]
+                            if fnd then
+                                let st = irs|>List.rev|>List.tail|>List.rev
+                                irs <- st@[ni]
                             fnd
                         else
                             let ih = intl.Head
@@ -220,7 +225,7 @@ module Library2 =
                     getmv game.MoveText irs
                 else
                     let ni,fnd = getnxt irs.Head (irs.Head+1) game.MoveText
-                    irs <- [ni]
+                    if fnd then irs <- [ni]
                     fnd
             if isnxt then
                 //now need to select the element
@@ -230,6 +235,50 @@ module Library2 =
                         if el.Id=id.ToString() then
                             el|>highlight
                 else
+                    //next see if moving into RAV
+                    let rec getnxtrv oi ci mct (mtel:MoveTextEntry list) =
+                        if ci=mtel.Length then ci,false
+                        else
+                            let mte = mtel.[ci]
+                            if mct = 0 then
+                                match mte with
+                                |HalfMoveEntry(_,_,_,amv) ->
+                                    if amv.IsNone then failwith "should have valid aMove"
+                                    else getnxtrv oi (ci+1) (mct+1) mtel
+                                |_ -> getnxtrv oi (ci+1) mct mtel
+                            else
+                                match mte with
+                                |HalfMoveEntry(_,_,_,amv) ->
+                                    if amv.IsNone then failwith "should have valid aMove"
+                                    else ci,false
+                                |RAVEntry(nmtel) ->
+                                    //TODO now need to see if first move in rav is mv
+                                    ci,false
+                                |_ -> getnxtrv oi (ci+1) mct mtel
+                    let isnxtrv =
+                        if irs.Length>1 then 
+                            let rec getmv (mtel:MoveTextEntry list) (intl:int list) =
+                                if intl.Length=1 then
+                                    let oi = intl.Head
+                                    let ni,fnd = getnxtrv oi (oi+1) 0 mtel
+                                    let st = irs|>List.rev|>List.tail|>List.rev
+                                    irs <- st@[ni]
+                                    fnd
+                                else
+                                    let ih = intl.Head
+                                    let mte = mtel.[ih]
+                                    match mte with
+                                    |RAVEntry(nmtel) -> getmv nmtel intl.Tail
+                                    |_ -> failwith "should be a RAV"
+                            getmv game.MoveText irs
+                        else
+                            let ni,fnd = getnxtrv irs.Head (irs.Head+1) 0 game.MoveText
+                            irs <- [ni]
+                            fnd
+
+                
+                
+                
                 //TODO
                     ()
 
