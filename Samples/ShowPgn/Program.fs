@@ -62,7 +62,7 @@ module Main =
             pvmbtn.Click.Add(fun e -> prvm())
             //events
             pgn.BdChng |> Observable.add bd.SetBoard
-
+            bd.MvMade|>Observable.add pgn.DoMove
     
     let frm = new FrmMain()
     

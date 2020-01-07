@@ -46,13 +46,12 @@
     <EmbeddedResource Include="Images\WhitePawn.png" />
     <EmbeddedResource Include="Images\WhiteQueen.png" />
     <EmbeddedResource Include="Images\WhiteRook.png" />
-    <Compile Include="Library.fs" />
+    <Compile Include="PnlBoard.fs" />
+    <Compile Include="WbPgn.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FsChessPgn\FsChessPgn.fsproj" />
   </ItemGroup>
-
-  <ItemGroup />
 
 </Project>
