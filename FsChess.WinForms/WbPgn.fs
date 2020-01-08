@@ -297,11 +297,8 @@ module Library2 =
                                 if el.Id=id.ToString() then
                                     el|>highlight
                         else
-
-                
-                
-                
-                    //TODO
+                            //TODO - need to create a new RAV
+                            let ngame,nirs = Game.AddRav game irs mv 
                             ()
 
 

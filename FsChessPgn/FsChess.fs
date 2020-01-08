@@ -106,6 +106,9 @@ module Game =
     //Gets the aMoves for the Game
     let GetaMoves = FsChessPgn.Game.SetaMoves
 
+    //Adds a RAV to the Game given the the aMoves for the Game
+    let AddRav = FsChessPgn.Game.SetaMoves
+
 module Pretty =
 
     let Square = FsChessPgn.Square.Name

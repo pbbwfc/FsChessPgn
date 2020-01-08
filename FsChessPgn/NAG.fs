@@ -3,6 +3,7 @@
 open FsChess
 
 module Nag = 
+    
     let ToStr(nag:NAG) =
          match nag with
          | NAG.Good -> "!"
