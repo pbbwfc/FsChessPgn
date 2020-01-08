@@ -235,34 +235,48 @@ module Library2 =
                         if el.Id=id.ToString() then
                             el|>highlight
                 else
+                    //Check if first move in RAV
+                    let rec inrav oi ci (mtel:MoveTextEntry list) =
+                        if ci=mtel.Length then ci,false //Should not hit this as means has no moves
+                        else
+                            let mte = mtel.[ci]
+                            match mte with
+                            |HalfMoveEntry(_,_,_,amv) ->
+                                if amv.IsNone then failwith "should have valid aMove"
+                                elif amv.Value.Mv=mv then
+                                    board <- amv.Value.PostBrd
+                                    ci,true
+                                else ci,false
+                            |_ -> inrav oi (ci+1) mtel
                     //next see if moving into RAV
                     let rec getnxtrv oi ci mct (mtel:MoveTextEntry list) =
-                        if ci=mtel.Length then ci,false
+                        if ci=mtel.Length then ci,0,false //TODO this is an extension to RAV or Moves
                         else
                             let mte = mtel.[ci]
                             if mct = 0 then
                                 match mte with
                                 |HalfMoveEntry(_,_,_,amv) ->
-                                    if amv.IsNone then failwith "should have valid aMove"
-                                    else getnxtrv oi (ci+1) (mct+1) mtel
+                                    getnxtrv oi (ci+1) (mct+1) mtel
                                 |_ -> getnxtrv oi (ci+1) mct mtel
                             else
                                 match mte with
                                 |HalfMoveEntry(_,_,_,amv) ->
-                                    if amv.IsNone then failwith "should have valid aMove"
-                                    else ci,false
+                                    ci,0,false
                                 |RAVEntry(nmtel) ->
                                     //TODO now need to see if first move in rav is mv
-                                    ci,false
+                                    let sci,fnd = inrav 0 0 nmtel
+                                    if fnd then
+                                        ci,sci,fnd
+                                    else getnxtrv oi (ci+1) mct mtel
                                 |_ -> getnxtrv oi (ci+1) mct mtel
                     let isnxtrv =
                         if irs.Length>1 then 
                             let rec getmv (mtel:MoveTextEntry list) (intl:int list) =
                                 if intl.Length=1 then
                                     let oi = intl.Head
-                                    let ni,fnd = getnxtrv oi (oi+1) 0 mtel
+                                    let ni,sci,fnd = getnxtrv oi (oi+1) 0 mtel
                                     let st = irs|>List.rev|>List.tail|>List.rev
-                                    irs <- st@[ni]
+                                    irs <- st@[ni;sci]
                                     fnd
                                 else
                                     let ih = intl.Head
@@ -272,15 +286,23 @@ module Library2 =
                                     |_ -> failwith "should be a RAV"
                             getmv game.MoveText irs
                         else
-                            let ni,fnd = getnxtrv irs.Head (irs.Head+1) 0 game.MoveText
-                            irs <- [ni]
+                            let ni,sci,fnd = getnxtrv irs.Head (irs.Head+1) 0 game.MoveText
+                            irs <- [ni;sci]
                             fnd
+                    if isnxtrv then
+                        //now need to select the element
+                        let id = getir irs 0
+                        for el in pgn.Document.GetElementsByTagName("span") do
+                            if el.GetAttribute("className") = "mv" then
+                                if el.Id=id.ToString() then
+                                    el|>highlight
+                        else
 
                 
                 
                 
-                //TODO
-                    ()
+                    //TODO
+                            ()
 
 
 
