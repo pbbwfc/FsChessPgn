@@ -82,8 +82,6 @@ module Game =
             let mvstr = l5|>List.map PgnWrite.MoveTextEntryStr|>List.reduce(fun a b -> a + " " + b)
             "moves: ..." + mvstr
    
-    
-    //TODO
     let SetaMoves(gm:Game) =
         let rec setamv (pmvl:MoveTextEntry list) prebd bd opmvl =
             if pmvl|>List.isEmpty then opmvl|>List.rev
@@ -104,3 +102,35 @@ module Game =
         let nmt = setamv gm.MoveText ibd ibd []
         {gm with MoveText=nmt}
 
+    let AddRav (gm:Game) (irs:int list) (pmv:pMove) = 
+        let rec getadd mct ci nmte (imtel:MoveTextEntry list) (omtel:MoveTextEntry list) =
+            if ci>omtel.Length then getadd mct ci nmte imtel.Tail (imtel.Head::omtel)
+            elif imtel.IsEmpty then (RAVEntry([nmte])::omtel)|>List.rev,omtel.Length
+            else
+                //ignore first move
+                let mte = imtel.Head
+                if mct=0 then
+                    match mte with
+                    |HalfMoveEntry(_) -> getadd 1 ci nmte imtel.Tail (imtel.Head::omtel)
+                    |_ -> getadd 0 ci nmte imtel.Tail (imtel.Head::omtel)
+                else
+                    match mte with
+                    |HalfMoveEntry(_) |GameEndEntry(_) -> 
+                        //need to include before this
+                        ((RAVEntry([nmte])::omtel)|>List.rev)@imtel,omtel.Length
+                    |_ -> getadd 1 ci nmte imtel.Tail (imtel.Head::omtel)
+        if irs.Length=1 then
+            let cmv = gm.MoveText.[irs.Head]
+            let bd =
+                match cmv with
+                |HalfMoveEntry(_,_,_,amv) -> amv.Value.PostBrd
+                |_ -> failwith "should be a move"
+            let amv = pmv|>pMove.ToaMove bd
+            let nmte = HalfMoveEntry(None,false,pmv,Some(amv))
+
+            let nmtel,ni = getadd 0 (irs.Head+1) nmte gm.MoveText []
+            {gm with MoveText=nmtel},[ni;0]
+        
+        else
+            //TODO
+            gm,irs

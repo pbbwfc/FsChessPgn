@@ -1,8 +1,8 @@
-﻿namespace FsChessPgn
+namespace FsChessPgn
 
 open FsChess
 
-module Nag = 
+module NagUtil = 
     
     let ToStr(nag:NAG) =
          match nag with

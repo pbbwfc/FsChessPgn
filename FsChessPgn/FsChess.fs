@@ -80,6 +80,9 @@ module Move =
     ///Get the UCI string such as g1f3 for a move
     let ToUci = FsChessPgn.MoveUtil.toUci
 
+    ///Get the pMove for a move for this board
+    let TopMove = FsChessPgn.MoveUtil.topMove
+
     ///Get the SAN string such as Nf3 for a move for this board
     let ToSan = FsChessPgn.MoveUtil.toPgn
 
@@ -98,7 +101,7 @@ module Game =
     let MoveStr = FsChessPgn.PgnWrite.MoveTextEntryStr
 
     ///Gets a NAG as a string such as ?? given one of the list from Game.MoveText
-    let NAGStr = FsChessPgn.Nag.ToStr
+    let NAGStr = FsChessPgn.NagUtil.ToStr
 
     ///Gets the moves text as a string given the Game.MoveText
     let MovesStr = FsChessPgn.PgnWrite.MoveTextStr
@@ -107,7 +110,7 @@ module Game =
     let GetaMoves = FsChessPgn.Game.SetaMoves
 
     //Adds a RAV to the Game given the the aMoves for the Game
-    let AddRav = FsChessPgn.Game.SetaMoves
+    let AddRav = FsChessPgn.Game.AddRav
 
 module Pretty =
 

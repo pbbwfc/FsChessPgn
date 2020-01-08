@@ -1,0 +1,16 @@
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[ECO "A40"]
+
+1. d4 
+    {test}
+1... e6 2. c4 
+    ( 2. Nf3 )
+    ( 2. Bf4 )
+*
+

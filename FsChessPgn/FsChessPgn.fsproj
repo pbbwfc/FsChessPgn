@@ -98,7 +98,7 @@
     <Compile Include="File.fs" />
     <Compile Include="Square.fs" />
     <Compile Include="GameResult.fs" />
-    <Compile Include="Nag.fs" />
+    <Compile Include="NagUtil.fs" />
     <Compile Include="Bitboard.fs" />
     <Compile Include="Attacks.fs" />
     <Compile Include="FEN.fs" />

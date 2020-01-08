@@ -54,6 +54,7 @@ The following Move related functions are provided in the module Move:
 | FromSan       | Brd -> string -> Move | Get an encoded move from a SAN string such as Nf3 for this Board  |
 | FromUci       | Brd -> string -> Move | Get an encoded move from a UCI string such as g1f3 for this Board |
 | ToUci         | Move -> string        | Get the UCI string such as g1f3 for a move                        |
+| TopMove       | Brd -> Move -> pMove  | Get the pMove for a move for this board                           |
 | ToSan         | Brd -> Move -> string | Get the SAN string such as Nf3 for a move for this board          |
 
 ## Game

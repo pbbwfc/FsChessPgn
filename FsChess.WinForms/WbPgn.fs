@@ -104,6 +104,11 @@ module Library2 =
             for el in pgn.Document.GetElementsByTagName("span") do
                 if el.GetAttribute("className") = "mv" then
                     el.Click.Add(fun _ -> onclick(el))
+            let id = getir irs 0
+            for el in pgn.Document.GetElementsByTagName("span") do
+                if el.GetAttribute("className") = "mv" then
+                    if el.Id=id.ToString() then
+                        el|>highlight
         
 
         do
@@ -275,8 +280,9 @@ module Library2 =
                                 if intl.Length=1 then
                                     let oi = intl.Head
                                     let ni,sci,fnd = getnxtrv oi (oi+1) 0 mtel
-                                    let st = irs|>List.rev|>List.tail|>List.rev
-                                    irs <- st@[ni;sci]
+                                    if fnd then
+                                        let st = irs|>List.rev|>List.tail|>List.rev
+                                        irs <- st@[ni;sci]
                                     fnd
                                 else
                                     let ih = intl.Head
@@ -287,7 +293,7 @@ module Library2 =
                             getmv game.MoveText irs
                         else
                             let ni,sci,fnd = getnxtrv irs.Head (irs.Head+1) 0 game.MoveText
-                            irs <- [ni;sci]
+                            if fnd then irs <- [ni;sci]
                             fnd
                     if isnxtrv then
                         //now need to select the element
@@ -298,8 +304,10 @@ module Library2 =
                                     el|>highlight
                         else
                             //TODO - need to create a new RAV
-                            let ngame,nirs = Game.AddRav game irs mv 
-                            ()
+                            let ngame,nirs = Game.AddRav game irs (mv|>Move.TopMove board) 
+                            game <- ngame
+                            irs <- nirs
+                            pgn.DocumentText <- mvtags()
 
 
 
