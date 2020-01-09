@@ -24,6 +24,7 @@ module Library1 =
         let mutable board = Board.Start
         let mutable sqTo = -1
         let mutable cCur = Cursors.Default
+        let mutable prompctp = PieceType.EMPTY
         let bdpnl = new Panel(Dock = DockStyle.Top, Height = 400)
         let sqpnl = new Panel(Width = 420, Height = 420, Left = 29, Top = 13)
         
@@ -43,6 +44,41 @@ module Library1 =
         let sqs : PictureBox [] = Array.zeroCreate 64
         let flbls : Label [] = Array.zeroCreate 8
         let rlbls : Label [] = Array.zeroCreate 8
+
+        let dlgprom = 
+            let dlg = new Form(Text = "Select Piece", Height = 88, Width = 182, FormBorderStyle = FormBorderStyle.FixedToolWindow,StartPosition=FormStartPosition.CenterParent)
+            let sqs : PictureBox [] = Array.zeroCreate 4
+        
+            let bpcims =
+                [ img "BlackQueen.png"
+                  img "BlackRook.png"
+                  img "BlackKnight.png"
+                  img "BlackBishop.png" ]
+        
+            let wpcims =
+                [ img "WhiteQueen.png"
+                  img "WhiteRook.png"
+                  img "WhiteKnight.png"
+                  img "WhiteBishop.png" ]
+        
+            ///set pieces on squares
+            let setsq i (sq : PictureBox) =
+                let sq = new PictureBox(Height = 42, Width = 42, SizeMode = PictureBoxSizeMode.CenterImage)
+                sq.BackColor <- if i % 2 = 0 then Color.Green else Color.PaleGreen
+                sq.Top <- 1
+                sq.Left <- i * 42 + 1
+                sq.Image <- if board.WhosTurn=Player.White then wpcims.[i] else bpcims.[i]
+                //events
+                let pctps = [ PieceType.Queen;PieceType.Rook;PieceType.Knight;PieceType.Bishop]
+                sq.Click.Add(fun e -> 
+                    prompctp <- pctps.[i]
+                    dlg.Close())
+                sqs.[i] <- sq
+        
+            do 
+                sqs |> Array.iteri setsq
+                sqs |> Array.iter dlg.Controls.Add
+            dlg
 
         //events
         let mvEvt = new Event<_>()
@@ -141,6 +177,13 @@ module Library1 =
                         board <- board|>Board.Push mvl.Head
                         setpcsmvs()
                         mvl.Head|>mvEvt.Trigger
+                    //TODO need to allow for promotion
+                    elif mvl.Length=4 then
+                        dlgprom.ShowDialog() |> ignore
+                        let nmvl = mvl|>List.filter(fun mv -> mv|>Move.PromPcTp=prompctp)
+                        board <- board|>Board.Push nmvl.Head
+                        setpcsmvs()
+                        nmvl.Head|>mvEvt.Trigger
                     else p.Image <- oimg
                 else p.Image <- oimg
                 sqpnl.Cursor <- Cursors.Default

@@ -240,9 +240,11 @@ module Library2 =
                         if el.Id=id.ToString() then
                             el|>highlight
             elif isext then
-                let ngame,nirs = Game.AddMv game irs (mv|>Move.TopMove board) 
+                let pmv = mv|>Move.TopMove board
+                let ngame,nirs = Game.AddMv game irs pmv 
                 game <- ngame
                 irs <- nirs
+                board <- board|>Board.Push mv
                 pgn.DocumentText <- mvtags()
             else
                 //Check if first move in RAV

@@ -60,7 +60,8 @@ module MoveUtil =
                         else getuniqs pu fu ru attl.Tail
         
             let pu, fu, ru = 
-                if ((piece=Piece.WPawn)||(piece=Piece.BPawn))&&iscap=false then true,true,true
+                if ((piece=Piece.WPawn)||(piece=Piece.BPawn)) then
+                    if iscap then false,true,false else true,true,true
                 else getuniqs true true true ((board|>Board.AttacksTo sTo (piece|>Piece.PieceToPlayer))|>Bitboard.ToSquares)
 
             let uf,ur =
