@@ -119,18 +119,70 @@ module Game =
                         //need to include before this
                         ((RAVEntry([nmte])::omtel)|>List.rev)@imtel,omtel.Length
                     |_ -> getadd 1 ci nmte imtel.Tail (imtel.Head::omtel)
+        let filtmv mte =
+            match mte with
+            |HalfMoveEntry(_) -> true
+            |_ -> false
+        
         if irs.Length=1 then
             let cmv = gm.MoveText.[irs.Head]
+            let mvs = gm.MoveText.[0..irs.Head]|>List.filter filtmv
+            let mn = (mvs.Length+2)/2|>Some
             let bd =
                 match cmv with
                 |HalfMoveEntry(_,_,_,amv) -> amv.Value.PostBrd
                 |_ -> failwith "should be a move"
             let amv = pmv|>pMove.ToaMove bd
-            let nmte = HalfMoveEntry(None,false,pmv,Some(amv))
+            let nmte = HalfMoveEntry(mn,bd.WhosTurn=Player.Black,pmv,Some(amv))
 
             let nmtel,ni = getadd 0 (irs.Head+1) nmte gm.MoveText []
             {gm with MoveText=nmtel},[ni;0]
-        
         else
-            //TODO
-            gm,irs
+            let rec getmncur indx cmn (cirs:int list) (mtel:MoveTextEntry list) =
+                if cirs.Length=1 && indx=cirs.Head then mtel.Head,cmn
+                elif indx=cirs.Head then
+                    let rv = mtel.Head
+                    match rv with
+                    |RAVEntry(nmtel) -> getmncur 0 (cmn-1) cirs.Tail nmtel
+                    |_ -> failwith "should be RAV"
+                else
+                    let mte = mtel.Head
+                    match mte with
+                    |HalfMoveEntry(_) -> getmncur (indx+1) (cmn+1) cirs mtel.Tail
+                    |_ -> getmncur (indx+1) cmn cirs mtel.Tail
+            let cmv,dmn = getmncur 0 0 irs gm.MoveText        
+            let mn = (dmn+2)/2|>Some
+            let bd =
+                match cmv with
+                |HalfMoveEntry(_,_,_,amv) -> amv.Value.PostBrd
+                |_ -> failwith "should be a move"
+            let amv = pmv|>pMove.ToaMove bd
+            let nmte = HalfMoveEntry(mn,bd.WhosTurn=Player.Black,pmv,Some(amv))
+            let rec getnmtel (cirs:int list) (mtel:MoveTextEntry list) =
+                if cirs.Length=1 then 
+                    let nmtel,_ = getadd 0 (cirs.Head+1) nmte mtel []
+                    nmtel
+                else
+                    let i = cirs.Head
+                    let rav = mtel.[i]
+                    match rav with
+                    |RAVEntry(nmtel) ->
+                        mtel.[..i-1]@[RAVEntry(getnmtel cirs.Tail nmtel)]@mtel.[i+1..]
+                    |_ -> failwith "should be RAV"
+            let rec getnmirs (cirs:int list) (pirs:int list) (mtel:MoveTextEntry list) =
+                if cirs.Length=1 then 
+                    let _,ni = getadd 0 (cirs.Head+1) nmte mtel []
+                    (0::ni::pirs)|>List.rev
+                else
+                    let i = cirs.Head
+                    let rav = mtel.[i]
+                    match rav with
+                    |RAVEntry(nmtel) ->
+                        getnmirs cirs.Tail (i::pirs) nmtel
+                    |_ -> failwith "should be RAV"
+            let nmtel = getnmtel irs gm.MoveText
+            let nirs = getnmirs irs [] gm.MoveText
+            {gm with MoveText=nmtel},nirs
+
+    let AddMv (gm:Game) (irs:int list) (pmv:pMove) = 
+        gm,irs

@@ -38,6 +38,7 @@ module MoveUtil =
         elif piece = Piece.BKing && sFrom = E8 && sTo = C8 then 
             pMove.CreateCastle(MoveType.CastleQueenSide)
         else 
+            //do not need this check for pawn moves
             let rec getuniqs pu fu ru attl = 
                 if List.isEmpty attl then pu, fu, ru
                 else 
@@ -59,7 +60,8 @@ module MoveUtil =
                         else getuniqs pu fu ru attl.Tail
         
             let pu, fu, ru = 
-                getuniqs true true true ((board|>Board.AttacksTo sTo (piece|>Piece.PieceToPlayer))|>Bitboard.ToSquares)
+                if ((piece=Piece.WPawn)||(piece=Piece.BPawn))&&iscap=false then true,true,true
+                else getuniqs true true true ((board|>Board.AttacksTo sTo (piece|>Piece.PieceToPlayer))|>Bitboard.ToSquares)
 
             let uf,ur =
                 if pu then None,None

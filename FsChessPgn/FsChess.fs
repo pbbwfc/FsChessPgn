@@ -109,7 +109,10 @@ module Game =
     //Gets the aMoves for the Game
     let GetaMoves = FsChessPgn.Game.SetaMoves
 
-    //Adds a RAV to the Game given the the aMoves for the Game
+    //Adds a pMove to the Game given its address
+    let AddMv = FsChessPgn.Game.AddMv
+
+    //Adds a RAV to the Game given the pMove is contains and its address
     let AddRav = FsChessPgn.Game.AddRav
 
 module Pretty =
