@@ -187,14 +187,32 @@ module Game =
     let AddMv (gm:Game) (irs:int list) (pmv:pMove) = 
         let rec getext ci nmte (imtel:MoveTextEntry list) (omtel:MoveTextEntry list) =
             if ci>omtel.Length then getext ci nmte imtel.Tail (imtel.Head::omtel)
-            elif imtel.IsEmpty then (nmte::omtel)|>List.rev,omtel.Length
+            elif imtel.IsEmpty then 
+                //need to remove iscont and mn if black, if after a move
+                match omtel.Head with
+                |HalfMoveEntry(_) |NAGEntry(_) ->
+                    match nmte with
+                    |HalfMoveEntry(mn,_,pmv,amv) ->
+                        let nmn = if amv.Value.PreBrd.WhosTurn=Player.Black then None else mn
+                        (HalfMoveEntry(nmn,false,pmv,amv)::omtel)|>List.rev,omtel.Length
+                    |_ -> failwith "can't reach here"
+                |_ ->
+                    (nmte::omtel)|>List.rev,omtel.Length
             else
-                //ignore first move
                 let mte = imtel.Head
                 match mte with
                 |GameEndEntry(_) -> 
                     //need to include before this
-                    ((nmte::omtel)|>List.rev)@imtel,omtel.Length
+                    //need to remove iscont if after a move
+                    match omtel.Head with
+                    |HalfMoveEntry(_) |NAGEntry(_) ->
+                        match nmte with
+                        |HalfMoveEntry(mn,_,pmv,amv) ->
+                            let nmn = if amv.Value.PreBrd.WhosTurn=Player.Black then None else mn
+                            ((HalfMoveEntry(nmn,false,pmv,amv)::omtel)|>List.rev)@imtel,omtel.Length
+                        |_ -> failwith "can't reach here"
+                    |_ ->
+                        ((nmte::omtel)|>List.rev)@imtel,omtel.Length
                 |_ -> getext ci nmte imtel.Tail (imtel.Head::omtel)
         let filtmv mte =
             match mte with
