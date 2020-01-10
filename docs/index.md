@@ -259,7 +259,7 @@ val result : FsChess.Types.GameResult = BlackWins
 
 * Provides chess related components for WinForms:
 
-These include componenets to show a board and details of a PGN game:
+These include components to show a board and details of a PGN game:
 
 ![showpgn](showpgn.png)
 

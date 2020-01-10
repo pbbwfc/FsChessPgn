@@ -48,6 +48,7 @@
     <EmbeddedResource Include="Images\WhiteRook.png" />
     <Compile Include="PnlBoard.fs" />
     <Compile Include="WbPgn.fs" />
+    <Compile Include="LinkBrdPgn.fs" />
   </ItemGroup>
 
   <ItemGroup>

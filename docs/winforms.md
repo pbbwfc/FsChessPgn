@@ -53,3 +53,15 @@ It generates the following events:
 | Event           | Type                            | Description                                                                         |
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
 | BdChng          | IEvent<Brd>                     | Provides the new Board after a change                                               |
+
+# Link for Board and Pgn
+
+I have also produced a slight simplification to usage by providing a function to create both a Board Panel and a Pgn Game Panel.
+
+These are then automatically linked together so that changes in one produce changes in the other. Sample usage:
+
+```fsharp
+let bd,pgn = CreateLnkBrdPgn()
+```
+
+There is a simple example of its use - see the sample application _ShowLink_.
