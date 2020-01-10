@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Images\down-32-red.png" />
+    <EmbeddedResource Include="Images\down-32-yell.png" />
+    <EmbeddedResource Include="Images\endButton.png" />
+    <EmbeddedResource Include="Images\homeButton.png" />
+    <EmbeddedResource Include="Images\new.png" />
+    <EmbeddedResource Include="Images\nextButton.png" />
+    <EmbeddedResource Include="Images\nextLineButton.png" />
+    <EmbeddedResource Include="Images\opn.png" />
+    <EmbeddedResource Include="Images\plus-minus-32.png" />
+    <EmbeddedResource Include="Images\prevButton.png" />
+    <EmbeddedResource Include="Images\prevLineButton.png" />
+    <EmbeddedResource Include="Images\sav.png" />
+    <EmbeddedResource Include="Images\sava.png" />
+    <EmbeddedResource Include="Images\up-32-red.png" />
+    <EmbeddedResource Include="Images\up-32-yell.png" />
     <EmbeddedResource Include="Icons\KindleChess.ico" />
     <Compile Include="Form.fs" />
     <Compile Include="Program.fs" />
