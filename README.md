@@ -62,7 +62,7 @@ val ismate : bool = true
 
 * Reads and writes PGNs. Supports headers, comments, NAGs and a tree of variations
 
-* Also provides chess related components for WinForms
+* Provides chess related components for WinForms
 
 ## Installing
 

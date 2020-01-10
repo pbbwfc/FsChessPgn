@@ -120,6 +120,7 @@ module Library2 =
             pgn.DocumentCompleted.Add(setclicks)
             pgn.ObjectForScripting <- pgn
 
+        ///Sets the Game to be displayed
         member pgn.SetGame(gm:Game) = 
             game <- gm|>Game.GetaMoves
             pgn.DocumentText <- mvtags()
@@ -128,6 +129,7 @@ module Library2 =
             irs <- [-1]
             board|>bdchngEvt.Trigger
 
+        ///Goes to the next Move in the Game
         member pgn.NextMove() = 
             let rec getnxt oi ci (mtel:MoveTextEntry list) =
                 if ci=mtel.Length then oi
@@ -165,6 +167,7 @@ module Library2 =
                     if el.Id=id.ToString() then
                         el|>highlight
                         
+        ///Goes to the previous Move in the Game
         member pgn.PrevMove() = 
             let rec getprv oi ci (mtel:MoveTextEntry list) =
                 if ci<0 then oi
@@ -202,6 +205,7 @@ module Library2 =
                     if el.Id=id.ToString() then
                         el|>highlight
 
+        ///Make a Move in the Game - may change the Game or just select a Move
         member pgn.DoMove(mv:Move) =
             let rec getnxt oi ci (mtel:MoveTextEntry list) =
                 if ci=mtel.Length then ci,false,true//implies is an extension
@@ -323,4 +327,5 @@ module Library2 =
 
 
         //publish
+        ///Provides the new Board after a change
         member __.BdChng = bdchngEvt.Publish

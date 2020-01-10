@@ -15,6 +15,20 @@ There is a simple example of its use - see the sample application _ShowBoard_.
 
 ![showboard](showboard.png)
 
+It provides the following functions:
+
+| Function        | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| SetBoard        | Brd -> unit                     | Sets the Board to be displayed                                                      |
+
+It generates the following events:
+
+| Event           | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| MvMade          | IEvent<Move>                    | Provides the Move made on the board                                                 |
+
+
+
 # Pgn Game Panel
 
 This component is a panel holding the moves of a game in PGN format.
@@ -24,3 +38,18 @@ It keeps track of a Game including headers, moves and comments.
 There is a simple example of its use - see the sample application _ShowPgn_.
 
 ![showpgn](showpgn.png)
+
+It provides the following functions:
+
+| Function        | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| SetGame         | Game -> unit                    | Sets the Game to be displayed                                                       |
+| NextMove        | unit -> unit                    | Goes to the next Move in the Game                                                   |
+| PrevMove        | unit -> unit                    | Goes to the previous Move in the Game                                               |
+| DoMove          | Move -> unit                    | Make a Move in the Game - may change the Game or just select a Move                 |
+
+It generates the following events:
+
+| Event           | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| BdChng          | IEvent<Brd>                     | Provides the new Board after a change                                               |

@@ -257,6 +257,13 @@ val mvs : string = "1. e4 c5 2. c4 Nc6 3. Ne2 Nf6 4. Nbc3 Nb4 5. g3 Nd3# 0-1"
 val result : FsChess.Types.GameResult = BlackWins
 ```
 
+* Provides chess related components for WinForms:
+
+These include componenets to show a board and details of a PGN game:
+
+![showpgn](showpgn.png)
+
+
 ## Installing
 
 Please just download a copy of the code from GitHub and then start using any of the sample scripts. 

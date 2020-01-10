@@ -249,9 +249,11 @@ module Library1 =
             sqpnl |> bdpnl.Controls.Add
             bdpnl |> bd.Controls.Add
 
+        ///Sets the Board to be displayed
         member bd.SetBoard(ibd:Brd) =
             board<-ibd
             setpcsmvs()
 
         //publish
+        ///Provides the Move made on the board
         member __.MvMade = mvEvt.Publish

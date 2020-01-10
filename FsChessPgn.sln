@@ -32,10 +32,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{10919F05-4
 	ProjectSection(SolutionItems) = preProject
 		docs\_config.yml = docs\_config.yml
 		docs\Core.md = docs\Core.md
+		docs\fools.png = docs\fools.png
 		docs\index.md = docs\index.md
 		docs\Pgn.md = docs\Pgn.md
 		README.md = README.md
 		docs\showboard.png = docs\showboard.png
+		docs\showpgn.png = docs\showpgn.png
 		docs\Types.md = docs\Types.md
 		docs\winforms.md = docs\winforms.md
 	EndProjectSection
@@ -58,7 +60,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FsChess.WinForms", "FsChess
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowBoard", "Samples\ShowBoard\ShowBoard.fsproj", "{4B0629AA-8D4B-4936-92F4-EE5AEAD4D33B}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ShowPgn", "Samples\ShowPgn\ShowPgn.fsproj", "{8AD3BE42-8184-4759-9766-CAA53DBDB0C1}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowPgn", "Samples\ShowPgn\ShowPgn.fsproj", "{8AD3BE42-8184-4759-9766-CAA53DBDB0C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
