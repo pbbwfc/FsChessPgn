@@ -1,9 +1,12 @@
-﻿namespace FsChess.WinForms
+﻿namespace KindleChess
 
 open System
 open System.Drawing
 open System.Windows.Forms
 open FsChess.Pgn
+open FsChess.WinForms
+open Dialogs
+open State
 
 module Form =
     let img nm =
@@ -14,7 +17,6 @@ module Form =
         let thisExe = System.Reflection.Assembly.GetExecutingAssembly()
         let file = thisExe.GetManifestResourceStream("KindleChess3.Icons." + nm)
         new Icon(file)
-    
     
     type FrmMain() as this =
         inherit Form(Text = "Kindle Chess", WindowState = FormWindowState.Maximized, Icon = ico "KindleChess.ico", IsMdiContainer = true)
@@ -29,7 +31,7 @@ module Form =
             //do new
             let nwb =
                 new ToolStripMenuItem(Image = img "new.png", Text = "&New")
-            //nwb.Click.Add(fun _ -> (new DlgNewBk()).ShowDialog() |> ignore)
+            nwb.Click.Add(fun _ -> (new DlgNewBk()).ShowDialog() |> ignore)
             bk.DropDownItems.Add(nwb) |> ignore
             //do open
             let opnb =
@@ -37,10 +39,10 @@ module Form =
             //opnb.Click.Add(fun _ -> (new DlgOpnBk()).ShowDialog() |> ignore)
             bk.DropDownItems.Add(opnb) |> ignore
             //do save
-            //let dosaveb (e) = stt.SaveBook() |> ignore
+            let dosaveb (e) = stt.SaveBook() |> ignore
             let savb =
                 new ToolStripMenuItem(Image = img "sav.png", Text = "&Save")
-            //savb.Click.Add(dosaveb)
+            savb.Click.Add(dosaveb)
             bk.DropDownItems.Add(savb) |> ignore
             m.Items.Add(bk) |> ignore
             //do save as 

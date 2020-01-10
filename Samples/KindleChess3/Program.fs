@@ -1,4 +1,4 @@
-﻿namespace FsChess.WinForms
+﻿namespace KindleChess
 
 open System
 open System.Windows.Forms

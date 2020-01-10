@@ -23,14 +23,24 @@
     <EmbeddedResource Include="Images\up-32-red.png" />
     <EmbeddedResource Include="Images\up-32-yell.png" />
     <EmbeddedResource Include="Icons\KindleChess.ico" />
+    <Compile Include="Types.fs" />
+    <Compile Include="Book.fs" />
+    <Compile Include="State.fs" />
+    <Compile Include="Dialogs.fs" />
     <Compile Include="Form.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="FSharp.Json" Version="0.4.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\FsChess.WinForms\FsChess.WinForms.fsproj" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="RD /S /Q &quot;$(TargetDir)cs\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)de\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)es\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)fr\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)it\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)ja\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)ko\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)pl\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)pt-BR\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)ru\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)tr\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)zh-Hans\&quot;&#xD;&#xA;RD /S /Q &quot;$(TargetDir)zh-Hant\&quot;" />
+  </Target>
 
 </Project>
