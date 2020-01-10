@@ -63,8 +63,12 @@ module Library2 =
                 let str = ng|>Game.NAGStr
                 "<span " + idstr + " class=\"ng\" style=\"color:darkred\">" + str + "</span>"
             |RAVEntry(mtel) ->
+                let indent = 
+                    let rirs = irs|>getirs ir
+                    let ind = rirs.Length * 2
+                    ";margin-left: " + ind.ToString() + "px"
                 let str = mtel|>List.mapi (mvtag ir)|>List.reduce(+)
-                "<div style=\"color:darkslategray\">(" + str + ")</div>"
+                "<div style=\"color:darkslategray" + indent + "\">(" + str + ")</div>"
 
         let mvtags() = 
             let mt = game.MoveText
