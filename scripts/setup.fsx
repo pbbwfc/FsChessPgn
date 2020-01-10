@@ -8,7 +8,7 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\File.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Square.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\GameResult.fs"
-#load @"d:\GitHub\FsChessPgn\FsChessPgn\Annotation.fs"
+#load @"d:\GitHub\FsChessPgn\FsChessPgn\NagUtil.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Bitboard.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Attacks.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FEN.fs"
