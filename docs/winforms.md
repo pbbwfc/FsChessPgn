@@ -47,7 +47,9 @@ It provides the following functions:
 | GetGame         | unit -> Game                    | Gets the Game that is displayed                                                     |
 | SetGame         | Game -> unit                    | Sets the Game to be displayed                                                       |
 | NextMove        | unit -> unit                    | Goes to the next Move in the Game                                                   |
+| LastMove        | unit -> unit                    | Goes to the last Move in the Variation                                              |
 | PrevMove        | unit -> unit                    | Goes to the previous Move in the Game                                               |
+| FirstMove       | unit -> unit                    | Goes to the first Move in the Variation                                             |
 | DoMove          | Move -> unit                    | Make a Move in the Game - may change the Game or just select a Move                 |
 
 It generates the following events:

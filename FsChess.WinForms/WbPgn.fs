@@ -169,7 +169,14 @@ module Library2 =
                 if el.GetAttribute("className") = "mv" then
                     if el.Id=id.ToString() then
                         el|>highlight
-                        
+        
+        ///Goes to the last Move in the Variation
+        member pgn.LastMove() = 
+            let rec gofwd lirs =
+                pgn.NextMove()
+                if irs<>lirs then gofwd irs
+            gofwd irs
+        
         ///Goes to the previous Move in the Game
         member pgn.PrevMove() = 
             let rec getprv oi ci (mtel:MoveTextEntry list) =
@@ -207,6 +214,13 @@ module Library2 =
                 if el.GetAttribute("className") = "mv" then
                     if el.Id=id.ToString() then
                         el|>highlight
+
+        ///Goes to the last Move in the Variation
+        member pgn.FirstMove() = 
+            let rec goback lirs =
+                pgn.PrevMove()
+                if irs<>lirs then goback irs
+            goback irs
 
         ///Make a Move in the Game - may change the Game or just select a Move
         member pgn.DoMove(mv:Move) =
@@ -326,8 +340,6 @@ module Library2 =
                         game <- ngame
                         irs <- nirs
                         pgn.DocumentText <- mvtags()
-
-
 
         //publish
         ///Provides the new Board after a change

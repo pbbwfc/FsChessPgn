@@ -17,7 +17,12 @@ module Form =
         let thisExe = System.Reflection.Assembly.GetExecutingAssembly()
         let file = thisExe.GetManifestResourceStream("KindleChess3.Icons." + nm)
         new Icon(file)
-    
+    type Nav =
+        | Home
+        | Prev
+        | Next
+        | End
+
     type FrmMain() as this =
         inherit Form(Text = "Kindle Chess", WindowState = FormWindowState.Maximized, Icon = ico "KindleChess.ico", IsMdiContainer = true)
 
@@ -299,7 +304,6 @@ module Form =
         let nmlbl =
             new Label(Text = "Not loaded", Dock = DockStyle.Left, 
                       TextAlign = ContentAlignment.MiddleLeft,Width=400)
-        let updb = new ToolStripButton(Text = "Update Description")
         let homeb = new ToolStripButton(Image = img "homeButton.png")
         let prevb = new ToolStripButton(Image = img "prevButton.png")
         let nextb = new ToolStripButton(Image = img "nextButton.png")
@@ -311,6 +315,23 @@ module Form =
 
         let rtpnl = new Panel(Dock=DockStyle.Fill)
     
+        // do navigation
+        let donav (n) =
+            match n with
+            | Next -> pgn.NextMove()
+            | End -> pgn.LastMove()
+            | Prev -> pgn.PrevMove()
+            | Home -> pgn.FirstMove()
+        
+        // keyDown
+        let dokeydown (e : KeyEventArgs) =
+            e.Handled <- true
+            let s = new obj()
+            if (e.KeyCode = Keys.Home) then donav (Home)
+            if (e.KeyCode = Keys.Left) then donav (Prev)
+            if (e.KeyCode = Keys.Right) then donav (Next)
+            if (e.KeyCode = Keys.End) then donav (End)
+
         // add chapter tab
         let addchap (nm, ch : Game) =
             ch|>pgn.SetGame
@@ -322,7 +343,7 @@ module Form =
         
         do
             pgn|>rtpnl.Controls.Add
-            [ updb; homeb; prevb; nextb; endb ] 
+            [ homeb; prevb; nextb; endb ] 
             |> List.iter (fun c -> ts.Items.Add(c) |> ignore)
             pnl.Controls.Add(ts)
             pnl.Controls.Add(nmlbl)
@@ -333,6 +354,11 @@ module Form =
             mm|>this.Controls.Add
 
             //events
+            homeb.Click.Add(fun _ -> donav (Home))
+            prevb.Click.Add(fun _ -> donav (Prev))
+            nextb.Click.Add(fun _ -> donav (Next))
+            endb.Click.Add(fun _ -> donav (End))
+            
             stt.ChAdd |> Observable.add addchap
             stt.ChRnm |> Observable.add chaprnm
             stt.ChChg |> Observable.add addchap
