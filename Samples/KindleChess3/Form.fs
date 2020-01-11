@@ -362,4 +362,5 @@ module Form =
             //events
             stt.ChAdd |> Observable.add addchap
             stt.ChRnm |> Observable.add chaprnm
-            stt.ChChg |> Observable.add addchap 
+            stt.ChChg |> Observable.add addchap
+            stt.Ornt |> Observable.add bd.Orient

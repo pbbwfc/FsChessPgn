@@ -124,12 +124,38 @@ module Library1 =
                 board.PieceAt
                 |>List.map Piece.ToStr
                 |> List.iteri (fun i c -> sqs.[i].Image <- if c = " " then null else getim c)
-                //mvstb.Text <- stt.GetMvsStr()
             if (bd.InvokeRequired) then 
                 try 
                     bd.Invoke(MethodInvoker(setpcsmvs)) |> ignore
                 with _ -> ()
             else setpcsmvs()
+
+        ///orient board
+        let orient isw =
+            let ori() =
+                let possq i (sq : PictureBox) =
+                    let r = i / 8
+                    let f = i % 8
+                    if not isw then 
+                        sq.Top <- 7 * 42 - r * 42 + 1
+                        sq.Left <- 7 * 42 - f * 42 + 1
+                    else 
+                        sq.Left <- f * 42 + 1
+                        sq.Top <- r * 42 + 1
+                sqs |> Array.iteri possq
+                flbls
+                |> Array.iteri (fun i l -> 
+                       if isw then l.Left <- i * 42 + 30
+                       else l.Left <- 7 * 42 - i * 42 + 30)
+                rlbls
+                |> Array.iteri (fun i l -> 
+                       if isw then l.Top <- 7 * 42 - i * 42 + 16
+                       else l.Top <- i * 42 + 16)
+            if (bd.InvokeRequired) then 
+                try 
+                    bd.Invoke(MethodInvoker(ori)) |> ignore
+                with _ -> ()
+            else ori()
 
         ///highlight possible squares
         let highlightsqs sl =
@@ -253,6 +279,10 @@ module Library1 =
         member bd.SetBoard(ibd:Brd) =
             board<-ibd
             setpcsmvs()
+
+        ///Orients the Board depending on whether White
+        member bd.Orient(isw:bool) =
+            isw|>orient
 
         //publish
         ///Provides the Move made on the board

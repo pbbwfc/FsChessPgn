@@ -215,8 +215,8 @@ module Book =
         let nm = cur.Chapters.[i]
         let fol = if cur.IsW then wfol else bfol
         let cfl = Path.Combine(fol, cur.Title)
-        Chap.save nm cfl ch
         cur|>save|>ignore
+        Chap.save nm cfl ch
 
     /////editGmDt - renames a chapter and changes the game details
     //let editGmDt i nm intro (cur : BookT) =

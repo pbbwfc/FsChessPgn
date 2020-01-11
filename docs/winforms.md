@@ -20,6 +20,7 @@ It provides the following functions:
 | Function        | Type                            | Description                                                                         |
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
 | SetBoard        | Brd -> unit                     | Sets the Board to be displayed                                                      |
+| Orient          | bool -> unit                    | Orients the Board depending on whether White                                        |
 
 It generates the following events:
 

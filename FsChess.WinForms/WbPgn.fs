@@ -43,7 +43,6 @@ module Library2 =
             let curr = mve.Style
             oldstyle <- Some(mve,curr)
             mve.Style <- "BACKGROUND-COLOR: powderblue"
-
         
         let rec mvtag ravno i (mte:MoveTextEntry) =
             let ir = i|||(ravno<<<8)
