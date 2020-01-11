@@ -20,8 +20,6 @@ type SharedState() =
     let chaddEvt = new Event<_>()
     let chrnmEvt = new Event<_>()
     let chchgEvt = new Event<_>()
-    let chmvextEvt = new Event<_>()
-    let chmvsplEvt = new Event<_>()
     let mvlchgEvt = new Event<_>()
     let mctchgEvt = new Event<_>()
     let cmplxchgEvt = new Event<_>()
@@ -34,8 +32,6 @@ type SharedState() =
     member __.ChAdd = chaddEvt.Publish
     member __.ChRnm = chrnmEvt.Publish
     member __.ChChg = chchgEvt.Publish
-    member __.ChMvExt = chmvextEvt.Publish
-    member __.ChMvSpl = chmvsplEvt.Publish
     member __.MvlChg = mvlchgEvt.Publish
     member __.MctChg = mctchgEvt.Publish
     member __.CmplxChg = cmplxchgEvt.Publish
@@ -77,40 +73,6 @@ type SharedState() =
     member __.IsSub
         with get () = issub
         and set (value) = issub <- value
-    
-    //member x.NextMv() =
-    //    if mct < mvl.Length then 
-    //        x.Pos |> Pos.DoMv mvl.[mct]
-    //        x.Mvs <- x.Mvs @ [ mvl.[mct] ]
-    //        mct <- mct + 1
-    //        pos |> pchngEvt.Trigger
-    //        chi |> mctchgEvt.Trigger
-    
-    //member x.EndMv() =
-    //    let rec domvs() =
-    //        if mct < mvl.Length then 
-    //            x.Pos |> Pos.DoMv mvl.[mct]
-    //            x.Mvs <- x.Mvs @ [ mvl.[mct] ]
-    //            mct <- mct + 1
-    //            domvs()
-    //    if mct < mvl.Length then 
-    //        domvs()
-    //        pos |> pchngEvt.Trigger
-    //        chi |> mctchgEvt.Trigger
-    
-    //member x.PrevMv() =
-    //    if mct > 0 then 
-    //        mct <- mct - 1
-    //        x.Mvs <- x.Mvs.[0..x.Mvs.Length - 2]
-    //        x.Pos <- Pos.FromMoves x.Mvs
-    //        chi |> mctchgEvt.Trigger
-    
-    //member x.HomeMv() =
-    //    if mct > 0 then 
-    //        x.Mvs <- x.Mvs.[0..x.Mvs.Length - mct - 1]
-    //        mct <- 0
-    //        x.Pos <- Pos.FromMoves x.Mvs
-    //        chi |> mctchgEvt.Trigger
     
     member __.CurBook = curb
     
@@ -158,11 +120,6 @@ type SharedState() =
             mct <- 0
             issub <- false
     
- 
-    //member __.EditGameDet(nm,intro) =
-    //    curb <- curb |> Book.editGmDt chi nm intro
-    //    (chi, nm) |> chrnmEvt.Trigger
-
     member __.Books(isw) =
         if isw then Book.wbks()
         else Book.bbks()
@@ -218,9 +175,7 @@ type SharedState() =
             let ch = curb|>Book.getChap chi
             (nm,ch) |> chchgEvt.Trigger
    
-    //member __.GetDsc() = curb |> Book.getdsc vid mct chi
-    //member __.UpdDsc(pm) = curb <- curb |> Book.upddsc vid mct chi pm
-    //member __.GenHTML() = Book.genh (curb)
+    member __.GenHTML() = Book.genh (curb)
     
     //member __.DelLine() =
     //    curb <- curb |> Book.delLine chi vid

@@ -2,9 +2,9 @@ namespace KindleChess
 
 open System.IO
 open FSharp.Json
-//open DotLiquid
+open DotLiquid
 open Microsoft.FSharp.Reflection
-//open FSharp.Markdown
+open FSharp.Markdown
 open FsChess
 
 module Book =
@@ -106,89 +106,80 @@ module Book =
         let cfl = Path.Combine(fol, nm)
         Directory.Delete(cfl, true) |> ignore
     
-    /////genh - generates HTML files for book
-    //let genh (cur : BookT) =
-    //    try 
-    //        let cfl =
-    //            Path.Combine((if cur.IsW then wfol
-    //                          else bfol), cur.Title)
-    //        Directory.CreateDirectory(cfl) |> ignore
-    //        let hfl = Path.Combine(cfl, "HTML")
-    //        Directory.CreateDirectory(hfl) |> ignore
-    //        //do label for games
-    //        let glbls =
-    //            let intros = cur.Chapters|>Array.map(fun c -> c.Intro)
-    //            let getgmlbl i = 
-    //                if i="" then ""
-    //                else
-    //                    let gmdt = i|>GmChHdT.FromStr
-    //                    gmdt.White + " vs. " + gmdt.Black
-    //            intros|>Array.map getgmlbl
+    ///genh - generates HTML files for book
+    let genh (cur : BookT) =
+        try 
+            let fol = if cur.IsW then wfol else bfol
+            let cfl = Path.Combine(fol, cur.Title)
+            Directory.CreateDirectory(cfl) |> ignore
+            let hfl = Path.Combine(cfl, "HTML")
+            Directory.CreateDirectory(hfl) |> ignore
+            //do label for games
+            let glbls = cur.Chapters|>List.toArray
 
-    //        //write files
-    //        //register types used
-    //        let reg ty =
-    //            let fields = FSharpType.GetRecordFields(ty)
-    //            Template.RegisterSafeType(ty, 
-    //                                      [| for f in fields -> f.Name |])
-    //        reg typeof<BookT>
-    //        reg typeof<ChapT>
-    //        Template.RegisterFilter typeof<TreeT>
-    //        //create output
-    //        //do simple options
-    //        let gendoc inp oup =
-    //            let t =
-    //                Path.Combine(tfol, inp)
-    //                |> File.ReadAllText
-    //                |> Template.Parse
+            //write files
+            //register types used
+            let reg ty =
+                let fields = FSharpType.GetRecordFields(ty)
+                Template.RegisterSafeType(ty, [| for f in fields -> f.Name |])
+            reg typeof<BookT>
+            reg typeof<Game>
+            //Template.RegisterFilter typeof<TreeT>
+            //create output
+            //do simple options
+            let gendoc inp oup =
+                let t =
+                    Path.Combine(tfol, inp)
+                    |> File.ReadAllText
+                    |> Template.Parse
                 
-    //            let ostr =
-    //                t.Render(Hash.FromDictionary(dict [ "book", box cur; "glbls", box glbls ]))
-    //            let ouf = Path.Combine(hfl, oup)
-    //            File.WriteAllText(ouf, ostr)
-    //        gendoc "opf.dotl" "book.opf"
-    //        gendoc "ncx.dotl" "book.ncx"
-    //        gendoc "toc.dotl" "toc.html"
-    //        //copy standard files
-    //        let css = Path.Combine(tfol, "book.css")
-    //        let ocss = Path.Combine(hfl, "book.css")
-    //        File.Copy(css, ocss, true)
-    //        let gif =
-    //            Path.Combine(tfol, 
-    //                         if cur.IsW then "white.gif"
-    //                         else "black.gif")
+                let ostr =
+                    t.Render(Hash.FromDictionary(dict [ "book", box cur; "glbls", box glbls ]))
+                let ouf = Path.Combine(hfl, oup)
+                File.WriteAllText(ouf, ostr)
+            gendoc "opf.dotl" "book.opf"
+            gendoc "ncx.dotl" "book.ncx"
+            gendoc "toc.dotl" "toc.html"
+            //copy standard files
+            let css = Path.Combine(tfol, "book.css")
+            let ocss = Path.Combine(hfl, "book.css")
+            File.Copy(css, ocss, true)
+            let gif =
+                Path.Combine(tfol, 
+                             if cur.IsW then "white.gif"
+                             else "black.gif")
             
-    //        let ogif = Path.Combine(hfl, "cover.gif")
-    //        File.Copy(gif, ogif, true)
-    //        //do welcome
-    //        let t =
-    //            Path.Combine(tfol, "Welcome.dotl")
-    //            |> File.ReadAllText
-    //            |> Template.Parse
+            let ogif = Path.Combine(hfl, "cover.gif")
+            File.Copy(gif, ogif, true)
+            //do welcome
+            let t =
+                Path.Combine(tfol, "Welcome.dotl")
+                |> File.ReadAllText
+                |> Template.Parse
             
-    //        let wel =
-    //            cur.Welcome
-    //            |> Markdown.Parse
-    //            |> Markdown.WriteHtml
+            let wel =
+                cur.Welcome
+                |> Markdown.Parse
+                |> Markdown.WriteHtml
             
-    //        let ostr = t.Render(Hash.FromDictionary(dict [ "wel", box wel ]))
-    //        let ouf = Path.Combine(hfl, "Welcome.html")
-    //        File.WriteAllText(ouf, ostr)
-    //        // variations
-    //        let t =
-    //            Path.Combine(tfol, "Variations.dotl")
-    //            |> File.ReadAllText
-    //            |> Template.Parse
+            let ostr = t.Render(Hash.FromDictionary(dict [ "wel", box wel ]))
+            let ouf = Path.Combine(hfl, "Welcome.html")
+            File.WriteAllText(ouf, ostr)
+            //// variations
+            //let t =
+            //    Path.Combine(tfol, "Variations.dotl")
+            //    |> File.ReadAllText
+            //    |> Template.Parse
             
-    //        let vars =
-    //            cur.Chapters |> Array.mapi (fun i c -> c.Lines |> Tree.ToVar i)
-    //        let ostr = t.Render(Hash.FromDictionary(dict [ "vars", box vars; "book", box cur ]))
-    //        let ouf = Path.Combine(hfl, "Variations.html")
-    //        File.WriteAllText(ouf, ostr)
-    //        // chapters
-    //        cur.Chapters |> Array.iteri (Chap.genh tfol hfl cur.IsW)
-    //        "Successfully generated HTML for book: " + cur.Title
-    //    with e -> "Generation failed with error: " + e.ToString()
+            //let vars =
+            //    cur.Chapters |> Array.mapi (fun i c -> c.Lines |> Tree.ToVar i)
+            //let ostr = t.Render(Hash.FromDictionary(dict [ "vars", box vars; "book", box cur ]))
+            //let ouf = Path.Combine(hfl, "Variations.html")
+            //File.WriteAllText(ouf, ostr)
+            //// chapters
+            //cur.Chapters |> Array.iteri (Chap.genh tfol hfl cur.IsW)
+            "Successfully generated HTML for book: " + cur.Title
+        with e -> "Generation failed with error: " + e.ToString()
     
     //Chapter elements
     ///rnmChap - renames a chapter
@@ -216,13 +207,6 @@ module Book =
         let fol = if cur.IsW then wfol else bfol
         let cfl = Path.Combine(fol, cur.Title)
         Chap.save nm cfl ch
-
-    /////editGmDt - renames a chapter and changes the game details
-    //let editGmDt i nm intro (cur : BookT) =
-    //    let chs = cur.Chapters
-    //    let ch = Chap.editGmDt nm intro chs.[i]
-    //    chs.[i] <- ch
-    //    { cur with Chapters = chs }
 
     ///addChap - adds a new chapter to the book
     let addChap nm (cur : BookT) =
@@ -254,30 +238,10 @@ module Book =
         let latechs = cur.Chapters.[chi+1..]
         { cur with Chapters = prechs@[ch;postch]@latechs }
 
-
     /////delLine - deletes a line
     //let delLine i vid (cur : BookT) =
     //    let chs = cur.Chapters
     //    let ch = Chap.delLine vid chs.[i]
-    //    chs.[i] <- ch
-    //    { cur with Chapters = chs }
-    
-    /////addmv - adds a new move to a chapter
-    //let addmv (mvs : Move list) (mv : Move) i (cur : BookT) =
-    //    let chs = cur.Chapters
-    //    let ch, chg, vid = Chap.addmv mvs mv chs.[i]
-    //    chs.[i] <- ch
-    //    { cur with Chapters = chs }, chg, vid
-    
-    /////getdsc -gets a description for a move in a chapter
-    //let getdsc (vid : string) mct i (cur : BookT) =
-    //    let chs = cur.Chapters
-    //    Chap.getdsc vid mct chs.[i]
-    
-    /////upddsc - updates a description for a move in a chapter
-    //let upddsc (vid : string) mct i pm (cur : BookT) =
-    //    let chs = cur.Chapters
-    //    let ch = Chap.upddsc vid mct pm chs.[i]
     //    chs.[i] <- ch
     //    { cur with Chapters = chs }
     

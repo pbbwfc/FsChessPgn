@@ -62,9 +62,11 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowBoard", "Samples\ShowBo
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowPgn", "Samples\ShowPgn\ShowPgn.fsproj", "{8AD3BE42-8184-4759-9766-CAA53DBDB0C1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ShowLink", "Samples\ShowLink\ShowLink.fsproj", "{28723B77-48D7-4957-8638-7D5095E2D576}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowLink", "Samples\ShowLink\ShowLink.fsproj", "{28723B77-48D7-4957-8638-7D5095E2D576}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "KindleChess3", "Samples\KindleChess3\KindleChess3.fsproj", "{785631B8-FB28-491C-A38C-A46FBC1BA6AC}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "KindleChess3", "Samples\KindleChess3\KindleChess3.fsproj", "{785631B8-FB28-491C-A38C-A46FBC1BA6AC}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FSharp.Markdown", "Samples\FSharp.Markdown\FSharp.Markdown.fsproj", "{3FBA06A2-98BF-430C-B529-19BB72E12CD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,6 +106,10 @@ Global
 		{785631B8-FB28-491C-A38C-A46FBC1BA6AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{785631B8-FB28-491C-A38C-A46FBC1BA6AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{785631B8-FB28-491C-A38C-A46FBC1BA6AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FBA06A2-98BF-430C-B529-19BB72E12CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FBA06A2-98BF-430C-B529-19BB72E12CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FBA06A2-98BF-430C-B529-19BB72E12CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FBA06A2-98BF-430C-B529-19BB72E12CD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,6 +122,7 @@ Global
 		{8AD3BE42-8184-4759-9766-CAA53DBDB0C1} = {7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}
 		{28723B77-48D7-4957-8638-7D5095E2D576} = {7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}
 		{785631B8-FB28-491C-A38C-A46FBC1BA6AC} = {7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}
+		{3FBA06A2-98BF-430C-B529-19BB72E12CD9} = {7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EFBBF18-81E9-4F01-A431-E58B2EB70F3E}

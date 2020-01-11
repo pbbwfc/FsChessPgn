@@ -74,11 +74,11 @@ module Form =
             // add separator
             bk.DropDownItems.Add(new ToolStripSeparator()) |> ignore
             //do generate html
-            //let dogenhb (e) = stt.GenHTML() |> ignore
+            let dogenhb (e) = stt.GenHTML() |> ignore
             let genhb =
                 new ToolStripMenuItem(Image = img "sava.png", 
                                       Text = "Generate &HTML")
-            //genhb.Click.Add(dogenhb)
+            genhb.Click.Add(dogenhb)
             bk.DropDownItems.Add(genhb) |> ignore
             //do chapter menu
             let chp = new ToolStripMenuItem("Chapter")

@@ -1,0 +1,30 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Chapter {{i}} - {{ ch.Name }}</title>
+  <link rel="stylesheet" href="book.css" type="text/css" />
+</head>
+
+<body>
+  <div>
+	{% if ch.Intro == "" %}
+    <h2>
+      <b>CHAPTER {{i}}
+        <br />{{ ch.Name }}</b>
+    </h2>
+	{% else %}
+    <h2>
+      <b>GAME - {{ ch.Name }}</b>
+	</h2>
+	<h3>
+        <br />{{ gmlbl1 }}
+        <br />{{ gmlbl2 }}
+    </h3>
+	{% endif %}
+
+{{ treetxt }}
+
+  </div>
+</body>
+
+</html>

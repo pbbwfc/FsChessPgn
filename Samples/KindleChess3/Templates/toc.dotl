@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Table of Contents</title>
+</head>
+
+<body>
+
+  <div>
+    <h1>
+      <b>TABLE OF CONTENTS</b>
+    </h1>
+    <h3>
+      <b>
+        <a href="Welcome.html">WELCOME</a>
+      </b>
+    </h3>
+{%- for i in (1..book.Chapters.size) -%}
+  {%- assign j = i|minus: 1 -%}
+	{%- if book.Chapters[j].StartsWith("Game") -%}
+    <h3>
+      <b>GAME - {{ glbls[j] }}
+        <br />
+        <a href="CH{{i}}.html">{{ glbls[j] }}</a>
+      </b>
+    </h3>
+	{%- else -%}
+    <h3>
+      <b>CHAPTER {{i}}
+        <br />
+        <a href="CH{{i}}.html">{{ glbls[j] }}</a>
+      </b>
+    </h3>
+	{%- endif -%}
+{%- endfor -%}
+    <h3>
+      <b>
+        <a href="Variations.html">VARIATIONS</a>
+      </b>
+    </h3>
+  </div>
+</body>
+
+</html>

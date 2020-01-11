@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
+	"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+
+<!--
+	For a detailed description of NCX usage please refer to:
+	http://www.idpf.org/2007/opf/OPF_2.0_final_spec.html#Section2.4.1
+-->
+
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en-US">
+<head>
+<meta name="dtb:uid" content="BookId"/>
+<meta name="dtb:depth" content="2"/>
+<meta name="dtb:totalPageCount" content="0"/>
+<meta name="dtb:maxPageNumber" content="0"/>
+</head>
+<docTitle><text>{{ book.Title }}</text></docTitle>
+<docAuthor><text>{{ book.Creator }}</text></docAuthor>
+  <navMap>
+    <navPoint class="toc" id="toc" playOrder="1">
+      <navLabel>
+        <text>Table of Contents</text>
+      </navLabel>
+      <content src="toc.html"/>
+    </navPoint>
+    <navPoint class="welcome" id="welcome" playOrder="2">
+      <navLabel>
+        <text>Welcome</text>
+      </navLabel>
+      <content src="Welcome.html"/>
+    </navPoint>
+{%- for i in (1..book.Chapters.size) -%}
+  {%- assign j = i|minus: 1 -%}
+    <navPoint class="chapter" id="chapter_{{i}}" playOrder="{{i| plus: 2}}">
+      <navLabel>
+        {%- if book.Chapters[j].StartsWith("Game") -%}
+        <text>GAME: {{ glbls[j] }}</text>
+        {%- else -%}
+        <text>Chapter {{i}}: {{ glbls[j] }}</text>
+        {%- endif -%}
+      </navLabel>
+      <content src="CH{{i}}.html"/>
+    </navPoint>
+{%- endfor -%}
+    <navPoint class="chapter" id="variations" playOrder="{{ book.Chapters.size | plus: 3 }}">
+      <navLabel>
+        <text>Variations</text>
+      </navLabel>
+      <content src="Variations.html"/>
+    </navPoint>
+  </navMap>
+</ncx>
