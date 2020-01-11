@@ -241,15 +241,18 @@ type SharedState() =
         x.Mvs <- []
         visw <- isw
         curb <- Book.load (nm, visw)
-        chi <- curb.Chapters.Length - 1
         curb |> cchngEvt.Trigger
         visw |> orntEvt.Trigger
         if curb.Chapters.Length > 0 then 
             //vid <- curb.Chapters.[chi].Lines.Vid
             //issub <- curb.Chapters.[chi].Lines.IsSub
             //tel <- curb.Chapters.[chi].Lines.Mvs
-            mvl <- tel |> List.map (fun te -> te.Mv)
+            //mvl <- tel |> List.map (fun te -> te.Mv)
+            chi <- 0
             mct <- 0
+            let nm = curb.Chapters.[chi]
+            let ch = curb|>Book.getChap chi
+            (nm,ch) |> chchgEvt.Trigger
     
     member __.SaveBook() = Book.save (curb)
     
@@ -259,6 +262,12 @@ type SharedState() =
     
     member __.DelBook(nm, isw) = Book.delete (nm, isw)
     
+    member __.ChOpen(i:int) =
+        chi <- i
+        let ch = curb|>Book.getChap chi
+        let nm = curb.Chapters.[chi]
+        (nm,ch) |> chchgEvt.Trigger
+
     member __.ChSave(ch:Game) =
         ch|>Book.saveChap chi curb
 

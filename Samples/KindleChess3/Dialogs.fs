@@ -49,6 +49,18 @@ module Dialogs =
         member this.SetText(txt) = tb.Text <- txt
         member this.Tb = tb
 
+    type DlgDd() as this =
+        inherit Dialog()
+        let dd = new ComboBox(Width = 250)
+        do
+            this.AddControl(dd)
+        member this.SetDd(vals) = 
+            dd.Items.Clear()
+            vals |>Array.map(fun v -> box v)
+            |> dd.Items.AddRange
+            if dd.Items.Count > 0 then dd.SelectedIndex <- 0
+        member this.Dd = dd
+
     type DlgTbDd() as this =
         inherit Dialog()
         let tb = new TextBox(Text = "NOT SET", Width = 120)
@@ -204,6 +216,15 @@ module Dialogs =
     
 
     //chapter dialogs
+    type DlgOpn() as this =
+        inherit DlgDd(Text = "Open Chapter")
+
+        do
+            this.SetDd(stt.CurBook.Chapters|>List.toArray)
+        override this.DoOK (e) =
+            stt.ChOpen(this.Dd.SelectedIndex)
+            this.Close()
+
     type DlgAdd() as this =
         inherit DlgTb(Text = "Add New Chapter")
         do

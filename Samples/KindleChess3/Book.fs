@@ -216,6 +216,7 @@ module Book =
         let fol = if cur.IsW then wfol else bfol
         let cfl = Path.Combine(fol, cur.Title)
         Chap.save nm cfl ch
+        cur|>save|>ignore
 
     /////editGmDt - renames a chapter and changes the game details
     //let editGmDt i nm intro (cur : BookT) =
@@ -249,13 +250,12 @@ module Book =
     //                let nmvs = mvs@[mv]
     //                addmv imvl.Tail nmvs ntr
     //        addmv gm.Moves [] ch0.Lines        
-        
     //    let ch = {ch0 with Intro=intro;Lines=lines}
     //    { cur with Chapters = Array.append cur.Chapters [| ch |] },ch 
 
     ///addChap - adds a new chapter to the book
     let addChap nm (cur : BookT) =
-        let ch = Game.Start
+        let ch = {Game.Start with MoveText=[GameEndEntry(GameResult.Open)]}
         { cur with Chapters = cur.Chapters@[nm] },ch 
     
     ///delChap - deletes a chapter

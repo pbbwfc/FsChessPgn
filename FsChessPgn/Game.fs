@@ -203,16 +203,19 @@ module Game =
                 match mte with
                 |GameEndEntry(_) -> 
                     //need to include before this
-                    //need to remove iscont if after a move
-                    match omtel.Head with
-                    |HalfMoveEntry(_) |NAGEntry(_) ->
-                        match nmte with
-                        |HalfMoveEntry(mn,_,pmv,amv) ->
-                            let nmn = if amv.Value.PreBrd.WhosTurn=Player.Black then None else mn
-                            ((HalfMoveEntry(nmn,false,pmv,amv)::omtel)|>List.rev)@imtel,omtel.Length
-                        |_ -> failwith "can't reach here"
-                    |_ ->
+                    if omtel.Length=0 then
                         ((nmte::omtel)|>List.rev)@imtel,omtel.Length
+                    else
+                        //need to remove iscont if after a move
+                        match omtel.Head with
+                        |HalfMoveEntry(_) |NAGEntry(_) ->
+                            match nmte with
+                            |HalfMoveEntry(mn,_,pmv,amv) ->
+                                let nmn = if amv.Value.PreBrd.WhosTurn=Player.Black then None else mn
+                                ((HalfMoveEntry(nmn,false,pmv,amv)::omtel)|>List.rev)@imtel,omtel.Length
+                            |_ -> failwith "can't reach here"
+                        |_ ->
+                            ((nmte::omtel)|>List.rev)@imtel,omtel.Length
                 |_ -> getext ci nmte imtel.Tail (imtel.Head::omtel)
         let filtmv mte =
             match mte with
@@ -226,6 +229,14 @@ module Game =
                 let amv = pmv|>pMove.ToaMove bd
                 let nmte = HalfMoveEntry(mn|>Some,bd.WhosTurn=Player.Black,pmv,Some(amv))
                 {gm with MoveText=[nmte]},[0]
+            //if not with a selected move
+            elif irs.Head = -1 then
+                let bd = if gm.BoardSetup.IsSome then gm.BoardSetup.Value else Board.Start
+                let mn = 1
+                let amv = pmv|>pMove.ToaMove bd
+                let nmte = HalfMoveEntry(mn|>Some,bd.WhosTurn=Player.Black,pmv,Some(amv))
+                let nmtel,ni = getext (irs.Head+1) nmte gm.MoveText []
+                {gm with MoveText=nmtel},[ni]
             else
                 let cmv = gm.MoveText.[irs.Head]
                 let mvs = gm.MoveText.[0..irs.Head]|>List.filter filtmv

@@ -75,6 +75,11 @@ module Form =
             bk.DropDownItems.Add(genhb) |> ignore
             //do chapter menu
             let chp = new ToolStripMenuItem("Chapter")
+            //do rename
+            let chopn = new ToolStripMenuItem("Open")
+            //rnm.ShortcutKeys <- Keys.Control ||| Keys.O
+            chopn.Click.Add(fun _ -> if stt.Chi>=0 then (new DlgOpn()).ShowDialog() |> ignore)
+            chp.DropDownItems.Add(chopn) |> ignore
             //do save
             let chsav = new ToolStripMenuItem("Save")
             chsav.Click.Add(fun _ -> stt.ChSave(pgn.GetGame()))
@@ -357,3 +362,4 @@ module Form =
             //events
             stt.ChAdd |> Observable.add addchap
             stt.ChRnm |> Observable.add chaprnm
+            stt.ChChg |> Observable.add addchap 
