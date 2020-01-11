@@ -11,23 +11,19 @@ type SharedState() =
     let mutable tel = [] //table entries for selected branch
     let mutable mvl = [] //moves for selected branch
     let mutable mct = -1 //move num selected in selected branch
-    let mutable vid = "" //Vid for selected branch
     let mutable issub = false //IsSub for selected branch
-    let mutable clipch = None //chapter copied for future pasting
     //Events
     let pchngEvt = new Event<_>()
     let mchngEvt = new Event<_>()
     let orntEvt = new Event<_>()
     let cchngEvt = new Event<_>()
     let chaddEvt = new Event<_>()
-    let chinsEvt = new Event<_>()
     let chrnmEvt = new Event<_>()
     let chchgEvt = new Event<_>()
     let chmvextEvt = new Event<_>()
     let chmvsplEvt = new Event<_>()
     let mvlchgEvt = new Event<_>()
     let mctchgEvt = new Event<_>()
-    let vidchgEvt = new Event<_>()
     let cmplxchgEvt = new Event<_>()
     let nagchgEvt = new Event<_>()
     //publish
@@ -36,14 +32,12 @@ type SharedState() =
     member __.Ornt = orntEvt.Publish
     member __.CurChng = cchngEvt.Publish
     member __.ChAdd = chaddEvt.Publish
-    member __.ChIns = chinsEvt.Publish
     member __.ChRnm = chrnmEvt.Publish
     member __.ChChg = chchgEvt.Publish
     member __.ChMvExt = chmvextEvt.Publish
     member __.ChMvSpl = chmvsplEvt.Publish
     member __.MvlChg = mvlchgEvt.Publish
     member __.MctChg = mctchgEvt.Publish
-    member __.VidChg = vidchgEvt.Publish
     member __.CmplxChg = cmplxchgEvt.Publish
     member __.NagChg = nagchgEvt.Publish
     
@@ -79,10 +73,6 @@ type SharedState() =
     member __.Mct
         with get () = mct
         and set (value) = mct <- value
-    
-    member __.Vid
-        with get () = vid
-        and set (value) = vid <- value
     
     member __.IsSub
         with get () = issub
@@ -143,91 +133,32 @@ type SharedState() =
             curb <- cur
             chi <- curb.Chapters.Length - 1
             (nm,ch) |> chaddEvt.Trigger
-            //vid <- ch.Lines.Vid
             tel <- []
             mvl <- []
             mct <- 0
             issub <- false
 
-    //member __.InsChapter(nm) =
-    //    let cur,ch = curb |> Book.insChap nm chi
-    //    curb <- cur
-    //    (chi, curb) |> chinsEvt.Trigger
-    //    vid <- ch.Lines.Vid
-    //    tel <- []
-    //    mvl <- []
-    //    mct <- 0
-    //    issub <- false
+    member __.MoveUpChapter() =
+        if chi<curb.Chapters.Length - 1 then
+            let cur = curb |> Book.mvuChap chi
+            curb <- cur
+            chi <- chi + 1
+            tel <- []
+            mvl <- []
+            mct <- 0
+            issub <- false
 
-    //member __.MoveUpChapter() =
-    //    if chi<curb.Chapters.Length - 1 then
-    //        let cur,ch = curb |> Book.mvuChap chi
-    //        curb <- cur
-    //        chi <- chi + 1
-    //        (chi, curb) |> chinsEvt.Trigger
-    //        vid <- ch.Lines.Vid
-    //        tel <- []
-    //        mvl <- []
-    //        mct <- 0
-    //        issub <- false
-
-    //member __.MoveDownChapter() =
-    //    if chi>0 then
-    //        let cur,ch = curb |> Book.mvdChap chi
-    //        curb <- cur
-    //        chi <- chi - 1
-    //        (chi, curb) |> chinsEvt.Trigger
-    //        vid <- ch.Lines.Vid
-    //        tel <- []
-    //        mvl <- []
-    //        mct <- 0
-    //        issub <- false
+    member __.MoveDownChapter() =
+        if chi>0 then
+            let cur = curb |> Book.mvdChap chi
+            curb <- cur
+            chi <- chi - 1
+            tel <- []
+            mvl <- []
+            mct <- 0
+            issub <- false
     
-    //member __.CopyChapter() =
-    //    clipch <- curb.Chapters.[chi]|>Some
-
-    //member __.PasteChapter() =
-    //    if clipch.IsSome then
-    //        let pch = clipch.Value
-    //        let cur,ch = curb |> Book.pstChap pch chi
-    //        curb <- cur
-    //        (chi, curb) |> chinsEvt.Trigger
-    //        vid <- ch.Lines.Vid
-    //        tel <- []
-    //        mvl <- []
-    //        mct <- 0
-    //        issub <- false
-
-    //member __.AddGameChapter(nm,gmdt) =
-    //    if curb=Book.emp then
-    //        System.Windows.Forms.MessageBox.Show("Please open book before adding a chapter!")|>ignore
-    //    else
-    //        let cur,ch = curb |> Book.addGameChap gmdt nm
-    //        curb <- cur
-    //        chi <- curb.Chapters.Length - 1
-    //        (chi, ch) |> chaddEvt.Trigger
-    //        vid <- ch.Lines.Vid
-    //        tel <- []
-    //        mvl <- []
-    //        mct <- 0
-    //        issub <- false
-
-    //member __.PasteGame() =
-    //    if curb=Book.emp then
-    //        System.Windows.Forms.MessageBox.Show("Please open book before adding a chapter!")|>ignore
-    //    else
-    //        let txt = System.Windows.Forms.Clipboard.GetText()
-    //        if txt<>"" then
-    //            let cur,ch = curb |> Book.pstGameChap txt
-    //            curb <- cur
-    //            (chi, curb) |> chinsEvt.Trigger
-    //            vid <- ch.Lines.Vid
-    //            tel <- []
-    //            mvl <- []
-    //            mct <- 0
-    //            issub <- false
-
-
+ 
     //member __.EditGameDet(nm,intro) =
     //    curb <- curb |> Book.editGmDt chi nm intro
     //    (chi, nm) |> chrnmEvt.Trigger
@@ -254,7 +185,9 @@ type SharedState() =
             let ch = curb|>Book.getChap chi
             (nm,ch) |> chchgEvt.Trigger
     
-    member __.SaveBook() = Book.save (curb)
+    member __.SaveBook(cho:Game option) = 
+        Book.save (curb)|>ignore
+        if cho.IsSome then cho.Value|>Book.saveChap chi curb 
     
     member __.SaveAsBook(nm) =
         curb <- Book.saveas (curb, nm)
@@ -268,9 +201,6 @@ type SharedState() =
         let nm = curb.Chapters.[chi]
         (nm,ch) |> chchgEvt.Trigger
 
-    member __.ChSave(ch:Game) =
-        ch|>Book.saveChap chi curb
-
     member __.ChRename(nm) =
         curb <- curb |> Book.rnmChap chi nm
         nm |> chrnmEvt.Trigger
@@ -282,10 +212,6 @@ type SharedState() =
         chi <- -1
         curb |> cchngEvt.Trigger
         if curb.Chapters.Length > 0 then 
-            //vid <- curb.Chapters.[chi].Lines.Vid
-            //issub <- curb.Chapters.[chi].Lines.IsSub
-            //tel <- curb.Chapters.[chi].Lines.Mvs
-            //mvl <- tel |> List.map (fun te -> te.Mv)
             chi <- 0
             mct <- 0
             let nm = curb.Chapters.[chi]

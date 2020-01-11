@@ -215,7 +215,6 @@ module Book =
         let nm = cur.Chapters.[i]
         let fol = if cur.IsW then wfol else bfol
         let cfl = Path.Combine(fol, cur.Title)
-        cur|>save|>ignore
         Chap.save nm cfl ch
 
     /////editGmDt - renames a chapter and changes the game details
@@ -224,34 +223,6 @@ module Book =
     //    let ch = Chap.editGmDt nm intro chs.[i]
     //    chs.[i] <- ch
     //    { cur with Chapters = chs }
-
-    /////addGameChap - adds a new game chapter to the book
-    //let addGameChap gmdt nm (cur : BookT) =
-    //    let ch0 = Chap.create cur.Chapters.Length nm
-    //    let ch = {ch0 with Intro=gmdt}
-    //    { cur with Chapters = Array.append cur.Chapters [| ch |] },ch 
-
-    /////pstGameChap - paste a new game chapter to the book
-    //let pstGameChap txt (cur : BookT) =
-    //    let ch0 = Chap.create cur.Chapters.Length "Pasted Game"
-    //    let gm = txt|>PGN.ReadOneFromString
-    //    let intro =
-    //        let wbits = gm.White.Split([|','|])|>Array.map(fun s ->s.Trim())
-    //        let wh = if wbits.Length=2 then wbits.[1] + " " + wbits.[0] else gm.White
-    //        let bbits = gm.Black.Split([|','|])|>Array.map(fun s ->s.Trim())
-    //        let bl = if bbits.Length=2 then bbits.[1] + " " + bbits.[0] else gm.Black
-    //        {White=wh;Black=bl;Event=gm.Event;GmDate=System.DateTime(int(gm.Year.Value),int(gm.Month.Value),int(gm.Day.Value))}.ToString()
-    //    let lines =
-    //        let rec addmv imvl mvs otr =
-    //            if imvl|>List.isEmpty then otr
-    //            else
-    //                let mv = imvl.Head
-    //                let ntr, chg, vid = Tree.addmv mvs mv otr
-    //                let nmvs = mvs@[mv]
-    //                addmv imvl.Tail nmvs ntr
-    //        addmv gm.Moves [] ch0.Lines        
-    //    let ch = {ch0 with Intro=intro;Lines=lines}
-    //    { cur with Chapters = Array.append cur.Chapters [| ch |] },ch 
 
     ///addChap - adds a new chapter to the book
     let addChap nm (cur : BookT) =
@@ -267,51 +238,21 @@ module Book =
         Chap.del nm cfl
         { cur with Chapters = nchs }
     
-    /////insChap - inserts a new chapter in the book
-    //let insChap nm chi (cur : BookT) =
-    //    let ch = Chap.create chi nm
-    //    let upd i (ch:ChapT) = 
-    //        let nwls = ch.Lines |> Tree.glbrelbl ((i+chi+2).ToString())
-    //        {ch with Lines=nwls}
-    //    let latechs = cur.Chapters.[chi..] |>Array.mapi upd
-    //    { cur with Chapters = Array.append(Array.append cur.Chapters.[0..chi-1] [| ch|]) latechs },ch
+    ///mvuChap - moves up a chapter in the book
+    let mvuChap chi (cur : BookT) =
+        let prechs = cur.Chapters.[0..chi-1]
+        let prech = cur.Chapters.[chi+1]
+        let ch = cur.Chapters.[chi]
+        let latechs = cur.Chapters.[chi+2..]
+        { cur with Chapters = prechs@[prech;ch]@latechs }
 
-    /////pstChap - pastes a new chapter in the book
-    //let pstChap pch chi (cur : BookT) =
-    //    let upd i (ch:ChapT) = 
-    //        let nwls = ch.Lines |> Tree.glbrelbl ((i+chi+2).ToString())
-    //        {ch with Lines=nwls}
-    //    let latechs = cur.Chapters.[chi..] |>Array.mapi upd
-    //    let ch = {pch with Lines=pch.Lines |> Tree.glbrelbl ((chi+1).ToString())}
-    //    { cur with Chapters = Array.append(Array.append cur.Chapters.[0..chi-1] [| ch|]) latechs },ch
-
-    /////mvuChap - moves up a chapter in the book
-    //let mvuChap chi (cur : BookT) =
-    //    let prechs = cur.Chapters.[0..chi-1]
-    //    let prech = 
-    //        let ch = cur.Chapters.[chi+1]
-    //        let nwls = ch.Lines |> Tree.glbrelbl ((chi+1).ToString())
-    //        {ch with Lines=nwls}
-    //    let ch = 
-    //        let ch = cur.Chapters.[chi]
-    //        let nwls = ch.Lines |> Tree.glbrelbl ((chi+2).ToString())
-    //        {ch with Lines=nwls}
-    //    let latechs = cur.Chapters.[chi+2..]
-    //    { cur with Chapters = Array.append(Array.append prechs [| prech;ch |]) latechs },ch
-
-    /////mvdChap - moves down a chapter in the book
-    //let mvdChap chi (cur : BookT) =
-    //    let prechs = cur.Chapters.[0..chi-2]
-    //    let postch = 
-    //        let ch = cur.Chapters.[chi-1]
-    //        let nwls = ch.Lines |> Tree.glbrelbl ((chi+1).ToString())
-    //        {ch with Lines=nwls}
-    //    let ch = 
-    //        let ch = cur.Chapters.[chi]
-    //        let nwls = ch.Lines |> Tree.glbrelbl ((chi).ToString())
-    //        {ch with Lines=nwls}
-    //    let latechs = cur.Chapters.[chi+1..]
-    //    { cur with Chapters = Array.append(Array.append prechs [| ch;postch |]) latechs },ch
+    ///mvdChap - moves down a chapter in the book
+    let mvdChap chi (cur : BookT) =
+        let prechs = cur.Chapters.[0..chi-2]
+        let postch = cur.Chapters.[chi-1]
+        let ch = cur.Chapters.[chi]
+        let latechs = cur.Chapters.[chi+1..]
+        { cur with Chapters = prechs@[ch;postch]@latechs }
 
 
     /////delLine - deletes a line

@@ -233,14 +233,6 @@ module Dialogs =
             stt.AddChapter(this.Tb.Text)
             this.Close()
 
-    //type DlgIns() as this =
-    //    inherit DlgTb(Text = "Insert New Chapter")
-    //    do
-    //        this.SetText("Type Name Here")
-    //    override this.DoOK (e) =
-    //        stt.InsChapter(this.Tb.Text)
-    //        this.Close()
-
     type DlgRnm(i) as this =
         inherit DlgTb(Text = "Rename Chapter")
         do
@@ -248,57 +240,6 @@ module Dialogs =
         override this.DoOK (e) =
             stt.ChRename(this.Tb.Text)
             this.Close()
-
-    //type DlgAddGm() as this =
-    //    inherit Form(Text = "Add New Game Chapter", Height = 230, Width = 280, 
-    //                 FormBorderStyle = FormBorderStyle.FixedDialog)
-    //    let vc =
-    //        new TableLayoutPanel(Dock = DockStyle.Fill, ColumnCount = 1, 
-    //                             RowCount = 2)
-    //    let hc1 =
-    //        new FlowLayoutPanel(FlowDirection = FlowDirection.LeftToRight, 
-    //                            Height = 30, Width = 260)
-    //    let hc2 =
-    //        new FlowLayoutPanel(FlowDirection = FlowDirection.RightToLeft, 
-    //                            Height = 30, Width = 260)
-    //    let nm = new TextBox(Text = "Type Chapter Name Here", Width = 260)
-    //    let wh = new TextBox(Text = "Type White Player Name Here", Width = 260)
-    //    let bl = new TextBox(Text = "Type Black Player Name Here", Width = 260)
-    //    let ev = new TextBox(Text = "Type Event Here", Width = 260)
-    //    let dtlbl =
-    //        new Label(Text = "Date", 
-    //                  TextAlign = ContentAlignment.MiddleLeft, Width=30)
-    //    let dt = new DateTimePicker()
-    //    let okbtn = new Button(Text = "OK")
-    //    let cnbtn = new Button(Text = "Cancel")
-    
-    //    let donew (e) =
-    //        let gmdt = {White=wh.Text;Black=bl.Text;Event=ev.Text;GmDate=dt.Value}
-    //        stt.AddGameChapter(nm.Text,gmdt.ToString())
-    //        this.Close()
-    
-    //    do 
-    //        this.MaximizeBox <- false
-    //        this.MinimizeBox <- false
-    //        this.ShowInTaskbar <- false
-    //        this.StartPosition <- FormStartPosition.CenterParent
-    //        hc1.Controls.Add(dtlbl)
-    //        hc1.Controls.Add(dt)
-    //        hc2.Controls.Add(cnbtn)
-    //        hc2.Controls.Add(okbtn)
-    //        vc.Controls.Add(nm)
-    //        vc.Controls.Add(wh)
-    //        vc.Controls.Add(bl)
-    //        vc.Controls.Add(ev)
-    //        vc.Controls.Add(hc1)
-    //        vc.Controls.Add(hc2)
-
-    //        this.Controls.Add(vc)
-    //        this.AcceptButton <- okbtn
-    //        this.CancelButton <- cnbtn
-    //        //events
-    //        cnbtn.Click.Add(fun _ -> this.Close())
-    //        okbtn.Click.Add(donew)
 
     //type DlgEditGm(i) as this =
     //    inherit Form(Text = "Edit Game Details", Height = 230, Width = 280, 

@@ -41,7 +41,9 @@ module Form =
             opnb.Click.Add(fun _ -> (new DlgOpnBk()).ShowDialog() |> ignore)
             bk.DropDownItems.Add(opnb) |> ignore
             //do save
-            let dosaveb (e) = stt.SaveBook() |> ignore
+            let dosaveb (e) = 
+                let cho = if stt.Chi>=0 then pgn.GetGame()|>Some else None
+                stt.SaveBook(cho) |> ignore
             let savb =
                 new ToolStripMenuItem(Image = img "sav.png", Text = "&Save")
             savb.Click.Add(dosaveb)
@@ -80,10 +82,6 @@ module Form =
             //rnm.ShortcutKeys <- Keys.Control ||| Keys.O
             chopn.Click.Add(fun _ -> if stt.Chi>=0 then (new DlgOpn()).ShowDialog() |> ignore)
             chp.DropDownItems.Add(chopn) |> ignore
-            //do save
-            let chsav = new ToolStripMenuItem("Save")
-            chsav.Click.Add(fun _ -> stt.ChSave(pgn.GetGame()))
-            chp.DropDownItems.Add(chsav) |> ignore
             //do rename
             let rnm = new ToolStripMenuItem("Rename")
             //rnm.ShortcutKeys <- Keys.Control ||| Keys.O
@@ -111,47 +109,20 @@ module Form =
             delc.Click.Add(dodelc)
             chp.DropDownItems.Add(delc) |> ignore
             m.Items.Add(chp) |> ignore
-            //do insert
-            let ins = new ToolStripMenuItem("Insert")
-            //ad.ShortcutKeys <- Keys.Control ||| Keys.N
-            //ins.Click.Add(fun _ -> if stt.Chi>=0 then (new DlgIns()).ShowDialog() |> ignore)
-            chp.DropDownItems.Add(ins) |> ignore
             // add separator
             chp.DropDownItems.Add(new ToolStripSeparator()) |> ignore
             //do move up
             let mvu = new ToolStripMenuItem("Move Up")
             //ad.ShortcutKeys <- Keys.Control ||| Keys.N
-            //mvu.Click.Add(fun _ -> if stt.Chi>=0 then stt.MoveUpChapter())
+            mvu.Click.Add(fun _ -> if stt.Chi>=0 then stt.MoveUpChapter())
             chp.DropDownItems.Add(mvu) |> ignore
             //do move down
             let mvd = new ToolStripMenuItem("Move Down")
             //ad.ShortcutKeys <- Keys.Control ||| Keys.N
-            //mvd.Click.Add(fun _ -> if stt.Chi>=0 then stt.MoveDownChapter())
+            mvd.Click.Add(fun _ -> if stt.Chi>=0 then stt.MoveDownChapter())
             chp.DropDownItems.Add(mvd) |> ignore
             // add separator
             chp.DropDownItems.Add(new ToolStripSeparator()) |> ignore
-            //do copy
-            let cop = new ToolStripMenuItem("Copy")
-            //ad.ShortcutKeys <- Keys.Control ||| Keys.N
-            //cop.Click.Add(fun _ -> if stt.Chi>=0 then stt.CopyChapter())
-            chp.DropDownItems.Add(cop) |> ignore
-            //do paste
-            let pst = new ToolStripMenuItem("Paste")
-            //ad.ShortcutKeys <- Keys.Control ||| Keys.N
-            //pst.Click.Add(fun _ -> if stt.Chi>=0 then stt.PasteChapter())
-            chp.DropDownItems.Add(pst) |> ignore
-            // add separator
-            chp.DropDownItems.Add(new ToolStripSeparator()) |> ignore
-            //do add game chapter
-            let adg = new ToolStripMenuItem("Add Game")
-            //ad.ShortcutKeys <- Keys.Control ||| Keys.N
-            //adg.Click.Add(fun _ -> (new DlgAddGm()).ShowDialog() |> ignore)
-            chp.DropDownItems.Add(adg) |> ignore
-            //do paste game chapter
-            let psg = new ToolStripMenuItem("Paste Game")
-            //ad.ShortcutKeys <- Keys.Control ||| Keys.N
-            //psg.Click.Add(fun _ -> if stt.Chi>=0 then stt.PasteGame())
-            chp.DropDownItems.Add(psg) |> ignore
             //do edit game details
             let edg = new ToolStripMenuItem("Edit Game Details")
             //ad.ShortcutKeys <- Keys.Control ||| Keys.N
@@ -244,23 +215,25 @@ module Form =
             let ts = new ToolStrip()
             //do new
             let nwb = new ToolStripButton(Image = img "new.png", Text = "&New")
-            //nwb.Click.Add(fun _ -> (new DlgNewBk()).ShowDialog() |> ignore)
+            nwb.Click.Add(fun _ -> (new DlgNewBk()).ShowDialog() |> ignore)
             ts.Items.Add(nwb) |> ignore
             //do open
             let opnb =
                 new ToolStripButton(Image = img "opn.png", Text = "&Open")
-            //opnb.Click.Add(fun _ -> (new DlgOpnBk()).ShowDialog() |> ignore)
+            opnb.Click.Add(fun _ -> (new DlgOpnBk()).ShowDialog() |> ignore)
             ts.Items.Add(opnb) |> ignore
             //do save
-            //let dosaveb (e) = stt.SaveBook() |> ignore
+            let dosaveb (e) = 
+                let cho = if stt.Chi>=0 then pgn.GetGame()|>Some else None
+                stt.SaveBook(cho) |> ignore
             let savb =
                 new ToolStripButton(Image = img "sav.png", Text = "&Save")
-            //savb.Click.Add(dosaveb)
+            savb.Click.Add(dosaveb)
             ts.Items.Add(savb) |> ignore
             //do save as 
             let savab =
                 new ToolStripButton(Image = img "sava.png", Text = "Save &As")
-            //savab.Click.Add(fun _ -> (new DlgSaveAsBk()).ShowDialog() |> ignore)
+            savab.Click.Add(fun _ -> (new DlgSaveAsBk()).ShowDialog() |> ignore)
             ts.Items.Add(savab) |> ignore
             //do generate html
             //let dogenhb (e) = stt.GenHTML() |> ignore
