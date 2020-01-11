@@ -24,6 +24,7 @@
     <EmbeddedResource Include="Images\up-32-yell.png" />
     <EmbeddedResource Include="Icons\KindleChess.ico" />
     <Compile Include="Types.fs" />
+    <Compile Include="Chap.fs" />
     <Compile Include="Book.fs" />
     <Compile Include="State.fs" />
     <Compile Include="Dialogs.fs" />

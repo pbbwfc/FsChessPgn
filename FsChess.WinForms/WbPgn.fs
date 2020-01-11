@@ -120,6 +120,10 @@ module Library2 =
             pgn.DocumentCompleted.Add(setclicks)
             pgn.ObjectForScripting <- pgn
 
+        ///Gets the Game that is displayed
+        member pgn.GetGame() = 
+            game
+
         ///Sets the Game to be displayed
         member pgn.SetGame(gm:Game) = 
             game <- gm|>Game.GetaMoves

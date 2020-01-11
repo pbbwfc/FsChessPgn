@@ -220,13 +220,13 @@ module Dialogs =
     //        stt.InsChapter(this.Tb.Text)
     //        this.Close()
 
-    //type DlgRnm(i) as this =
-    //    inherit DlgTb(Text = "Rename Chapter")
-    //    do
-    //        this.SetText(stt.CurBook.Chapters.[i].Name)
-    //    override this.DoOK (e) =
-    //        stt.ChRename(this.Tb.Text)
-    //        this.Close()
+    type DlgRnm(i) as this =
+        inherit DlgTb(Text = "Rename Chapter")
+        do
+            this.SetText(stt.CurBook.Chapters.[i])
+        override this.DoOK (e) =
+            stt.ChRename(this.Tb.Text)
+            this.Close()
 
     //type DlgAddGm() as this =
     //    inherit Form(Text = "Add New Game Chapter", Height = 230, Width = 280, 

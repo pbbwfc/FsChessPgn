@@ -76,9 +76,8 @@ module Book =
     ///save - serializes the book to a file in json
     let save (cur : BookT) =
         try 
-            let cfl =
-                Path.Combine((if cur.IsW then wfol
-                              else bfol), cur.Title)
+            let fol = if cur.IsW then wfol else bfol
+            let cfl = Path.Combine(fol, cur.Title)
             Directory.CreateDirectory(cfl) |> ignore
             let cfn = Path.Combine(cfl, "book.json")
             let str = Json.serialize (cur)
@@ -95,19 +94,16 @@ module Book =
     ///load - deserializes to a book from a file
     let load (nm, isw) : BookT =
         //set this to file in White/Black folder with filename same as name
-        let cfl =
-            Path.Combine((if isw then wfol
-                          else bfol), nm)
-        
+        let fol = if isw then wfol else bfol
+        let cfl = Path.Combine(fol, nm)
         let cfn = Path.Combine(cfl, "book.json")
         let str = File.ReadAllText(cfn)
         Json.deserialize (str)
     
     ///delete - deletes the book folder  
     let delete (nm, isw) =
-        let cfl =
-            Path.Combine((if isw then wfol
-                          else bfol), nm)
+        let fol = if isw then wfol else bfol
+        let cfl = Path.Combine(fol, nm)
         Directory.Delete(cfl, true) |> ignore
     
     /////genh - generates HTML files for book
@@ -194,13 +190,32 @@ module Book =
     //        "Successfully generated HTML for book: " + cur.Title
     //    with e -> "Generation failed with error: " + e.ToString()
     
-    ////Chapter elements
-    /////rnmChap - renames a chapter
-    //let rnmChap i nm (cur : BookT) =
-    //    let chs = cur.Chapters
-    //    let ch = Chap.rnm nm chs.[i]
-    //    chs.[i] <- ch
-    //    { cur with Chapters = chs }
+    //Chapter elements
+    ///rnmChap - renames a chapter
+    let rnmChap i nm (cur : BookT) =
+        let chs = cur.Chapters
+        let fol = if cur.IsW then wfol else bfol
+        let cfl = Path.Combine(fol, cur.Title)
+        Chap.rnm nm chs.[i] cfl
+        let nchs = 
+            let achs = chs|>List.toArray
+            achs.[i] <- nm
+            achs|>List.ofArray
+        { cur with Chapters = nchs }
+
+    ///getChap - gets a chapter
+    let getChap i (cur : BookT) =
+        let nm = cur.Chapters.[i]
+        let fol = if cur.IsW then wfol else bfol
+        let cfl = Path.Combine(fol, cur.Title)
+        Chap.get nm cfl
+
+    ///saveChap - save a chapter
+    let saveChap i (cur : BookT) (ch : Game) =
+        let nm = cur.Chapters.[i]
+        let fol = if cur.IsW then wfol else bfol
+        let cfl = Path.Combine(fol, cur.Title)
+        Chap.save nm cfl ch
 
     /////editGmDt - renames a chapter and changes the game details
     //let editGmDt i nm intro (cur : BookT) =
@@ -243,14 +258,14 @@ module Book =
         let ch = Game.Start
         { cur with Chapters = cur.Chapters@[nm] },ch 
     
-    /////delChap - deletes a chapter
-    //let delChap nm (cur : BookT) =
-    //    let chs = cur.Chapters
-    //    let nchs = chs |> Array.filter (fun c -> c.Name <> nm)
-    //    let upd i (ch:ChapT) = 
-    //        let nwls = ch.Lines |> Tree.glbrelbl ((i+1).ToString())
-    //        {ch with Lines=nwls}
-    //    { cur with Chapters = nchs|>Array.mapi upd }
+    ///delChap - deletes a chapter
+    let delChap nm (cur : BookT) =
+        let chs = cur.Chapters
+        let nchs = chs |> List.filter (fun c -> c <> nm)
+        let fol = if cur.IsW then wfol else bfol
+        let cfl = Path.Combine(fol, cur.Title)
+        Chap.del nm cfl
+        { cur with Chapters = nchs }
     
     /////insChap - inserts a new chapter in the book
     //let insChap nm chi (cur : BookT) =

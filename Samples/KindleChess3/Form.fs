@@ -23,6 +23,8 @@ module Form =
 
         let mutable gms = []
         let mutable ct = 0
+        
+        let bd,pgn = CreateLnkBrdPgn()
 
         let mm =
             let m = new MenuStrip()
@@ -73,10 +75,14 @@ module Form =
             bk.DropDownItems.Add(genhb) |> ignore
             //do chapter menu
             let chp = new ToolStripMenuItem("Chapter")
+            //do save
+            let chsav = new ToolStripMenuItem("Save")
+            chsav.Click.Add(fun _ -> stt.ChSave(pgn.GetGame()))
+            chp.DropDownItems.Add(chsav) |> ignore
             //do rename
             let rnm = new ToolStripMenuItem("Rename")
             //rnm.ShortcutKeys <- Keys.Control ||| Keys.O
-            //rnm.Click.Add(fun _ -> if stt.Chi>=0 then (new DlgRnm(stt.Chi)).ShowDialog() |> ignore)
+            rnm.Click.Add(fun _ -> if stt.Chi>=0 then (new DlgRnm(stt.Chi)).ShowDialog() |> ignore)
             chp.DropDownItems.Add(rnm) |> ignore
             // add separator
             chp.DropDownItems.Add(new ToolStripSeparator()) |> ignore
@@ -86,18 +92,18 @@ module Form =
             ad.Click.Add(fun _ -> (new DlgAdd()).ShowDialog() |> ignore)
             chp.DropDownItems.Add(ad) |> ignore
             //do delete
-            //let dodelc (e) =
-            //    if stt.Chi>=0 then
-            //        let nm = stt.CurBook.Chapters.[stt.Chi].Name
-            //        if MessageBox.Show
-            //               ("Do you want to delete chapter " + nm + "?", 
-            //                "Delete Chapter", MessageBoxButtons.YesNo, 
-            //                MessageBoxIcon.Question) = DialogResult.Yes then 
-            //            stt.ChDelete(nm)
+            let dodelc (e) =
+                if stt.Chi>=0 then
+                    let nm = stt.CurBook.Chapters.[stt.Chi]
+                    if MessageBox.Show
+                           ("Do you want to delete chapter " + nm + "?", 
+                            "Delete Chapter", MessageBoxButtons.YesNo, 
+                            MessageBoxIcon.Question) = DialogResult.Yes then 
+                        stt.ChDelete(nm)
     
             let delc = new ToolStripMenuItem("Delete")
             //delc.ShortcutKeys <- Keys.Alt ||| Keys.D
-            //delc.Click.Add(dodelc)
+            delc.Click.Add(dodelc)
             chp.DropDownItems.Add(delc) |> ignore
             m.Items.Add(chp) |> ignore
             //do insert
@@ -325,13 +331,16 @@ module Form =
                           GripStyle = ToolStripGripStyle.Hidden, 
                           Dock = DockStyle.None, Left = 100)
 
-        let bd,pgn = CreateLnkBrdPgn()
         let rtpnl = new Panel(Dock=DockStyle.Fill)
     
         // add chapter tab
         let addchap (nm, ch : Game) =
             ch|>pgn.SetGame
             nmlbl.Text <- nm
+        // chapter renamed
+        let chaprnm nm =
+            nmlbl.Text <- nm
+
         
         do
             pgn|>rtpnl.Controls.Add
@@ -347,3 +356,4 @@ module Form =
 
             //events
             stt.ChAdd |> Observable.add addchap
+            stt.ChRnm |> Observable.add chaprnm

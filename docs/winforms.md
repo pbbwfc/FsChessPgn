@@ -43,6 +43,7 @@ It provides the following functions:
 
 | Function        | Type                            | Description                                                                         |
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| GetGame         | unit -> Game                    | Gets the Game that is displayed                                                     |
 | SetGame         | Game -> unit                    | Sets the Game to be displayed                                                       |
 | NextMove        | unit -> unit                    | Goes to the next Move in the Game                                                   |
 | PrevMove        | unit -> unit                    | Goes to the previous Move in the Game                                               |

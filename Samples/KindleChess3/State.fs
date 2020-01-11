@@ -64,7 +64,9 @@ type SharedState() =
         with get () = chi
         and set (value) =
             chi <- value
-            chi |> chchgEvt.Trigger
+            let nm = curb.Chapters.[chi]
+            let ch = curb|>Book.getChap chi
+            (nm,ch) |> chchgEvt.Trigger
     
     member __.Tel
         with get () = tel
@@ -257,23 +259,30 @@ type SharedState() =
     
     member __.DelBook(nm, isw) = Book.delete (nm, isw)
     
-    //member __.ChRename(nm) =
-    //    curb <- curb |> Book.rnmChap chi nm
-    //    (chi, nm) |> chrnmEvt.Trigger
+    member __.ChSave(ch:Game) =
+        ch|>Book.saveChap chi curb
+
+    member __.ChRename(nm) =
+        curb <- curb |> Book.rnmChap chi nm
+        nm |> chrnmEvt.Trigger
     
-    //member x.ChDelete(nm) =
-    //    curb <- curb |> Book.delChap nm
-    //    x.Pos <- Pos.Start()
-    //    x.Mvs <- []
-    //    chi <- curb.Chapters.Length - 1
-    //    curb |> cchngEvt.Trigger
-    //    if curb.Chapters.Length > 0 then 
-    //        vid <- curb.Chapters.[chi].Lines.Vid
-    //        issub <- curb.Chapters.[chi].Lines.IsSub
-    //        tel <- curb.Chapters.[chi].Lines.Mvs
-    //        mvl <- tel |> List.map (fun te -> te.Mv)
-    //        mct <- 0
-    
+    member x.ChDelete(nm) =
+        curb <- curb |> Book.delChap nm
+        x.Pos <- Board.Start
+        x.Mvs <- []
+        chi <- -1
+        curb |> cchngEvt.Trigger
+        if curb.Chapters.Length > 0 then 
+            //vid <- curb.Chapters.[chi].Lines.Vid
+            //issub <- curb.Chapters.[chi].Lines.IsSub
+            //tel <- curb.Chapters.[chi].Lines.Mvs
+            //mvl <- tel |> List.map (fun te -> te.Mv)
+            chi <- 0
+            mct <- 0
+            let nm = curb.Chapters.[chi]
+            let ch = curb|>Book.getChap chi
+            (nm,ch) |> chchgEvt.Trigger
+   
     //member __.GetDsc() = curb |> Book.getdsc vid mct chi
     //member __.UpdDsc(pm) = curb <- curb |> Book.upddsc vid mct chi pm
     //member __.GenHTML() = Book.genh (curb)
