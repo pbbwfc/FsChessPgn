@@ -219,18 +219,25 @@ module Game =
             |HalfMoveEntry(_) -> true
             |_ -> false
         if irs.Length=1 then
-            let cmv = gm.MoveText.[irs.Head]
-            let mvs = gm.MoveText.[0..irs.Head]|>List.filter filtmv
-            let mn = (mvs.Length+2)/2|>Some
-            let bd =
-                match cmv with
-                |HalfMoveEntry(_,_,_,amv) -> amv.Value.PostBrd
-                |_ -> failwith "should be a move"
-            let amv = pmv|>pMove.ToaMove bd
-            let nmte = HalfMoveEntry(mn,bd.WhosTurn=Player.Black,pmv,Some(amv))
-
-            let nmtel,ni = getext (irs.Head+1) nmte gm.MoveText []
-            {gm with MoveText=nmtel},[ni]
+            //allow for empty list
+            if gm.MoveText.IsEmpty then
+                let bd = if gm.BoardSetup.IsSome then gm.BoardSetup.Value else Board.Start
+                let mn = 1
+                let amv = pmv|>pMove.ToaMove bd
+                let nmte = HalfMoveEntry(mn|>Some,bd.WhosTurn=Player.Black,pmv,Some(amv))
+                {gm with MoveText=[nmte]},[0]
+            else
+                let cmv = gm.MoveText.[irs.Head]
+                let mvs = gm.MoveText.[0..irs.Head]|>List.filter filtmv
+                let mn = (mvs.Length+2)/2|>Some
+                let bd =
+                    match cmv with
+                    |HalfMoveEntry(_,_,_,amv) -> amv.Value.PostBrd
+                    |_ -> failwith "should be a move"
+                let amv = pmv|>pMove.ToaMove bd
+                let nmte = HalfMoveEntry(mn,bd.WhosTurn=Player.Black,pmv,Some(amv))
+                let nmtel,ni = getext (irs.Head+1) nmte gm.MoveText []
+                {gm with MoveText=nmtel},[ni]
         else
             let rec getmncur indx cmn (cirs:int list) (mtel:MoveTextEntry list) =
                 if cirs.Length=1 && indx=cirs.Head then mtel.Head,cmn

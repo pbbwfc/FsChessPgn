@@ -180,37 +180,37 @@ module Dialogs =
             (new DlgEditDet(stt.CurBook)).ShowDialog()|>ignore
             this.Close()
 
-    //type DlgOpnBk() as this =
-    //    inherit DlgDdDd(Text = "Open Book")
+    type DlgOpnBk() as this =
+        inherit DlgDdDd(Text = "Open Book")
 
-    //    do
-    //        this.SetDd1([| "White";"Black" |])
-    //        this.SetDd2(stt.Books(true)|>List.toArray)
-    //    override this.DoOK (e) =
-    //        stt.OpenBook(this.Dd2.Text, this.Dd1.SelectedIndex = 0)
-    //        this.Close()
-    //    override this.DropDown1Changed(e) =
-    //        let isw = this.Dd1.SelectedIndex = 0
-    //        this.Dd2.Items.Clear()
-    //        this.SetDd2(stt.Books(isw)|>List.toArray)
+        do
+            this.SetDd1([| "White";"Black" |])
+            this.SetDd2(stt.Books(true)|>List.toArray)
+        override this.DoOK (e) =
+            stt.OpenBook(this.Dd2.Text, this.Dd1.SelectedIndex = 0)
+            this.Close()
+        override this.DropDown1Changed(e) =
+            let isw = this.Dd1.SelectedIndex = 0
+            this.Dd2.Items.Clear()
+            this.SetDd2(stt.Books(isw)|>List.toArray)
     
-    //type DlgSaveAsBk() as this =
-    //    inherit DlgTb(Text = "Save Book As")
-    //    do
-    //        this.SetText("Type Name Here")
-    //    override this.DoOK (e) =
-    //        stt.SaveAsBook(this.Tb.Text)
-    //        this.Close()
+    type DlgSaveAsBk() as this =
+        inherit DlgTb(Text = "Save Book As")
+        do
+            this.SetText("Type Name Here")
+        override this.DoOK (e) =
+            stt.SaveAsBook(this.Tb.Text)
+            this.Close()
     
 
-    ////chapter dialogs
-    //type DlgAdd() as this =
-    //    inherit DlgTb(Text = "Add New Chapter")
-    //    do
-    //        this.SetText("Type Name Here")
-    //    override this.DoOK (e) =
-    //        stt.AddChapter(this.Tb.Text)
-    //        this.Close()
+    //chapter dialogs
+    type DlgAdd() as this =
+        inherit DlgTb(Text = "Add New Chapter")
+        do
+            this.SetText("Type Name Here")
+        override this.DoOK (e) =
+            stt.AddChapter(this.Tb.Text)
+            this.Close()
 
     //type DlgIns() as this =
     //    inherit DlgTb(Text = "Insert New Chapter")

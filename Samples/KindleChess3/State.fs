@@ -133,19 +133,19 @@ type SharedState() =
     member __.UpdateBook(cr, dt, dc, wel) =
         curb <- curb |> Book.upd (cr, dt, dc, wel)
     
-    //member __.AddChapter(nm) =
-    //    if curb=Book.emp then
-    //        System.Windows.Forms.MessageBox.Show("Please open book before adding a chapter!")|>ignore
-    //    else
-    //        let cur,ch = curb |> Book.addChap nm
-    //        curb <- cur
-    //        chi <- curb.Chapters.Length - 1
-    //        (chi, ch) |> chaddEvt.Trigger
-    //        vid <- ch.Lines.Vid
-    //        tel <- []
-    //        mvl <- []
-    //        mct <- 0
-    //        issub <- false
+    member __.AddChapter(nm) =
+        if curb=Book.emp then
+            System.Windows.Forms.MessageBox.Show("Please open book before adding a chapter!")|>ignore
+        else
+            let cur,ch = curb |> Book.addChap nm
+            curb <- cur
+            chi <- curb.Chapters.Length - 1
+            (nm,ch) |> chaddEvt.Trigger
+            //vid <- ch.Lines.Vid
+            tel <- []
+            mvl <- []
+            mct <- 0
+            issub <- false
 
     //member __.InsChapter(nm) =
     //    let cur,ch = curb |> Book.insChap nm chi
@@ -230,32 +230,32 @@ type SharedState() =
     //    curb <- curb |> Book.editGmDt chi nm intro
     //    (chi, nm) |> chrnmEvt.Trigger
 
-    //member __.Books(isw) =
-    //    if isw then Book.wbks()
-    //    else Book.bbks()
+    member __.Books(isw) =
+        if isw then Book.wbks()
+        else Book.bbks()
     
-    //member x.OpenBook(nm, isw) =
-    //    x.Pos <- Pos.Start()
-    //    x.Mvs <- []
-    //    visw <- isw
-    //    curb <- Book.load (nm, visw)
-    //    chi <- curb.Chapters.Length - 1
-    //    curb |> cchngEvt.Trigger
-    //    visw |> orntEvt.Trigger
-    //    if curb.Chapters.Length > 0 then 
-    //        vid <- curb.Chapters.[chi].Lines.Vid
-    //        issub <- curb.Chapters.[chi].Lines.IsSub
-    //        tel <- curb.Chapters.[chi].Lines.Mvs
-    //        mvl <- tel |> List.map (fun te -> te.Mv)
-    //        mct <- 0
+    member x.OpenBook(nm, isw) =
+        x.Pos <- Board.Start
+        x.Mvs <- []
+        visw <- isw
+        curb <- Book.load (nm, visw)
+        chi <- curb.Chapters.Length - 1
+        curb |> cchngEvt.Trigger
+        visw |> orntEvt.Trigger
+        if curb.Chapters.Length > 0 then 
+            //vid <- curb.Chapters.[chi].Lines.Vid
+            //issub <- curb.Chapters.[chi].Lines.IsSub
+            //tel <- curb.Chapters.[chi].Lines.Mvs
+            mvl <- tel |> List.map (fun te -> te.Mv)
+            mct <- 0
     
     member __.SaveBook() = Book.save (curb)
     
-    //member __.SaveAsBook(nm) =
-    //    curb <- Book.saveas (curb, nm)
-    //    curb |> cchngEvt.Trigger
+    member __.SaveAsBook(nm) =
+        curb <- Book.saveas (curb, nm)
+        curb |> cchngEvt.Trigger
     
-    //member __.DelBook(nm, isw) = Book.delete (nm, isw)
+    member __.DelBook(nm, isw) = Book.delete (nm, isw)
     
     //member __.ChRename(nm) =
     //    curb <- curb |> Book.rnmChap chi nm

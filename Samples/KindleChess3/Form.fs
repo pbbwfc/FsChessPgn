@@ -3,7 +3,7 @@
 open System
 open System.Drawing
 open System.Windows.Forms
-open FsChess.Pgn
+open FsChess
 open FsChess.WinForms
 open Dialogs
 open State
@@ -36,7 +36,7 @@ module Form =
             //do open
             let opnb =
                 new ToolStripMenuItem(Image = img "opn.png", Text = "&Open")
-            //opnb.Click.Add(fun _ -> (new DlgOpnBk()).ShowDialog() |> ignore)
+            opnb.Click.Add(fun _ -> (new DlgOpnBk()).ShowDialog() |> ignore)
             bk.DropDownItems.Add(opnb) |> ignore
             //do save
             let dosaveb (e) = stt.SaveBook() |> ignore
@@ -48,19 +48,19 @@ module Form =
             //do save as 
             let savab =
                 new ToolStripMenuItem(Image = img "sava.png", Text = "Save &As")
-            //savab.Click.Add(fun _ -> (new DlgSaveAsBk()).ShowDialog() |> ignore)
+            savab.Click.Add(fun _ -> (new DlgSaveAsBk()).ShowDialog() |> ignore)
             bk.DropDownItems.Add(savab) |> ignore
             //do delete
-            //let dodelb (e) =
-            //    let nm, isw = stt.CurBook.Title, stt.CurBook.IsW
-            //    if MessageBox.Show
-            //           ("Do you want to delete book " + nm + "?", "Delete Book", 
-            //            MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes then 
-            //        stt.DelBook(nm, isw)
+            let dodelb (e) =
+                let nm, isw = stt.CurBook.Title, stt.CurBook.IsW
+                if MessageBox.Show
+                       ("Do you want to delete book " + nm + "?", "Delete Book", 
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes then 
+                    stt.DelBook(nm, isw)
     
             let delb = new ToolStripMenuItem("Delete")
             //delb.ShortcutKeys <- Keys.Alt ||| Keys.D
-            //delb.Click.Add(dodelb)
+            delb.Click.Add(dodelb)
             bk.DropDownItems.Add(delb) |> ignore
             // add separator
             bk.DropDownItems.Add(new ToolStripSeparator()) |> ignore
@@ -83,7 +83,7 @@ module Form =
             //do add
             let ad = new ToolStripMenuItem("Add")
             //ad.ShortcutKeys <- Keys.Control ||| Keys.N
-            //ad.Click.Add(fun _ -> (new DlgAdd()).ShowDialog() |> ignore)
+            ad.Click.Add(fun _ -> (new DlgAdd()).ShowDialog() |> ignore)
             chp.DropDownItems.Add(ad) |> ignore
             //do delete
             //let dodelc (e) =
@@ -313,12 +313,7 @@ module Form =
 
         let pnl = new Panel(Dock=DockStyle.Top,Height=30)
         let nmlbl =
-            let lbl = "Chapter "
-                //if ch.Intro="" then "Chapter " + (i+1).ToString()
-                //else
-                //    let gmdt = ch.Intro|>GmChHdT.FromStr
-                //    "GAME: " + gmdt.White + " vs. " + gmdt.Black
-            new Label(Text = lbl, Dock = DockStyle.Left, 
+            new Label(Text = "Not loaded", Dock = DockStyle.Left, 
                       TextAlign = ContentAlignment.MiddleLeft,Width=400)
         let updb = new ToolStripButton(Text = "Update Description")
         let homeb = new ToolStripButton(Image = img "homeButton.png")
@@ -333,6 +328,11 @@ module Form =
         let bd,pgn = CreateLnkBrdPgn()
         let rtpnl = new Panel(Dock=DockStyle.Fill)
     
+        // add chapter tab
+        let addchap (nm, ch : Game) =
+            ch|>pgn.SetGame
+            nmlbl.Text <- nm
+        
         do
             pgn|>rtpnl.Controls.Add
             [ updb; homeb; prevb; nextb; endb ] 
@@ -344,3 +344,6 @@ module Form =
             bd|>this.Controls.Add
             tb|>this.Controls.Add
             mm|>this.Controls.Add
+
+            //events
+            stt.ChAdd |> Observable.add addchap

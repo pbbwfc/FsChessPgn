@@ -5,6 +5,7 @@ open FSharp.Json
 //open DotLiquid
 open Microsoft.FSharp.Reflection
 //open FSharp.Markdown
+open FsChess
 
 module Book =
     let emp =
@@ -91,16 +92,16 @@ module Book =
         save ans |> ignore
         ans
     
-    /////load - deserializes to a book from a file
-    //let load (nm, isw) : BookT =
-    //    //set this to file in White/Black folder with filename same as name
-    //    let cfl =
-    //        Path.Combine((if isw then wfol
-    //                      else bfol), nm)
+    ///load - deserializes to a book from a file
+    let load (nm, isw) : BookT =
+        //set this to file in White/Black folder with filename same as name
+        let cfl =
+            Path.Combine((if isw then wfol
+                          else bfol), nm)
         
-    //    let cfn = Path.Combine(cfl, "book.json")
-    //    let str = File.ReadAllText(cfn)
-    //    Json.deserialize (str)
+        let cfn = Path.Combine(cfl, "book.json")
+        let str = File.ReadAllText(cfn)
+        Json.deserialize (str)
     
     ///delete - deletes the book folder  
     let delete (nm, isw) =
@@ -237,10 +238,10 @@ module Book =
     //    let ch = {ch0 with Intro=intro;Lines=lines}
     //    { cur with Chapters = Array.append cur.Chapters [| ch |] },ch 
 
-    /////addChap - adds a new chapter to the book
-    //let addChap nm (cur : BookT) =
-    //    let ch = Chap.create cur.Chapters.Length nm
-    //    { cur with Chapters = Array.append cur.Chapters [| ch |] },ch 
+    ///addChap - adds a new chapter to the book
+    let addChap nm (cur : BookT) =
+        let ch = Game.Start
+        { cur with Chapters = cur.Chapters@[nm] },ch 
     
     /////delChap - deletes a chapter
     //let delChap nm (cur : BookT) =
