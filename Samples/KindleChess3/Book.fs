@@ -165,17 +165,17 @@ module Book =
             let ostr = t.Render(Hash.FromDictionary(dict [ "wel", box wel ]))
             let ouf = Path.Combine(hfl, "Welcome.html")
             File.WriteAllText(ouf, ostr)
-            //// variations
-            //let t =
-            //    Path.Combine(tfol, "Variations.dotl")
-            //    |> File.ReadAllText
-            //    |> Template.Parse
+            // variations
+            let t =
+                Path.Combine(tfol, "Variations.dotl")
+                |> File.ReadAllText
+                |> Template.Parse
             
-            //let vars =
-            //    cur.Chapters |> Array.mapi (fun i c -> c.Lines |> Tree.ToVar i)
-            //let ostr = t.Render(Hash.FromDictionary(dict [ "vars", box vars; "book", box cur ]))
-            //let ouf = Path.Combine(hfl, "Variations.html")
-            //File.WriteAllText(ouf, ostr)
+            let vars =
+                cur.Chapters |> List.toArray |> Array.mapi (fun i c -> c |> Chap.ToVar cfl i)
+            let ostr = t.Render(Hash.FromDictionary(dict [ "vars", box vars; "book", box cur ; "glbls", box glbls]))
+            let ouf = Path.Combine(hfl, "Variations.html")
+            File.WriteAllText(ouf, ostr)
             //// chapters
             //cur.Chapters |> Array.iteri (Chap.genh tfol hfl cur.IsW)
             "Successfully generated HTML for book: " + cur.Title

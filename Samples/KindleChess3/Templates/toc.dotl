@@ -18,7 +18,7 @@
     </h3>
 {%- for i in (1..book.Chapters.size) -%}
   {%- assign j = i|minus: 1 -%}
-	{%- if book.Chapters[j].StartsWith("Game") -%}
+	{%- if glbls[j] contains "Game" -%}
     <h3>
       <b>GAME - {{ glbls[j] }}
         <br />

@@ -10,8 +10,9 @@
   <h1>VARIATIONS</h1>
 {%- for i in (1..vars.size) -%}
   {%- assign j = i|minus: 1 -%}
-	{% if book.Chapters[j].Intro == "" %}
-  <h2>Chapter {{i}} - {{ book.Chapters[j].Name }}</h2>
+	{%- if glbls[j] contains "Game" -%}
+    {%- else -%}
+  <h2>Chapter {{i}} - {{ glbls[j] }}</h2>
 {{ vars[j] }}
 {% endif %}
 {%- endfor -%}

@@ -33,7 +33,7 @@
   {%- assign j = i|minus: 1 -%}
     <navPoint class="chapter" id="chapter_{{i}}" playOrder="{{i| plus: 2}}">
       <navLabel>
-        {%- if book.Chapters[j].StartsWith("Game") -%}
+        {%- if glbls[j] contains "Game" -%}
         <text>GAME: {{ glbls[j] }}</text>
         {%- else -%}
         <text>Chapter {{i}}: {{ glbls[j] }}</text>

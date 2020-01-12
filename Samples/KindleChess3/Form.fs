@@ -241,11 +241,11 @@ module Form =
             savab.Click.Add(fun _ -> (new DlgSaveAsBk()).ShowDialog() |> ignore)
             ts.Items.Add(savab) |> ignore
             //do generate html
-            //let dogenhb (e) = stt.GenHTML() |> ignore
+            let dogenhb (e) = stt.GenHTML() |> ignore
             let genhb =
                 new ToolStripButton(Image = img "sava.png", 
                                     Text = "Generate &HTML")
-            //genhb.Click.Add(dogenhb) |> ignore
+            genhb.Click.Add(dogenhb) |> ignore
             ts.Items.Add(genhb) |> ignore
             //add separator
             ts.Items.Add(new ToolStripSeparator()) |> ignore
