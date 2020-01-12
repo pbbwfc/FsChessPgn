@@ -255,7 +255,7 @@ module Game =
                 elif indx=cirs.Head then
                     let rv = mtel.Head
                     match rv with
-                    |RAVEntry(nmtel) -> getmncur 0 (cmn-1) cirs.Tail nmtel
+                    |RAVEntry(nmtel) -> getmncur 0 cmn cirs.Tail nmtel
                     |_ -> failwith "should be RAV"
                 else
                     let mte = mtel.Head

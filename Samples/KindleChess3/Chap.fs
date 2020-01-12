@@ -54,6 +54,7 @@ module Chap =
                 |HalfMoveEntry(_) -> trim1 imtel.Tail (mte::omtel)
                 |_ -> trim1 imtel.Tail omtel
         let mtel1 = trim1 gm.MoveText []
+        //let tst1 = mtel1|>Game.MovesStr
         //2. trim off surplus moves
         let rec trim2 (imtel:MoveTextEntry list) omtel =
             let hasnoravs mtel =
@@ -64,16 +65,18 @@ module Chap =
                 let rvs = mtel|>List.filter filt
                 rvs.Length = 0
             if imtel.IsEmpty then omtel|>List.rev
-            elif imtel|>hasnoravs then (imtel.Head::omtel)|>List.rev
+            elif imtel|>hasnoravs then omtel|>List.rev//(imtel.Head::omtel)|>List.rev
             else
                 let mte = imtel.Head
                 match mte with
                 |RAVEntry(mtel) ->
                     let nmtel = trim2 mtel []
-                    trim2 imtel.Tail (RAVEntry(nmtel)::omtel)
+                    let nmtel2 = if nmtel.IsEmpty then [mtel.Head] else nmtel
+                    trim2 imtel.Tail (RAVEntry(nmtel2)::omtel)
                 |HalfMoveEntry(_) -> trim2 imtel.Tail (mte::omtel)
                 |_ -> trim2 imtel.Tail omtel
         let mtel2 = trim2 mtel1 []
+        let tst2 = mtel2|>Game.MovesStr
         //3. Turn mains into RAVs
         let rec torav (imtel:MoveTextEntry list) ravl omtel =
             if imtel.IsEmpty then omtel
@@ -81,12 +84,14 @@ module Chap =
                 let mte = imtel.Head
                 match mte with
                 |RAVEntry(mtel) ->
-                    torav imtel.Tail (mte::ravl) omtel
+                    let nmtel = torav (mtel|>List.rev) [] []
+                    torav imtel.Tail (RAVEntry(nmtel)::ravl) omtel
                 |HalfMoveEntry(_) -> 
                     if ravl.IsEmpty then torav imtel.Tail ravl (mte::omtel)
                     else torav imtel.Tail [] (RAVEntry(mte::omtel)::ravl)
                 |_ -> torav imtel.Tail ravl omtel
         let mtel3 = torav (mtel2|>List.rev) [] []
+        let tst3 = mtel3|>Game.MovesStr
         //4. Generate html
         let rec tohtm (imtel:MoveTextEntry list) indt idl ostr =
             if imtel.IsEmpty then ostr
@@ -117,8 +122,8 @@ module Chap =
                         |_ -> tohtm nimtel indt idl (ostr+(mte|>Game.MoveStr) + " ")
                 |_ -> tohtm imtel.Tail indt idl ostr
   
-        let tst = tohtm mtel3 "      " [ch;1] ""
-        "  <ul>" + nl + "    <li>" + tst + nl + "    </li>" + nl + "  </ul>"
+        let htm = tohtm mtel3 "      " [ch;1] ""
+        "  <ul>" + nl + "    <li>" + htm + nl + "    </li>" + nl + "  </ul>"
 
     /////genh - generates HTML files for chapter
     //let genh tfol hfl isw i ch =
