@@ -339,6 +339,7 @@ module Library2 =
                         let ngame,nirs = Game.AddRav game irs (mv|>Move.TopMove board) 
                         game <- ngame
                         irs <- nirs
+                        board <- board|>Board.Push mv
                         pgn.DocumentText <- mvtags()
 
         //publish

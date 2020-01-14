@@ -39,7 +39,7 @@ module Chap =
 
     ///ToVar - converts to create Variations html
     let ToVar fol i (nm : string) =
-        let ch = i + 1
+        let ch = (i + 1).ToString()
         let nl = System.Environment.NewLine
         let gm = get nm fol
         //1. just get moves and ravs
@@ -76,7 +76,7 @@ module Chap =
                 |HalfMoveEntry(_) -> trim2 imtel.Tail (mte::omtel)
                 |_ -> trim2 imtel.Tail omtel
         let mtel2 = trim2 mtel1 []
-        let tst2 = mtel2|>Game.MovesStr
+        //let tst2 = mtel2|>Game.MovesStr
         //3. Turn mains into RAVs
         let rec torav (imtel:MoveTextEntry list) ravl omtel =
             if imtel.IsEmpty then omtel
@@ -91,39 +91,48 @@ module Chap =
                     else torav imtel.Tail [] (RAVEntry(mte::omtel)::ravl)
                 |_ -> torav imtel.Tail ravl omtel
         let mtel3 = torav (mtel2|>List.rev) [] []
-        let tst3 = mtel3|>Game.MovesStr
+        //let tst3 = mtel3|>Game.MovesStr
         //4. Generate html
-        let rec tohtm (imtel:MoveTextEntry list) indt idl ostr =
-            if imtel.IsEmpty then ostr
-            else
-                let mte = imtel.Head
-                match mte with
-                |RAVEntry(mtel) ->
-                    let lnk1 = "<a href=\"CH" + ch.ToString() + ".html#"
-                    let idx = idl|>List.map(fun i -> i.ToString())|>List.reduce(fun a b -> a + "." + b)
-                    let lnk2 = idx + "\">" + idx + "</a> " 
-                    let lnk = lnk1 + lnk2
-                    let ravstr1 = nl + (indt + "  ") + "<li>" + lnk + (tohtm mtel (indt + "  ") (idl@[1]) "") + "</li>"
-                    let ravstr2 = if imtel.Tail.IsEmpty then ravstr1 + nl + indt + "</ul>" else ravstr1
-                    let nidl =
-                        let rv = idl|>List.rev
-                        let ne = rv.Head + 1
-                        (ne::rv.Tail)|>List.rev
-                    tohtm imtel.Tail indt nidl (ostr+ravstr2)
-                |HalfMoveEntry(_) -> 
-                    //need to vary this depending on what is next
-                    let nimtel = imtel.Tail
-                    if nimtel.IsEmpty then tohtm nimtel indt idl (ostr+(mte|>Game.MoveStr))
+        let mvfilt mte =
+            match mte with
+            |HalfMoveEntry(_) -> true
+            |_ -> false
+        let ravfilt mte =
+            match mte with
+            |RAVEntry(_) -> true
+            |_ -> false
+        let rec ravtohtm indt idstr i (rav:MoveTextEntry) =
+            let id = idstr + "." + (i+1).ToString()
+            let lnk = "<li><a href=\"CH" + ch + ".html#" + id + "\">" + id + "</a>"
+            match rav with
+            |RAVEntry(mtel) ->
+                let mvl = mtel|>List.filter mvfilt
+                let ravl = mtel|>List.filter ravfilt
+                let ravstr = 
+                    if ravl.IsEmpty then "</li>" + nl
                     else
-                        let nmte = nimtel.Head
-                        match nmte with
-                        |RAVEntry(_) ->
-                            tohtm nimtel indt idl (ostr+(mte|>Game.MoveStr) + nl + indt + "<ul>")
-                        |_ -> tohtm nimtel indt idl (ostr+(mte|>Game.MoveStr) + " ")
-                |_ -> tohtm imtel.Tail indt idl ostr
-  
-        let htm = tohtm mtel3 "      " [ch;1] ""
-        "  <ul>" + nl + "    <li>" + htm + nl + "    </li>" + nl + "  </ul>"
+                        nl
+                        + indt + "  <ul>" + nl 
+                        + (ravl|>List.mapi(ravtohtm (indt + "    ") id)|>List.reduce(+))
+                        + indt + "  </ul>" + nl
+                        + indt + "</li>" + nl
+                indt + lnk + (mvl|>Game.MovesStr) + ravstr
+            |_ -> failwith "must be RAV"
+
+        let mvl = mtel3|>List.filter mvfilt
+        let ravl = mtel3 |>List.filter ravfilt
+        let ravstr =
+            if ravl.IsEmpty then ""
+            else 
+                "      <ul>" + nl 
+                + (ravl|>List.mapi(ravtohtm "        " ch)|>List.reduce(+))
+                + "      </ul>" + nl
+        let htm =
+              "  <ul>" + nl + "    <li>" + (mvl|>Game.MovesStr) + nl
+              + ravstr
+              + "    </li>" + nl + "  </ul>"
+
+        htm
 
     /////genh - generates HTML files for chapter
     //let genh tfol hfl isw i ch =

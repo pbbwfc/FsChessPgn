@@ -62,9 +62,9 @@ module pMove =
             | PawnCapture(f, sq) -> 
                 CreateOrig(MoveType.Capture,sq,Some(PieceType.Pawn),Some(f),None)
             | AmbiguousFile(p, f, sq) -> 
-                CreateOrig(MoveType.Simple,sq,Some(p),Some(f),None)
+                CreateOrig((if s.Contains("x") then MoveType.Capture else MoveType.Simple),sq,Some(p),Some(f),None)
             | AmbiguousRank(p, r, sq) -> 
-                CreateOrig(MoveType.Simple,sq,Some(p),None,Some(r))
+                CreateOrig((if s.Contains("x") then MoveType.Capture else MoveType.Simple),sq,Some(p),None,Some(r))
             | Promotion(sq, p) -> 
                 CreateAll(MoveType.Simple,sq,Some(PieceType.Pawn),None,None,Some(p),false,false,false)
             | PromCapture(f, sq, p) -> 

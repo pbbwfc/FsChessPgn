@@ -5,7 +5,6 @@ open FsChess
 module MoveTextEntry =
 
     let Parse(s : string) =
-        //TODO:need to handle number and contin
         let mn =
             if System.Char.IsNumber(s.[0]) then
                 let bits = s.Split([|'.'|])
