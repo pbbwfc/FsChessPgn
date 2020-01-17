@@ -46,8 +46,8 @@ module Chap =
             let mte = imtel.Head
             match mte with
             |RAVEntry(mtel) ->
-                let mte = mtel.Head
-                match mte with
+                let mte0 = mtel.Head
+                match mte0 with
                 |CommentEntry(str) ->
                     if str.Contains("[sub]") then
                         torav imtel.Tail ravl (mte::omtel)
@@ -77,8 +77,17 @@ module Chap =
                 let mte = imtel.Head
                 match mte with
                 |RAVEntry(mtel) ->
-                    let nmtel = trim1 mtel []
-                    trim1 imtel.Tail (RAVEntry(nmtel)::omtel)
+                    let mte0 = mtel.Head
+                    match mte0 with
+                    |CommentEntry(str) ->
+                        if str.Contains("[sub]") then
+                            trim1 imtel.Tail omtel
+                        else
+                            let nmtel = trim1 mtel []
+                            trim1 imtel.Tail (RAVEntry(nmtel)::omtel)
+                    |_ ->
+                        let nmtel = trim1 mtel []
+                        trim1 imtel.Tail (RAVEntry(nmtel)::omtel)
                 |HalfMoveEntry(_) -> trim1 imtel.Tail (mte::omtel)
                 |_ -> trim1 imtel.Tail omtel
         let mtel2 = trim1 mtel1 []
@@ -188,11 +197,22 @@ module Chap =
          
         let ravfilt mte =
             match mte with
-            |RAVEntry(_) -> true
+            |RAVEntry(mtel) -> 
+                let mte = mtel.Head
+                match mte with
+                |CommentEntry(str) ->
+                    if str.Contains("[sub]") then false else true
+                |_ -> true
             |_ -> false
         let noravfilt mte =
             match mte with
-            |RAVEntry(_)|GameEndEntry(_) -> false
+            |RAVEntry(mtel) -> 
+                let mte = mtel.Head
+                match mte with
+                |CommentEntry(str) ->
+                    if str.Contains("[sub]") then true else false
+                |_ -> false
+            |GameEndEntry(_) -> false
             |_ -> true
         let rec getmvs bd dct id (imtel:MoveTextEntry list) inmv ostr =
             if imtel.IsEmpty then (if inmv then ostr + "</strong></p>" else ostr),bd
@@ -208,6 +228,11 @@ module Chap =
                     let htm = nstr|> Markdown.Parse|> Markdown.WriteHtml
                     if inmv then getmvs bd ndct id imtel.Tail false (ostr + "</strong></p>" + nl + htm)
                     else getmvs bd ndct id imtel.Tail false (ostr + htm)
+                |RAVEntry(mtel) -> 
+                    let str = mtel.Tail|>Game.MovesStr
+                    let htm = "<p>" + str + "</p>" + nl
+                    if inmv then getmvs bd dct id imtel.Tail false (ostr + "</strong></p>" + nl + htm)
+                    else getmvs bd dct id imtel.Tail false (ostr + htm)
                 |_ -> getmvs bd dct id imtel.Tail false (ostr + "</strong></p>")
         
         let rec getravs bd id (iravl:MoveTextEntry list) ostr =
