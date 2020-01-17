@@ -72,3 +72,6 @@ The following Game related functions are provided in the module Game:
 | GetaMoves       | Game -> Game                                 | Gets the aMoves for the Game                                                        |
 | AddMv           | Game -> int list -> pMove -> Game * int list | Adds a pMove to the Game given its address                                          |
 | AddRav          | Game -> int list -> pMove -> Game * int list | Adds a RAV to the Game given the pMove is contains and its address                  |
+| CommentBefore   | Game -> int list -> string -> Game           | Adds a comment to the Game before the address provided                              |
+| CommentAfter    | Game -> int list -> string -> Game           | Adds a comment to the Game after the address provided                               |
+| EditComment     | Game -> int list -> string -> Game           | Edits a comment to the Game at the address provided                                 |

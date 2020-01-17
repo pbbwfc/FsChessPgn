@@ -172,12 +172,13 @@ module pMove =
                     failwith "k"
             |_ -> failwith "all"
 
-    let ToaMove (bd:Brd) (pmv:pMove) =
-    //TODO:need to fix this
+    let ToaMove (bd:Brd) mno (pmv:pMove) =
         let mv = pmv|>ToMove bd
 
         {
             PreBrd = bd
+            Mno = mno
+            Isw = bd.WhosTurn=Player.White
             Mv = mv
             PostBrd = bd|>Board.MoveApply mv
         }

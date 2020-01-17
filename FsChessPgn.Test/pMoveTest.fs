@@ -32,7 +32,7 @@ type pMoveTest()=
         let bd = "r1bq1rk1/p1pp1ppp/8/3Pp3/pb6/5N2/PPPP1PPP/R1BQK2R w KQ - 2 10"|>Board.FromStr
         let mvte1 = gm.MoveText.[18]
         let (HalfMoveEntry (_,_,mv,_)) = mvte1
-        let amv=mv|>pMove.ToaMove bd
+        let amv=mv|>pMove.ToaMove bd 1
         let mv1=amv.Mv
         Assert.AreEqual(E1,mv1|>Move.From)
         Assert.AreEqual(G1,mv1|>Move.To)
@@ -55,7 +55,7 @@ type pMoveTest()=
         let bd = Board.Start
         let mvte1 = gm.MoveText.Head
         let (HalfMoveEntry (mn,ic,mv,_)) = mvte1
-        let amv=mv|>pMove.ToaMove bd
+        let amv=mv|>pMove.ToaMove bd 1
         let mv1=amv.Mv
         Assert.AreEqual(E2,mv1|>Move.From)
         Assert.AreEqual(E4,mv1|>Move.To)
@@ -78,7 +78,7 @@ type pMoveTest()=
         let bd = "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"|>Board.FromStr
         let mvte1 = gm.MoveText.[2]
         let (HalfMoveEntry (_,_,mv,_)) = mvte1
-        let amv=mv|>pMove.ToaMove bd
+        let amv=mv|>pMove.ToaMove bd 1
         let mv1=amv.Mv
         Assert.AreEqual(G1,mv1|>Move.From)
         Assert.AreEqual(F3,mv1|>Move.To)
@@ -101,7 +101,7 @@ type pMoveTest()=
         let bd = "r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 4 4"|>Board.FromStr
         let mvte1 = gm.MoveText.[6]
         let (HalfMoveEntry (_,_,mv,_)) = mvte1
-        let amv=mv|>pMove.ToaMove bd
+        let amv=mv|>pMove.ToaMove bd 1
         let mv1=amv.Mv
         Assert.AreEqual(F1,mv1|>Move.From)
         Assert.AreEqual(B5,mv1|>Move.To)
@@ -124,7 +124,7 @@ type pMoveTest()=
         let bd = "r2q1rk1/p1p2ppp/b2p4/2bP4/p2N4/2P5/PP3PPP/R1BQ1RK1 w - - 1 14"|>Board.FromStr
         let mvte1 = gm.MoveText.[26]
         let (HalfMoveEntry (_,_,mv,_)) = mvte1
-        let amv=mv|>pMove.ToaMove bd
+        let amv=mv|>pMove.ToaMove bd 1
         let mv1=amv.Mv
         Assert.AreEqual(F1,mv1|>Move.From)
         Assert.AreEqual(E1,mv1|>Move.To)
@@ -147,7 +147,7 @@ type pMoveTest()=
         let bd = "r2q1rk1/p1p2ppp/2Np4/2bP4/p1b5/2P5/PP3PPP/R1BQR1K1 b - - 4 15"|>Board.FromStr
         let mvte1 = gm.MoveText.[29]
         let (HalfMoveEntry (_,_,mv,_)) = mvte1
-        let amv=mv|>pMove.ToaMove bd
+        let amv=mv|>pMove.ToaMove bd 1
         let mv1=amv.Mv
         Assert.AreEqual(D8,mv1|>Move.From)
         Assert.AreEqual(F6,mv1|>Move.To)
@@ -170,7 +170,7 @@ type pMoveTest()=
         let bd = "r5k1/p1p2ppp/2NP1q2/1bp5/p3Q3/2P5/PP3PPP/R5K1 b - - 0 20"|>Board.FromStr
         let mvte1 = gm.MoveText.[39]
         let (HalfMoveEntry (_,_,mv,_)) = mvte1
-        let amv=mv|>pMove.ToaMove bd
+        let amv=mv|>pMove.ToaMove bd 1
         let mv1=amv.Mv
         Assert.AreEqual(G8,mv1|>Move.From)
         Assert.AreEqual(F8,mv1|>Move.To)
@@ -193,7 +193,7 @@ type pMoveTest()=
         let bd = "r4rk1/p1p2ppp/2Np1q2/2bP4/p1b5/2P1B3/PP3PPP/R2QR1K1 b - - 6 16"|>Board.FromStr
         let mvte1 = gm.MoveText.[31]
         let (HalfMoveEntry (_,_,mv,_)) = mvte1
-        let amv=mv|>pMove.ToaMove bd
+        let amv=mv|>pMove.ToaMove bd 1
         let mv1=amv.Mv
         Assert.AreEqual(F8,mv1|>Move.From)
         Assert.AreEqual(E8,mv1|>Move.To)

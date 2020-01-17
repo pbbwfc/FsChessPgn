@@ -237,9 +237,12 @@ module Types =
           Fullmove = 0
           }
 
+    //TODO - lot easier if held isw and move no
     type aMove =
         {
             PreBrd : Brd
+            Mno : int
+            Isw : bool
             Mv : Move
             PostBrd : Brd
         }

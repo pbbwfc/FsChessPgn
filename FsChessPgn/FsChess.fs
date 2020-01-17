@@ -115,6 +115,16 @@ module Game =
     //Adds a RAV to the Game given the pMove is contains and its address
     let AddRav = FsChessPgn.Game.AddRav
 
+    //Adds a comment to the Game before the address provided
+    let CommentBefore = FsChessPgn.Game.CommentBefore
+
+    //Adds a comment to the Game after the address provided
+    let CommentAfter = FsChessPgn.Game.CommentAfter
+
+    //Edits a comment to the Game at the address provided
+    let EditComment = FsChessPgn.Game.EditComment
+
+
 module Pretty =
 
     let Square = FsChessPgn.Square.Name

@@ -176,8 +176,8 @@ module Book =
             let ostr = t.Render(Hash.FromDictionary(dict [ "vars", box vars; "book", box cur ; "glbls", box glbls]))
             let ouf = Path.Combine(hfl, "Variations.html")
             File.WriteAllText(ouf, ostr)
-            //// chapters
-            //cur.Chapters |> Array.iteri (Chap.genh tfol hfl cur.IsW)
+            // chapters
+            cur.Chapters |> List.iteri (Chap.genh cfl tfol hfl cur.IsW)
             "Successfully generated HTML for book: " + cur.Title
         with e -> "Generation failed with error: " + e.ToString()
     
