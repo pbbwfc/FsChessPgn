@@ -214,6 +214,26 @@ module Chap =
                 |_ -> false
             |GameEndEntry(_) -> false
             |_ -> true
+        let rec dosubrav bd dct id (imtel:MoveTextEntry list) inmv ostr =
+            if imtel.IsEmpty then (if inmv then ostr + "</em></p>" else ostr),dct
+            else
+                let mte = imtel.Head
+                match mte with
+                |HalfMoveEntry(_,_,_,amv) ->
+                    let nbd = amv.Value.PostBrd
+                    if inmv then dosubrav nbd dct id imtel.Tail true (ostr + " " + (mte|>Game.MoveStr))
+                    else dosubrav nbd dct id imtel.Tail true (ostr + nl + "<p><em>" + (mte|>Game.MoveStr))
+                |CommentEntry(str) -> 
+                    let nstr,ndct = str|>dod bd dct id
+                    let htm = nstr|> Markdown.Parse|> Markdown.WriteHtml
+                    if inmv then dosubrav bd ndct id imtel.Tail false (ostr + "</em></p>" + nl + htm)
+                    else dosubrav bd ndct id imtel.Tail false (ostr + htm)
+                |RAVEntry(mtel) -> 
+                    let str,ndct = dosubrav bd dct id mtel.Tail false ""
+                    let htm = "<p>" + str + "</p>" + nl
+                    dosubrav bd ndct id imtel.Tail false (ostr + htm)
+                |_ -> dosubrav bd dct id imtel.Tail false (ostr + "</em></p>")
+          
         let rec getmvs bd dct id (imtel:MoveTextEntry list) inmv ostr =
             if imtel.IsEmpty then (if inmv then ostr + "</strong></p>" else ostr),bd
             else
@@ -229,10 +249,9 @@ module Chap =
                     if inmv then getmvs bd ndct id imtel.Tail false (ostr + "</strong></p>" + nl + htm)
                     else getmvs bd ndct id imtel.Tail false (ostr + htm)
                 |RAVEntry(mtel) -> 
-                    let str = mtel.Tail|>Game.MovesStr
+                    let str,ndct = dosubrav bd dct id mtel.Tail false ""
                     let htm = "<p>" + str + "</p>" + nl
-                    if inmv then getmvs bd dct id imtel.Tail false (ostr + "</strong></p>" + nl + htm)
-                    else getmvs bd dct id imtel.Tail false (ostr + htm)
+                    getmvs bd ndct id imtel.Tail false (ostr + htm)
                 |_ -> getmvs bd dct id imtel.Tail false (ostr + "</strong></p>")
         
         let rec getravs bd id (iravl:MoveTextEntry list) ostr =
@@ -241,12 +260,12 @@ module Chap =
                 else
                     let mte = mtel.Head
                     match mte with
-                    |HalfMoveEntry(_) -> mte
+                    |HalfMoveEntry(_,_,_,amv) -> mte,amv.Value.PostBrd
                     |_ -> getfirst mtel.Tail
             let getravlnk i (rav:MoveTextEntry) =
                 match rav with
                 |RAVEntry(mtel) ->
-                    let mv = getfirst mtel
+                    let mv,bd = getfirst mtel
                     let mvstr = mv|>Game.MoveStr
                     let sec = (i+1).ToString()
                     let lnk = id + "." + sec
@@ -256,23 +275,23 @@ module Chap =
             let getravhd i (rav:MoveTextEntry) =
                 match rav with
                 |RAVEntry(mtel) ->
-                    let mv = getfirst mtel
+                    let mv,nbd = getfirst mtel
                     let mvstr = mv|>Game.MoveStr
                     let sec = (i+1).ToString()
                     let lnk = id + "." + sec
                     "<div id=\"" + lnk + "\"></div>" + nl
-                     + "<h3>" + lnk + " - " + mvstr + "</h3>" + nl
+                     + "<h3>" + lnk + " - " + mvstr + "</h3>" + nl,nbd
                 |_ -> failwith "should be RAV"
             
             let dorav i (rav:MoveTextEntry) =
-                let hdr = getravhd i rav
+                let hdr,nbd = getravhd i rav
                 match rav with
                 |RAVEntry(mtel) ->
                     let sec = (i+1).ToString()
                     let lnk = id + "." + sec
                     let mvl = mtel.Tail|>List.filter noravfilt
                     let ravl = mtel.Tail|>List.filter ravfilt
-                    let mvtxt,nbd = getmvs bd 1 lnk mvl false ""
+                    let mvtxt,nbd = getmvs nbd 1 lnk mvl false ""
                     let ravtxt = getravs nbd lnk ravl ""
                     hdr + mvtxt + ravtxt + nl
 

@@ -402,9 +402,10 @@ module Game =
         else
             let rec getnmtel (cirs:int list) (mtel:MoveTextEntry list) =
                 if cirs.Length=1 then 
-                    let i = irs.Head
+                    let i = cirs.Head
                     let nmtel = 
                         if i=0 then mte::mtel.Tail
+                        elif i=mtel.Length-1 then mtel.[..i-1]@[mte]
                         else
                             mtel.[..i-1]@[mte]@mtel.[i+1..]
                     nmtel
