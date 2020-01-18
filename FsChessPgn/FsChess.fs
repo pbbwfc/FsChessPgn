@@ -103,6 +103,12 @@ module Game =
     ///Gets a NAG as a string such as ?? given one of the list from Game.MoveText
     let NAGStr = FsChessPgn.NagUtil.ToStr
 
+    ///Gets a NAG as a description such as Very Good given one of the list from Game.MoveText
+    let NAGDesc = FsChessPgn.NagUtil.Desc
+
+    ///Gets a list of all NAGs supported
+    let NAGlist = FsChessPgn.NagUtil.All
+
     ///Gets the moves text as a string given the Game.MoveText
     let MovesStr = FsChessPgn.PgnWrite.MoveTextStr
 

@@ -83,7 +83,7 @@ module Library2 =
         
         
         //dialogs
-        let dlgcomm(offset,id,cm) = 
+        let dlgcomm(offset,cm) = 
             let txt = if offset= -1 then "Add Comment Before" elif offset=1 then "Add Comment After" else "Edit Comment"
             let dlg = new Form(Text = txt, Height = 400, Width = 400, FormBorderStyle = FormBorderStyle.FixedToolWindow,StartPosition=FormStartPosition.CenterParent)
             let hc2 =
@@ -91,13 +91,13 @@ module Library2 =
                                     Height = 30, Width = 400,Dock=DockStyle.Bottom)
             let okbtn = new Button(Text = "OK")
             let cnbtn = new Button(Text = "Cancel")
-            //TODO - if edit need to load content
+            //if edit need to load content
             let comm =
                 new TextBox(Text = cm, Dock = DockStyle.Fill, 
                             Multiline = true, 
                             Font = new Font("Microsoft Sans Serif", 10.0f))
             let dook(e) = 
-                //TODO write comm.Text to comment
+                //write comm.Text to comment
                 if offset = -1 then
                     game <- Game.CommentBefore game rirs comm.Text
                     pgn.DocumentText <- mvtags()
@@ -126,6 +126,55 @@ module Library2 =
 
             dlg
        
+        let dlgnag(offset,ing:NAG) = 
+            let txt = if offset=1 then "Add NAG" else "Edit NAG"
+            let dlg = new Form(Text = txt, Height = 300, Width = 200, FormBorderStyle = FormBorderStyle.FixedToolWindow,StartPosition=FormStartPosition.CenterParent)
+            let hc2 =
+                new FlowLayoutPanel(FlowDirection = FlowDirection.RightToLeft, 
+                                    Height = 30, Width = 400,Dock=DockStyle.Bottom)
+            let okbtn = new Button(Text = "OK")
+            let cnbtn = new Button(Text = "Cancel")
+            //if edit need to load NAG
+            let nags =
+                //need to add radio buttons for each possible NAG
+                let vc = 
+                    new FlowLayoutPanel(FlowDirection = FlowDirection.TopDown, 
+                                         Height = 260, Width = 200,Dock=DockStyle.Fill)
+                let rbs = 
+                   Game.NAGlist|>List.toArray
+                   |>Array.map(fun ng -> (ng|>Game.NAGStr) + " - " + (ng|>Game.NAGDesc),ng)
+                   |>Array.map(fun (lb,ng) -> new RadioButton(Text=lb,Width=200,Checked=(ng=ing)):> Control)
+                rbs|>vc.Controls.AddRange
+                vc
+
+            let dook(e) = 
+                //write nag to NAGEntry
+                if offset = 1 then 
+                    //game <- Game.AddNAG game rirs comm.Text
+                    pgn.DocumentText <- mvtags()
+                else 
+                    //game <- Game.EditNAG game rirs comm.Text
+                    pgn.DocumentText <- mvtags()
+
+                dlg.Close()
+
+            do 
+                dlg.MaximizeBox <- false
+                dlg.MinimizeBox <- false
+                dlg.ShowInTaskbar <- false
+                dlg.StartPosition <- FormStartPosition.CenterParent
+                hc2.Controls.Add(cnbtn)
+                hc2.Controls.Add(okbtn)
+                dlg.Controls.Add(hc2)
+                dlg.Controls.Add(nags)
+                dlg.CancelButton <- cnbtn
+                //events
+                cnbtn.Click.Add(fun _ -> dlg.Close())
+                okbtn.Click.Add(dook)
+
+            dlg
+
+
         
         let onclick(mve:HtmlElement) = 
             let i = mve.Id|>int
@@ -158,13 +207,18 @@ module Library2 =
             //do edit comm before
             let adb =
                 new ToolStripMenuItem(Text = "Add Comment Before")
-            adb.Click.Add(fun _ -> dlgcomm(-1,rirs,"").ShowDialog() |> ignore)
+            adb.Click.Add(fun _ -> dlgcomm(-1,"").ShowDialog() |> ignore)
             m.Items.Add(adb) |> ignore
             //do edit comm after
             let ada =
                 new ToolStripMenuItem(Text = "Add Comment After")
-            ada.Click.Add(fun _ -> dlgcomm(1,rirs,"").ShowDialog() |> ignore)
+            ada.Click.Add(fun _ -> dlgcomm(1,"").ShowDialog() |> ignore)
             m.Items.Add(ada) |> ignore
+            //do add nag 
+            let nag =
+                new ToolStripMenuItem(Text = "Add NAG")
+            nag.Click.Add(fun _ -> dlgnag(1,NAG.Null).ShowDialog() |> ignore)
+            m.Items.Add(nag) |> ignore
             m
 
         let cmctxmnu = 
@@ -172,7 +226,7 @@ module Library2 =
             //do edit comm 
             let ed =
                 new ToolStripMenuItem(Text = "Edit Comment")
-            ed.Click.Add(fun _ -> dlgcomm(0,rirs,ccm).ShowDialog() |> ignore)
+            ed.Click.Add(fun _ -> dlgcomm(0,ccm).ShowDialog() |> ignore)
             m.Items.Add(ed) |> ignore
             m
 

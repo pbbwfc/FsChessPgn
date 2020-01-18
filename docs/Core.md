@@ -61,17 +61,19 @@ The following Move related functions are provided in the module Move:
 
 The following Game related functions are provided in the module Game:
 
-| Function        | Type                                         | Description                                                                         |
-|:----------------|:---------------------------------------------|:------------------------------------------------------------------------------------|
-| Start           | Game                                         | The starting Game with no moves                                                     |
-| PushSAN         | string -> Game -> Game                       | Make a SAN Move such as Nf3 for this Game and return the new Game                   |
-| Pop             | Game -> Game                                 | Pops a move of the end for this Game and return the new Game                        |
-| MoveStr         | MoveTextEntry -> string                      | Gets a single move as a string given one of the list from Game.MoveText             |
-| NAGStr          | NAG -> string                                | Gets a NAG as a string such as ?? given one from the list in Game.MoveText          |
-| MovesStr        | MoveTextEntry list -> string                 | Gets the moves text as a string given the Game.MoveText                             |
-| GetaMoves       | Game -> Game                                 | Gets the aMoves for the Game                                                        |
-| AddMv           | Game -> int list -> pMove -> Game * int list | Adds a pMove to the Game given its address                                          |
-| AddRav          | Game -> int list -> pMove -> Game * int list | Adds a RAV to the Game given the pMove is contains and its address                  |
-| CommentBefore   | Game -> int list -> string -> Game           | Adds a comment to the Game before the address provided                              |
-| CommentAfter    | Game -> int list -> string -> Game           | Adds a comment to the Game after the address provided                               |
-| EditComment     | Game -> int list -> string -> Game           | Edits a comment to the Game at the address provided                                 |
+| Function        | Type                                         | Description                                                                            |
+|:----------------|:---------------------------------------------|:---------------------------------------------------------------------------------------|
+| Start           | Game                                         | The starting Game with no moves                                                        |
+| PushSAN         | string -> Game -> Game                       | Make a SAN Move such as Nf3 for this Game and return the new Game                      |
+| Pop             | Game -> Game                                 | Pops a move of the end for this Game and return the new Game                           |
+| MoveStr         | MoveTextEntry -> string                      | Gets a single move as a string given one of the list from Game.MoveText                |
+| NAGStr          | NAG -> string                                | Gets a NAG as a string such as ?? given one from the list in Game.MoveText             |
+| NAGDesc         | NAG -> string                                | Gets a NAG as a description such as Very Good given one of the list from Game.MoveText |
+| NAGlist         | NAG list                                     | Gets a list of all NAGs supported                                                      |
+| MovesStr        | MoveTextEntry list -> string                 | Gets the moves text as a string given the Game.MoveText                                |
+| GetaMoves       | Game -> Game                                 | Gets the aMoves for the Game                                                           |
+| AddMv           | Game -> int list -> pMove -> Game * int list | Adds a pMove to the Game given its address                                             |
+| AddRav          | Game -> int list -> pMove -> Game * int list | Adds a RAV to the Game given the pMove is contains and its address                     |
+| CommentBefore   | Game -> int list -> string -> Game           | Adds a comment to the Game before the address provided                                 |
+| CommentAfter    | Game -> int list -> string -> Game           | Adds a comment to the Game after the address provided                                  |
+| EditComment     | Game -> int list -> string -> Game           | Edits a comment to the Game at the address provided                                    |
