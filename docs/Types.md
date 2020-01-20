@@ -195,6 +195,8 @@ These are a means of storing a move with the associated board position. They are
 | Field             | Type              | Description                                 |
 |:------------------|:------------------|:--------------------------------------------|
 | PreBrd            | Brd               | The position before the move                |
+| Mno               | int               | The move number                             |
+| Isw               | bool              | Whether the move is by White                |
 | Mv                | Move              | The encoded move                            |
 | PostBrd           | Brd               | The position after the move                 |
 
