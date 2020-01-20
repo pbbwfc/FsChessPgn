@@ -187,12 +187,12 @@ module Chap =
             + @""" src=""board/" + png 
             + @""" width=""352"" height=""352"" border=""2"" />" + "</p>"
         let dod bd dct id (pd : string) =
-            if not (pd.Contains("[diag]")) then pd,dct
+            if not (pd.Contains("[diag]")) then pd|>Markdown.Parse|>Markdown.WriteHtml,dct
             else 
                 let pos = pd.IndexOf("[diag]")
                 let npd =
-                    pd.Substring(0, pos) + (link bd dct id) 
-                    + pd.Substring(pos + 6)
+                    (pd.Substring(0, pos)|>Markdown.Parse|>Markdown.WriteHtml) + (link bd dct id) 
+                    + (pd.Substring(pos + 6)|>Markdown.Parse|>Markdown.WriteHtml)
                 npd,(dct+1)
          
         let ravfilt mte =
@@ -226,13 +226,12 @@ module Chap =
                 |NAGEntry(ng) ->
                     dosubrav bd dct id imtel.Tail inmv (ostr + (ng|>Game.NAGHtm))
                 |CommentEntry(str) -> 
-                    let nstr,ndct = str|>dod bd dct id
-                    let htm = nstr|> Markdown.Parse|> Markdown.WriteHtml
+                    let htm,ndct = str|>dod bd dct id
                     if inmv then dosubrav bd ndct id imtel.Tail false (ostr + "</em></p>" + nl + htm)
                     else dosubrav bd ndct id imtel.Tail false (ostr + htm)
                 |RAVEntry(mtel) -> 
                     let str,ndct = dosubrav bd dct id mtel.Tail false ""
-                    let htm = "<p>" + str + "</p>" + nl
+                    let htm = str + nl
                     dosubrav bd ndct id imtel.Tail false (ostr + htm)
                 |GameEndEntry(_) -> dosubrav bd dct id imtel.Tail false (ostr + "</em></p>")
           
@@ -248,13 +247,12 @@ module Chap =
                 |NAGEntry(ng) ->
                     getmvs bd dct id imtel.Tail inmv (ostr + (ng|>Game.NAGHtm))
                 |CommentEntry(str) -> 
-                    let nstr,ndct = str|>dod bd dct id
-                    let htm = nstr|> Markdown.Parse|> Markdown.WriteHtml
+                    let htm,ndct = str|>dod bd dct id
                     if inmv then getmvs bd ndct id imtel.Tail false (ostr + "</strong></p>" + nl + htm)
                     else getmvs bd ndct id imtel.Tail false (ostr + htm)
                 |RAVEntry(mtel) -> 
                     let str,ndct = dosubrav bd dct id mtel.Tail false ""
-                    let htm = "<p>" + str + "</p>" + nl
+                    let htm = str + nl
                     getmvs bd ndct id imtel.Tail false (ostr + htm)
                 |GameEndEntry(_) -> getmvs bd dct id imtel.Tail false (ostr + "</strong></p>")
         
@@ -301,25 +299,17 @@ module Chap =
 
                 |_ -> failwith "should be RAV"
 
-            
             if iravl.IsEmpty then ""
             else
                 "<ul>" + nl
                 + (iravl|>List.mapi getravlnk|>List.reduce(+))
                 + "</ul>" + nl
                 + (iravl|>List.mapi dorav|>List.reduce(+))
-
-            
-            
- 
-        
         
         let mvl = mtel|>List.filter noravfilt
         let mvtxt,nbd = getmvs initbd 1 chno mvl false ""
         let ravl = mtel|>List.filter ravfilt
         let ravtxt = getravs nbd chno ravl ""
-
-        
         
         let gmtxt = mvtxt + ravtxt
         
