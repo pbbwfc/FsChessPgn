@@ -145,6 +145,25 @@ These are a means of storing the broad type of each move for a SAN move. They ar
  - CastleKingSide
  - CastleQueenSide
 
+## Numeric Annotation Glyphs
+
+These are a means of storing comments on moves and positions with these values:
+
+| Label        | Value |
+|:-------------|:------|
+| Null         | 0     | 
+| Good         | 1     | 
+| Poor         | 2     |
+| Very Good    | 3     |
+| Speculative  | 4     |
+| Questionable | 5     |
+| Even         | 10    | 
+| Wslight      | 14    | 
+| Bslight      | 15    |
+| Wmoderate    | 16    |
+| Bmoderate    | 17    |
+| Wdecisive    | 18    |
+
 ## SAN Moves
 
 These are a means of storing a move in SAN format such as _Nxg6+_. They are provided as a record type **pMove** with these fields:

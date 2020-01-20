@@ -189,6 +189,13 @@ module Types =
         |VeryPoor = 4
         |Speculative = 5
         |Questionable = 6
+        |Even = 10
+        |Wslight = 14
+        |Bslight = 15
+        |Wmoderate = 16
+        |Bmoderate =17
+        |Wdecisive = 18
+        |Bdecisive = 19
 
     type pMove = 
         {

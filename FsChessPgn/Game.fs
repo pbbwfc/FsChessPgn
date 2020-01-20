@@ -418,3 +418,35 @@ module Game =
                     |_ -> failwith "should be RAV"
             let nmtel = getnmtel irs gm.MoveText
             {gm with MoveText=nmtel}
+
+    let AddNag (gm:Game) (irs:int list) (ng:NAG) =
+        let mte = NAGEntry(ng)
+        if irs.Length=1 then
+            //allow for empty list
+            if gm.MoveText.IsEmpty then
+                {gm with MoveText=[mte]}
+            else
+                let i = irs.Head
+                let nmtel = 
+                    if i=gm.MoveText.Length-1 then gm.MoveText@[mte]
+                    else
+                        gm.MoveText.[..i]@[mte]@gm.MoveText.[i+1..]
+                {gm with MoveText=nmtel}
+        else
+            let rec getnmtel (cirs:int list) (mtel:MoveTextEntry list) =
+                if cirs.Length=1 then 
+                    let i = cirs.Head
+                    let nmtel = 
+                        if i=mtel.Length-1 then mtel@[mte]
+                        else
+                            mtel.[..i]@[mte]@mtel.[i+1..]
+                    nmtel
+                else
+                    let i = cirs.Head
+                    let rav = mtel.[i]
+                    match rav with
+                    |RAVEntry(nmtel) ->
+                        mtel.[..i-1]@[RAVEntry(getnmtel cirs.Tail nmtel)]@mtel.[i+1..]
+                    |_ -> failwith "should be RAV"
+            let nmtel = getnmtel irs gm.MoveText
+            {gm with MoveText=nmtel}

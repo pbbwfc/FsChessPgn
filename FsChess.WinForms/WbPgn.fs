@@ -63,7 +63,7 @@ module Library2 =
                 let str = mte|>Game.MoveStr
                 " <span " + idstr + " class=\"ge\" style=\"color:blue\">" + str + "</span>"
             |NAGEntry(ng) ->
-                let str = ng|>Game.NAGStr
+                let str = ng|>Game.NAGHtm
                 "<span " + idstr + " class=\"ng\" style=\"color:darkred\">" + str + "</span>"
             |RAVEntry(mtel) ->
                 let indent = 
@@ -128,29 +128,31 @@ module Library2 =
        
         let dlgnag(offset,ing:NAG) = 
             let txt = if offset=1 then "Add NAG" else "Edit NAG"
-            let dlg = new Form(Text = txt, Height = 300, Width = 200, FormBorderStyle = FormBorderStyle.FixedToolWindow,StartPosition=FormStartPosition.CenterParent)
+            let dlg = new Form(Text = txt, Height = 300, Width = 400, FormBorderStyle = FormBorderStyle.FixedToolWindow,StartPosition=FormStartPosition.CenterParent)
             let hc2 =
                 new FlowLayoutPanel(FlowDirection = FlowDirection.RightToLeft, 
                                     Height = 30, Width = 400,Dock=DockStyle.Bottom)
             let okbtn = new Button(Text = "OK")
             let cnbtn = new Button(Text = "Cancel")
             //if edit need to load NAG
+            let tc = 
+                new TableLayoutPanel(ColumnCount = 2, RowCount = 6, 
+                                    Height = 260, Width = 200,Dock=DockStyle.Fill)
             let nags =
                 //need to add radio buttons for each possible NAG
-                let vc = 
-                    new FlowLayoutPanel(FlowDirection = FlowDirection.TopDown, 
-                                         Height = 260, Width = 200,Dock=DockStyle.Fill)
                 let rbs = 
                    Game.NAGlist|>List.toArray
-                   |>Array.map(fun ng -> (ng|>Game.NAGStr) + " - " + (ng|>Game.NAGDesc),ng)
-                   |>Array.map(fun (lb,ng) -> new RadioButton(Text=lb,Width=200,Checked=(ng=ing)):> Control)
-                rbs|>vc.Controls.AddRange
-                vc
+                   |>Array.map(fun ng -> (ng|>Game.NAGStr) + "   " + (ng|>Game.NAGDesc),ng)
+                   |>Array.map(fun (lb,ng) -> new RadioButton(Text=lb,Width=200,Checked=(ng=ing)))
+                rbs
 
             let dook(e) = 
+                //get selected nag
+                let indx = nags|>Array.findIndex(fun rb -> rb.Checked)
+                let selNag = Game.NAGlist.[indx]
                 //write nag to NAGEntry
-                if offset = 1 then 
-                    //game <- Game.AddNAG game rirs comm.Text
+                if offset = 1 && indx<>0 then 
+                    game <- Game.AddNag game rirs selNag
                     pgn.DocumentText <- mvtags()
                 else 
                     //game <- Game.EditNAG game rirs comm.Text
@@ -166,7 +168,9 @@ module Library2 =
                 hc2.Controls.Add(cnbtn)
                 hc2.Controls.Add(okbtn)
                 dlg.Controls.Add(hc2)
-                dlg.Controls.Add(nags)
+                nags.[0..6]|>Array.iteri(fun i rb -> tc.Controls.Add(rb,0,i))
+                nags.[7..13]|>Array.iteri(fun i rb -> tc.Controls.Add(rb,1,i))
+                dlg.Controls.Add(tc)
                 dlg.CancelButton <- cnbtn
                 //events
                 cnbtn.Click.Add(fun _ -> dlg.Close())
