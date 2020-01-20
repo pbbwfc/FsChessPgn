@@ -68,10 +68,13 @@ The following Game related functions are provided in the module Game:
 | Pop             | Game -> Game                                 | Pops a move of the end for this Game and return the new Game                           |
 | MoveStr         | MoveTextEntry -> string                      | Gets a single move as a string given one of the list from Game.MoveText                |
 | NAGStr          | NAG -> string                                | Gets a NAG as a string such as ?? given one from the list in Game.MoveText             |
+| NAGFromStr      | string -> NAG                                | Gets a NAG from a string such as ??                                                    |
 | NAGHtm          | NAG -> string                                | Gets a NAG as HTML such as ?? given one from the list in Game.MoveText                 |
 | NAGDesc         | NAG -> string                                | Gets a NAG as a description such as Very Good given one of the list from Game.MoveText |
 | NAGlist         | NAG list                                     | Gets a list of all NAGs supported                                                      |
-| AddNag          | Game -> int list -> NAG -> Game              | Gets a list of all NAGs supported                                                      |
+| AddNag          | Game -> int list -> NAG -> Game              | Adds a Nag in the Game after the address provided                                      |
+| DeleteNag       | Game -> int list -> Game                     | Deletes a Nag in the Game at the address provided                                      |
+| EditNag         | Game -> int list -> NAG -> Game              | Edits a Nag in the Game at the address provided                                        |
 | MovesStr        | MoveTextEntry list -> string                 | Gets the moves text as a string given the Game.MoveText                                |
 | GetaMoves       | Game -> Game                                 | Gets the aMoves for the Game                                                           |
 | AddMv           | Game -> int list -> pMove -> Game * int list | Adds a pMove to the Game given its address                                             |

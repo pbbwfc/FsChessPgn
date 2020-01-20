@@ -17,6 +17,7 @@ module Library2 =
         let mutable irs = [-1]
         let mutable rirs = [-1]
         let mutable ccm = ""
+        let mutable cng = NAG.Null
 
         //events
         let bdchngEvt = new Event<_>()
@@ -154,8 +155,11 @@ module Library2 =
                 if offset = 1 && indx<>0 then 
                     game <- Game.AddNag game rirs selNag
                     pgn.DocumentText <- mvtags()
+                elif offset = 0 && indx<>0 then 
+                    game <- Game.EditNag game rirs selNag
+                    pgn.DocumentText <- mvtags()
                 else 
-                    //game <- Game.EditNAG game rirs comm.Text
+                    game <- Game.DeleteNag game rirs
                     pgn.DocumentText <- mvtags()
 
                 dlg.Close()
@@ -177,7 +181,6 @@ module Library2 =
                 okbtn.Click.Add(dook)
 
             dlg
-
 
         
         let onclick(mve:HtmlElement) = 
@@ -234,19 +237,32 @@ module Library2 =
             m.Items.Add(ed) |> ignore
             m
 
+        let ngctxmnu = 
+            let m = new ContextMenuStrip()
+            //do edit comm 
+            let ed =
+                new ToolStripMenuItem(Text = "Edit NAG")
+            ed.Click.Add(fun _ -> dlgnag(0,cng).ShowDialog() |> ignore)
+            m.Items.Add(ed) |> ignore
+            m
+
         let onrightclick(el:HtmlElement,psn) = 
             rirs <- getirs (el.Id|>int) []
             if el.GetAttribute("className") = "mv" then mvctxmnu.Show(pgn,psn)
-            if el.GetAttribute("className") = "cm" then 
+            elif el.GetAttribute("className") = "cm" then 
                 ccm <- el.InnerText
                 cmctxmnu.Show(pgn,psn)
+            elif el.GetAttribute("className") = "ng" then 
+                cng <- el.InnerText|>Game.NAGFromStr
+                ngctxmnu.Show(pgn,psn)
 
 
         let setclicks e = 
             for el in pgn.Document.GetElementsByTagName("span") do
                 if el.GetAttribute("className") = "mv" then
-                    //el.Click.Add(fun  -> onclick(el))
                     el.MouseDown.Add(fun e -> if e.MouseButtonsPressed=MouseButtons.Left then onclick(el) else onrightclick(el,e.MousePosition))
+                elif el.GetAttribute("className") = "ng" then
+                    el.MouseDown.Add(fun e -> if e.MouseButtonsPressed=MouseButtons.Left then () else onrightclick(el,e.MousePosition))
             for el in pgn.Document.GetElementsByTagName("div") do
                 if el.GetAttribute("className") = "cm" then 
                     el.MouseDown.Add(fun e -> if e.MouseButtonsPressed=MouseButtons.Left then () else onrightclick(el,e.MousePosition))

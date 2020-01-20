@@ -450,3 +450,64 @@ module Game =
                     |_ -> failwith "should be RAV"
             let nmtel = getnmtel irs gm.MoveText
             {gm with MoveText=nmtel}
+
+    let EditNag (gm:Game) (irs:int list) (ng:NAG) =
+        let mte = NAGEntry(ng)
+        if irs.Length=1 then
+            //allow for empty list
+            if gm.MoveText.IsEmpty then
+                {gm with MoveText=[mte]}
+            else
+                let i = irs.Head
+                let nmtel = 
+                    if i=0 then mte::gm.MoveText.Tail
+                    else
+                        gm.MoveText.[..i-1]@[mte]@gm.MoveText.[i+1..]
+                {gm with MoveText=nmtel}
+        else
+            let rec getnmtel (cirs:int list) (mtel:MoveTextEntry list) =
+                if cirs.Length=1 then 
+                    let i = cirs.Head
+                    let nmtel = 
+                        if i=0 then mte::mtel.Tail
+                        elif i=mtel.Length-1 then mtel.[..i-1]@[mte]
+                        else
+                            mtel.[..i-1]@[mte]@mtel.[i+1..]
+                    nmtel
+                else
+                    let i = cirs.Head
+                    let rav = mtel.[i]
+                    match rav with
+                    |RAVEntry(nmtel) ->
+                        mtel.[..i-1]@[RAVEntry(getnmtel cirs.Tail nmtel)]@mtel.[i+1..]
+                    |_ -> failwith "should be RAV"
+            let nmtel = getnmtel irs gm.MoveText
+            {gm with MoveText=nmtel}
+
+    let DeleteNag (gm:Game) (irs:int list)  =
+        if irs.Length=1 then
+            let i = irs.Head
+            let nmtel = 
+                if i=0 then gm.MoveText.Tail
+                else
+                    gm.MoveText.[..i-1]@gm.MoveText.[i+1..]
+            {gm with MoveText=nmtel}
+        else
+            let rec getnmtel (cirs:int list) (mtel:MoveTextEntry list) =
+                if cirs.Length=1 then 
+                    let i = cirs.Head
+                    let nmtel = 
+                        if i=0 then mtel.Tail
+                        elif i=mtel.Length-1 then mtel.[..i-1]
+                        else
+                            mtel.[..i-1]@mtel.[i+1..]
+                    nmtel
+                else
+                    let i = cirs.Head
+                    let rav = mtel.[i]
+                    match rav with
+                    |RAVEntry(nmtel) ->
+                        mtel.[..i-1]@[RAVEntry(getnmtel cirs.Tail nmtel)]@mtel.[i+1..]
+                    |_ -> failwith "should be RAV"
+            let nmtel = getnmtel irs gm.MoveText
+            {gm with MoveText=nmtel}

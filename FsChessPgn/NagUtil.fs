@@ -19,9 +19,14 @@ module NagUtil =
         | NAG.Bslight -> "⩱"
         | NAG.Wmoderate -> "±"
         | NAG.Bmoderate -> "∓"
-        | NAG.Wdecisive -> "+ −"
-        | NAG.Bdecisive -> "− +"
+        | NAG.Wdecisive -> "+−"
+        | NAG.Bdecisive -> "−+"
         |_ -> ""
+
+    let FromStr(str:string) =
+        let stra = All|>List.map ToStr|>List.toArray
+        let indx = stra|>Array.findIndex(fun s -> s=str)
+        All.[indx]
 
     let ToHtm(nag:NAG) =
         match nag with
