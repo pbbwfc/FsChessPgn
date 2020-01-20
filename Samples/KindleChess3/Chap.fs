@@ -223,6 +223,8 @@ module Chap =
                     let nbd = amv.Value.PostBrd
                     if inmv then dosubrav nbd dct id imtel.Tail true (ostr + " " + (mte|>Game.MoveStr))
                     else dosubrav nbd dct id imtel.Tail true (ostr + nl + "<p><em>" + (mte|>Game.MoveStr))
+                |NAGEntry(ng) ->
+                    dosubrav bd dct id imtel.Tail inmv (ostr + (ng|>Game.NAGHtm))
                 |CommentEntry(str) -> 
                     let nstr,ndct = str|>dod bd dct id
                     let htm = nstr|> Markdown.Parse|> Markdown.WriteHtml
@@ -232,7 +234,7 @@ module Chap =
                     let str,ndct = dosubrav bd dct id mtel.Tail false ""
                     let htm = "<p>" + str + "</p>" + nl
                     dosubrav bd ndct id imtel.Tail false (ostr + htm)
-                |_ -> dosubrav bd dct id imtel.Tail false (ostr + "</em></p>")
+                |GameEndEntry(_) -> dosubrav bd dct id imtel.Tail false (ostr + "</em></p>")
           
         let rec getmvs bd dct id (imtel:MoveTextEntry list) inmv ostr =
             if imtel.IsEmpty then (if inmv then ostr + "</strong></p>" else ostr),bd
@@ -243,6 +245,8 @@ module Chap =
                     let nbd = amv.Value.PostBrd
                     if inmv then getmvs nbd dct id imtel.Tail true (ostr + " " + (mte|>Game.MoveStr))
                     else getmvs nbd dct id imtel.Tail true (ostr + nl + "<p><strong>" + (mte|>Game.MoveStr))
+                |NAGEntry(ng) ->
+                    getmvs bd dct id imtel.Tail inmv (ostr + (ng|>Game.NAGHtm))
                 |CommentEntry(str) -> 
                     let nstr,ndct = str|>dod bd dct id
                     let htm = nstr|> Markdown.Parse|> Markdown.WriteHtml
@@ -252,7 +256,7 @@ module Chap =
                     let str,ndct = dosubrav bd dct id mtel.Tail false ""
                     let htm = "<p>" + str + "</p>" + nl
                     getmvs bd ndct id imtel.Tail false (ostr + htm)
-                |_ -> getmvs bd dct id imtel.Tail false (ostr + "</strong></p>")
+                |GameEndEntry(_) -> getmvs bd dct id imtel.Tail false (ostr + "</strong></p>")
         
         let rec getravs bd id (iravl:MoveTextEntry list) ostr =
             let rec getfirst (mtel:MoveTextEntry list) =
