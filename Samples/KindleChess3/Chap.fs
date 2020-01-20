@@ -8,11 +8,6 @@ open FsChess
 open FsChess.Pgn
 
 module Chap =
-    /////create - creates a chapter
-    //let create i nm =
-    //    { Name = nm
-    //      Intro = ""
-    //      Lines = i |> Tree.create }
     
     ///rnm - renames a chapter
     let rnm nm oldnm fol = 
@@ -332,61 +327,3 @@ module Chap =
         let ouf = Path.Combine(hfl, "CH" + (i + 1).ToString() + ".html")
         File.WriteAllText(ouf, ostr)
     
-    
-    
-    
-    
-    
-    
-    
-    
-    /////delLine - deletes a line
-    //let delLine vid (ch : ChapT) =
-    //    let tr = Tree.delLine vid ch.Lines
-    //    { ch with Lines = tr }
-    
-    /////addmv - adds a new move to a chapter
-    //let addmv (mvs : Move list) (mv : Move) (ch : ChapT) =
-    //    let tr, chg, vid = Tree.addmv mvs mv ch.Lines
-    //    { ch with Lines = tr }, chg, vid
-    
-    /////getdsc -gets a description for a move in a chapter
-    //let getdsc (vid : string) mct (ch : ChapT) =
-    //    let itr = ch.Lines
-    //    Tree.getdsc vid mct itr
-    
-    /////upddsc - updates a description for a move in a chapter
-    //let upddsc (vid : string) mct pm (ch : ChapT) =
-    //    let itr = ch.Lines
-    //    let tr = Tree.upddsc vid mct pm itr
-    //    { ch with Lines = tr }
-    
-    /////setsub - sets a line as sub
-    //let setsub (vid : string) (ch : ChapT) =
-    //    let itr = ch.Lines
-    //    let tr = Tree.setsub vid itr
-    //    { ch with Lines = tr }
-    
-    /////setmain - sets a line as main
-    //let setmain (vid : string) (ch : ChapT) =
-    //    let itr = ch.Lines
-    //    let tr = Tree.setmain vid itr
-    //    { ch with Lines = tr }
-    
-    /////moveup - move up a line
-    //let moveup (vid : string) (ch : ChapT) =
-    //    let itr = ch.Lines
-    //    let tr = Tree.moveup vid itr
-    //    { ch with Lines = tr }
-    
-    /////movedown - move down a line
-    //let movedown (vid : string) (ch : ChapT) =
-    //    let itr = ch.Lines
-    //    let tr = Tree.movedown vid itr
-    //    { ch with Lines = tr }
-    
-    /////setnag - sets NAG for move
-    //let setnag nag mct (vid : string) (ch : ChapT) =
-    //    let itr = ch.Lines
-    //    let tr, ntel = Tree.setnag nag mct vid itr
-    //    { ch with Lines = tr }, ntel

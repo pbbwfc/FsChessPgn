@@ -134,69 +134,6 @@ module Form =
             //edg.Click.Add(fun _ -> if stt.Chi>=0 then (new DlgEditGm(stt.Chi)).ShowDialog() |> ignore)
             chp.DropDownItems.Add(edg) |> ignore
    
-            //do line menu
-            let ln = new ToolStripMenuItem("Line")
-    
-            //do set as sub line
-            //let dosubline (e) =
-            //    let vid = stt.Vid
-            //    if vid <> "" && not (vid.Contains("s")) then do stt.SetSub()
-    
-            let subl =
-                new ToolStripMenuItem(Image = img "down-32-red.png", 
-                                      Text = "Set as Sub Line")
-            //subl.Click.Add(dosubline)
-            ln.DropDownItems.Add(subl) |> ignore
-            //do set as not sub line
-            //let domainline (e) =
-            //    let vid = stt.Vid
-            //    if vid <> "" && vid.Contains("s") then do stt.SetMain()
-    
-            let mainl =
-                new ToolStripMenuItem(Image = img "up-32-red.png", 
-                                      Text = "Set as Main Line")
-            //mainl.Click.Add(domainline)
-            ln.DropDownItems.Add(mainl) |> ignore
-            //do move up line
-            //let domoveupline (e) =
-            //    let vid = stt.Vid
-            //    if vid <> "" then do stt.MoveUp()
-    
-            let moveupl =
-                new ToolStripMenuItem(Image = img "up-32-yell.png", 
-                                      Text = "Move Up")
-            moveupl.ShortcutKeys <- Keys.Alt ||| Keys.Up
-            //moveupl.Click.Add(domoveupline)
-            ln.DropDownItems.Add(moveupl) |> ignore
-            //do move down line
-            //let domovedownline (e) =
-            //    let vid = stt.Vid
-            //    if vid <> "" then do stt.MoveDown()
-    
-            let movedownl =
-                new ToolStripMenuItem(Image = img "down-32-yell.png", 
-                                      Text = "Move Down")
-            movedownl.ShortcutKeys <- Keys.Alt ||| Keys.Down
-            //movedownl.Click.Add(domovedownline)
-            ln.DropDownItems.Add(movedownl) |> ignore
-            // do delete line
-            //let dodelline (e) = stt.DelLine()
-            let dell = new ToolStripMenuItem("Delete")
-            //dell.ShortcutKeys <- Keys.Control ||| Keys.L
-            //dell.Click.Add(dodelline)
-            ln.DropDownItems.Add(dell) |> ignore
-            // add separator
-            ln.DropDownItems.Add(new ToolStripSeparator()) |> ignore
-            // do set NAG
-            let setnag =
-                new ToolStripMenuItem(Image = img "plus-minus-32.png", 
-                                      Text = "Set Evaluation")
-            //setnag.Click.Add
-            //    (fun _ -> 
-            //    if not (stt.Tel |> List.isEmpty) && stt.Mct > 0 then 
-            //        (new DlgSetNAG()).ShowDialog() |> ignore)
-            ln.DropDownItems.Add(setnag) |> ignore
-            m.Items.Add(ln) |> ignore
             //do about menu
             let abt = new ToolStripMenuItem("About")
             //do docs
@@ -247,57 +184,6 @@ module Form =
                                     Text = "Generate &HTML")
             genhb.Click.Add(dogenhb) |> ignore
             ts.Items.Add(genhb) |> ignore
-            //add separator
-            ts.Items.Add(new ToolStripSeparator()) |> ignore
-            //do set as sub line
-            //let dosubline (e) =
-            //    let vid = stt.Vid
-            //    if vid <> "" && not (vid.Contains("s")) then do stt.SetSub()
-    
-            let subl =
-                new ToolStripButton(Image = img "down-32-red.png", 
-                                    Text = "Set as Sub Line")
-            //subl.Click.Add(dosubline)
-            ts.Items.Add(subl) |> ignore
-            //do set as not sub line
-            //let domainline (e) =
-            //    let vid = stt.Vid
-            //    if vid <> "" && vid.Contains("s") then do stt.SetMain()
-    
-            let mainl =
-                new ToolStripButton(Image = img "up-32-red.png", 
-                                    Text = "Set as Main Line")
-            //mainl.Click.Add(domainline)
-            ts.Items.Add(mainl) |> ignore
-            //do move up line
-            //let domoveupline (e) =
-            //    let vid = stt.Vid
-            //    if vid <> "" then do stt.MoveUp()
-    
-            let moveupl =
-                new ToolStripButton(Image = img "up-32-yell.png", 
-                                    Text = "Move Up")
-            //moveupl.Click.Add(domoveupline)
-            ts.Items.Add(moveupl) |> ignore
-            //do move down line
-            //let domovedownline (e) =
-            //    let vid = stt.Vid
-            //    if vid <> "" then do stt.MoveDown()
-    
-            let movedownl =
-                new ToolStripButton(Image = img "down-32-yell.png", 
-                                    Text = "Move Down")
-            //movedownl.Click.Add(domovedownline)
-            ts.Items.Add(movedownl) |> ignore
-            // do set NAG
-            let setnag =
-                new ToolStripMenuItem(Image = img "plus-minus-32.png", 
-                                      Text = "Set Evaluation")
-            //setnag.Click.Add
-            //    (fun _ -> 
-            //    if not (stt.Tel |> List.isEmpty) && stt.Mct > 0 then 
-            //        (new DlgSetNAG()).ShowDialog() |> ignore)
-            ts.Items.Add(setnag) |> ignore
             ts
 
         let pnl = new Panel(Dock=DockStyle.Top,Height=30)
@@ -352,8 +238,10 @@ module Form =
             bd|>this.Controls.Add
             tb|>this.Controls.Add
             mm|>this.Controls.Add
-
+            this.KeyPreview <- true
             //events
+            //TODO does not work
+            this.KeyDown.Add(dokeydown)
             homeb.Click.Add(fun _ -> donav (Home))
             prevb.Click.Add(fun _ -> donav (Prev))
             nextb.Click.Add(fun _ -> donav (Next))

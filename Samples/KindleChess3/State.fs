@@ -4,38 +4,23 @@ open FsChess
 
 type SharedState() =
     let mutable pos = Board.Start
-    let mutable mvs = []
     let mutable visw = true
     let mutable curb = Book.emp
     let mutable chi = -1
-    let mutable tel = [] //table entries for selected branch
-    let mutable mvl = [] //moves for selected branch
-    let mutable mct = -1 //move num selected in selected branch
-    let mutable issub = false //IsSub for selected branch
     //Events
     let pchngEvt = new Event<_>()
-    let mchngEvt = new Event<_>()
     let orntEvt = new Event<_>()
     let cchngEvt = new Event<_>()
     let chaddEvt = new Event<_>()
     let chrnmEvt = new Event<_>()
     let chchgEvt = new Event<_>()
-    let mvlchgEvt = new Event<_>()
-    let mctchgEvt = new Event<_>()
-    let cmplxchgEvt = new Event<_>()
-    let nagchgEvt = new Event<_>()
     //publish
     member __.PosChng = pchngEvt.Publish
-    member __.MvsChng = mchngEvt.Publish
     member __.Ornt = orntEvt.Publish
     member __.CurChng = cchngEvt.Publish
     member __.ChAdd = chaddEvt.Publish
     member __.ChRnm = chrnmEvt.Publish
     member __.ChChg = chchgEvt.Publish
-    member __.MvlChg = mvlchgEvt.Publish
-    member __.MctChg = mctchgEvt.Publish
-    member __.CmplxChg = cmplxchgEvt.Publish
-    member __.NagChg = nagchgEvt.Publish
     
     //Members
     member __.Pos
@@ -43,12 +28,6 @@ type SharedState() =
         and set (value) =
             pos <- value
             pos |> pchngEvt.Trigger
-    
-    member __.Mvs
-        with get () = mvs
-        and set (value) =
-            mvs <- value
-            mvs |> mchngEvt.Trigger
     
     member __.Chi
         with get () = chi
@@ -58,27 +37,10 @@ type SharedState() =
             let ch = curb|>Book.getChap chi
             (nm,ch) |> chchgEvt.Trigger
     
-    member __.Tel
-        with get () = tel
-        and set (value) = tel <- value
-    
-    member __.Mvl
-        with get () = mvl
-        and set (value) = mvl <- value
-    
-    member __.Mct
-        with get () = mct
-        and set (value) = mct <- value
-    
-    member __.IsSub
-        with get () = issub
-        and set (value) = issub <- value
-    
     member __.CurBook = curb
     
     member x.NewBook(nm, isw) =
         x.Pos <- Board.Start
-        x.Mvs <- []
         curb <- Book.cur (nm, isw)
         curb |> cchngEvt.Trigger
         visw <- isw
@@ -95,30 +57,18 @@ type SharedState() =
             curb <- cur
             chi <- curb.Chapters.Length - 1
             (nm,ch) |> chaddEvt.Trigger
-            tel <- []
-            mvl <- []
-            mct <- 0
-            issub <- false
 
     member __.MoveUpChapter() =
         if chi<curb.Chapters.Length - 1 then
             let cur = curb |> Book.mvuChap chi
             curb <- cur
             chi <- chi + 1
-            tel <- []
-            mvl <- []
-            mct <- 0
-            issub <- false
 
     member __.MoveDownChapter() =
         if chi>0 then
             let cur = curb |> Book.mvdChap chi
             curb <- cur
             chi <- chi - 1
-            tel <- []
-            mvl <- []
-            mct <- 0
-            issub <- false
     
     member __.Books(isw) =
         if isw then Book.wbks()
@@ -126,18 +76,12 @@ type SharedState() =
     
     member x.OpenBook(nm, isw) =
         x.Pos <- Board.Start
-        x.Mvs <- []
         visw <- isw
         curb <- Book.load (nm, visw)
         curb |> cchngEvt.Trigger
         visw |> orntEvt.Trigger
         if curb.Chapters.Length > 0 then 
-            //vid <- curb.Chapters.[chi].Lines.Vid
-            //issub <- curb.Chapters.[chi].Lines.IsSub
-            //tel <- curb.Chapters.[chi].Lines.Mvs
-            //mvl <- tel |> List.map (fun te -> te.Mv)
             chi <- 0
-            mct <- 0
             let nm = curb.Chapters.[chi]
             let ch = curb|>Book.getChap chi
             (nm,ch) |> chchgEvt.Trigger
@@ -165,53 +109,15 @@ type SharedState() =
     member x.ChDelete(nm) =
         curb <- curb |> Book.delChap nm
         x.Pos <- Board.Start
-        x.Mvs <- []
         chi <- -1
         curb |> cchngEvt.Trigger
         if curb.Chapters.Length > 0 then 
             chi <- 0
-            mct <- 0
             let nm = curb.Chapters.[chi]
             let ch = curb|>Book.getChap chi
             (nm,ch) |> chchgEvt.Trigger
    
     member __.GenHTML() = Book.genh (curb)
-    
-    //member __.DelLine() =
-    //    curb <- curb |> Book.delLine chi vid
-    //    vid <- curb.Chapters.[chi].Lines.Vid
-    //    tel <- []
-    //    mvl <- []
-    //    mct <- 0
-    //    issub <- false
-    //    pos <- Pos.Start()
-    //    mvs <- []
-    //    pos |> pchngEvt.Trigger
-    //    (chi,curb.Chapters.[chi]) |> cmplxchgEvt.Trigger
-    
-    //member __.SetSub() =
-    //    if not issub then 
-    //        curb <- curb |> Book.setsub vid chi
-    //        (chi,curb.Chapters.[chi]) |> cmplxchgEvt.Trigger
-    
-    //member __.SetMain() =
-    //    if issub then 
-    //        curb <- curb |> Book.setmain vid chi
-    //        (chi,curb.Chapters.[chi]) |> cmplxchgEvt.Trigger
-    
-    //member __.MoveUp() =
-    //    curb <- curb |> Book.moveup vid chi
-    //    (chi,curb.Chapters.[chi]) |> cmplxchgEvt.Trigger
-    
-    //member __.MoveDown() =
-    //    curb <- curb |> Book.movedown vid chi
-    //    (chi,curb.Chapters.[chi]) |> cmplxchgEvt.Trigger
-    
-    //member __.SetNag(nag) =
-    //    let ncurb, ntel = curb |> Book.setnag nag mct vid chi
-    //    curb <- ncurb
-    //    tel <- ntel
-    //    (chi, tel) |> nagchgEvt.Trigger
-
+ 
 module State =
     let stt = new SharedState()

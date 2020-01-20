@@ -99,7 +99,7 @@ module Library1 =
             | "r" -> cur "BlackRook.cur"
             | "k" -> cur "BlackKing.cur"
             | "q" -> cur "BlackQueen.cur"
-            | _ -> failwith "invalid piece"
+            | _ -> Cursors.Default
  
         /// get image given char
         let getim c =
@@ -203,7 +203,7 @@ module Library1 =
                         board <- board|>Board.Push mvl.Head
                         setpcsmvs()
                         mvl.Head|>mvEvt.Trigger
-                    //TODO need to allow for promotion
+                    //need to allow for promotion
                     elif mvl.Length=4 then
                         dlgprom.ShowDialog() |> ignore
                         let nmvl = mvl|>List.filter(fun mv -> mv|>Move.PromPcTp=prompctp)
