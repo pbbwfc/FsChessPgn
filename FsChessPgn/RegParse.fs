@@ -91,7 +91,7 @@ module RegParse =
                     else
                         proclin st (cstr+hd.ToString()) tl gm
                 |InNum -> 
-                    if System.Char.IsNumber(hd) || hd = '.' || hd = ' ' && tl.Length>0 && tl.StartsWith(".")
+                    if System.Char.IsNumber(hd) || hd = '.' || hd = ' ' //&& tl.Length>0 && tl.StartsWith(".")
                     then
                         proclin st (cstr+hd.ToString()) tl gm
                     elif hd='/'||hd='-' then

@@ -10,3 +10,8 @@ module Games =
 
     ///Write a list of Games to a file
     let WriteFile = FsChessPgn.PgnWriter.WriteFile
+
+    ///Finds the Games that containg the specified Board
+    let FindBoard = FsChessPgn.Games.FindBoard
+
+    let CreateIndex = FsChessPgn.Games.CreateIndex
