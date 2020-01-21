@@ -71,13 +71,18 @@ module Form =
             //delb.ShortcutKeys <- Keys.Alt ||| Keys.D
             delb.Click.Add(dodelb)
             bk.DropDownItems.Add(delb) |> ignore
+            //do edit book details
+            let doeditbk (e) = (new DlgEditDet(stt.CurBook)).ShowDialog() |> ignore
+            let editbk =
+                new ToolStripMenuItem(Text = "Edit Details")
+            editbk.Click.Add(doeditbk)
+            bk.DropDownItems.Add(editbk) |> ignore
             // add separator
             bk.DropDownItems.Add(new ToolStripSeparator()) |> ignore
             //do generate html
             let dogenhb (e) = stt.GenHTML() |> ignore
             let genhb =
-                new ToolStripMenuItem(Image = img "sava.png", 
-                                      Text = "Generate &HTML")
+                new ToolStripMenuItem(Text = "Generate &HTML")
             genhb.Click.Add(dogenhb)
             bk.DropDownItems.Add(genhb) |> ignore
             //do chapter menu
@@ -177,11 +182,16 @@ module Form =
                 new ToolStripButton(Image = img "sava.png", Text = "Save &As")
             savab.Click.Add(fun _ -> (new DlgSaveAsBk()).ShowDialog() |> ignore)
             ts.Items.Add(savab) |> ignore
+            //do edit book details
+            let doeditbk (e) = (new DlgEditDet(stt.CurBook)).ShowDialog() |> ignore
+            let editbk =
+                new ToolStripButton(Text = "Edit Details")
+            editbk.Click.Add(doeditbk)
+            ts.Items.Add(editbk) |> ignore
             //do generate html
             let dogenhb (e) = stt.GenHTML() |> ignore
             let genhb =
-                new ToolStripButton(Image = img "sava.png", 
-                                    Text = "Generate &HTML")
+                new ToolStripButton(Text = "Generate &HTML")
             genhb.Click.Add(dogenhb) |> ignore
             ts.Items.Add(genhb) |> ignore
             ts

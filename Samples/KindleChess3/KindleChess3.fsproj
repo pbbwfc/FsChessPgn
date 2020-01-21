@@ -34,17 +34,17 @@
     <None Include="Templates\Welcome.dotl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Images\prevButton.png" />
     <EmbeddedResource Include="Images\endButton.png" />
     <EmbeddedResource Include="Images\homeButton.png" />
     <EmbeddedResource Include="Images\new.png" />
     <EmbeddedResource Include="Images\nextButton.png" />
-    <EmbeddedResource Include="Images\nextLineButton.png" />
     <EmbeddedResource Include="Images\opn.png" />
-    <EmbeddedResource Include="Images\prevButton.png" />
-    <EmbeddedResource Include="Images\prevLineButton.png" />
     <EmbeddedResource Include="Images\sav.png" />
     <EmbeddedResource Include="Images\sava.png" />
-    <EmbeddedResource Include="Icons\KindleChess.ico" />
+    <EmbeddedResource Include="Icons\KindleChess.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Compile Include="Types.fs" />
     <Compile Include="Chap.fs" />
     <Compile Include="Book.fs" />
