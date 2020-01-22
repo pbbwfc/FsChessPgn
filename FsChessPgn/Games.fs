@@ -118,7 +118,7 @@ module Games =
         let possibles = dct.[empties]|>Array.ofList
         let ngml = igml|>List.filter(fun (i,gm) -> possibles|>Array.contains i)
         let gmfnds = ngml|>List.choose (Game.GetBoard bd)
-        gmfnds//|>List.filter fst|>List.map snd
+        gmfnds
     
     let FindBoard (bd:Brd) (fn:string) =
         //TODO: consider doing in chunks for very large files
@@ -130,4 +130,5 @@ module Games =
             FastFindBoard bd dct (gml|>List.indexed)
         else 
             let gmfnds = gml|>List.indexed|>List.choose (Game.GetBoard bd)
-            gmfnds//|>List.filter fst|>List.map snd
+            gmfnds
+

@@ -9,6 +9,7 @@
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Square.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\GameResult.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\NagUtil.fs"
+#load @"d:\GitHub\FsChessPgn\FsChessPgn\Stats.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Bitboard.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\Attacks.fs"
 #load @"d:\GitHub\FsChessPgn\FsChessPgn\FEN.fs"
@@ -32,3 +33,5 @@ do
     fsi.AddPrinter<Square>(Pretty.Square)
     fsi.AddPrinter<Brd>(Pretty.Board)
     fsi.AddPrinter<Game>(Pretty.Game)
+    fsi.AddPrinter<BrdStats>(Pretty.BrdStats)
+

@@ -298,11 +298,33 @@ module Types =
             Mvstr : string
             Count : int
             Pc : float
-            WhitWins : int 
+            WhiteWins : int 
             Draws : int 
-            BlackWins :string
+            BlackWins :int
             Score : float
             DrawPc : float
         }
     
-    type BrdStats = MvStats list
+    type BrdStats = 
+        {
+            Mvstats : MvStats list
+            TotCount : int
+            Pc : float
+            TotWhiteWins : int 
+            TotDraws : int 
+            TotBlackWins :int
+            TotScore : float
+            TotDrawPc : float
+        }
+
+    let BrdStatsEMP = 
+        {
+            Mvstats = []
+            TotCount = 0
+            Pc = 0.0
+            TotWhiteWins = 0 
+            TotDraws = 0
+            TotBlackWins = 0
+            TotScore = 0.0
+            TotDrawPc = 0.0
+        }

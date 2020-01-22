@@ -22,3 +22,8 @@ module Games =
     let CreateIndex = FsChessPgn.Games.CreateIndex
 
     let GetIndex = FsChessPgn.Games.GetIndex
+
+module Stats =
+
+    ///Get Statistics for the Board
+    let Get = FsChessPgn.Stats.Get

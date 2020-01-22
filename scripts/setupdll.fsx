@@ -12,4 +12,5 @@ do
     fsi.AddPrinter<Square>(Pretty.Square)
     fsi.AddPrinter<Brd>(Pretty.Board)
     fsi.AddPrinter<Game>(Pretty.Game)
+    fsi.AddPrinter<BrdStats>(Pretty.BrdStats)
 

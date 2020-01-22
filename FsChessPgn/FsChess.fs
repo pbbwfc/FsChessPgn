@@ -152,3 +152,4 @@ module Pretty =
     let Move = FsChessPgn.MoveUtil.toUci
     let Board = FsChessPgn.Board.ToStr
     let Game = FsChessPgn.Game.pretty
+    let BrdStats = FsChessPgn.Stats.pretty

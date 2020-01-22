@@ -265,4 +265,14 @@ These are a means of storing statistics for a position. They are provided as a l
 | Score             | float              | The percentage score with this move               |
 | DrawPc            | float              | The percentage of draws with this move            |
 
-The collection of these stats for a position is held in the type **BrdStats** which is defined as a **MvStats list**.
+The collection of these stats for a position is held in the type **BrdStats** which is defined as follows:
+
+| Field             | Type               | Description                                       |
+|:------------------|:-------------------|:--------------------------------------------------|
+| Mvstats           | MvStats list       | The stats for each possible move                  |
+| TotCount          | int                | The total count of games                          |
+| TotWhiteWins      | int                | The number of wins for White across all moves     |
+| TotDraws          | int                | The number of draws across all moves              |
+| TotBlackWins      | int                | The number of wins for Black across all moves     |
+| TotScore          | float              | The percentage score across all moves             |
+| TotDrawPc         | float              | The percentage of draws across all moves          |
