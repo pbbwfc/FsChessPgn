@@ -12,5 +12,5 @@ let gmmvl = Games.FindBoard bd pgn
 
 let len = gmmvl.Length
 
-let stats = gmmvl|>Games.GetStats
+let stats = gmmvl|>Stats.Get
 

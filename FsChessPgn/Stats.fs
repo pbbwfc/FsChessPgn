@@ -11,10 +11,16 @@ module Stats =
                 let i,gm,mv = cigmmvl.Head
                 let cmvstl = bdst.Mvstats|>List.filter(fun mvst -> mvst.Mvstr=mv)
                 if cmvstl.IsEmpty then 
-                    let mvst = {Mvstr=mv;Count=1;Pc=0.0;WhiteWins=(if gm.Result=GameResult.WhiteWins then 1 else 0);
-                                Draws=(if gm.Result=GameResult.Draw then 1 else 0);BlackWins=(if gm.Result=GameResult.BlackWins then 1 else 0);
+                    let mvst = {Mvstr=mv;Count=1;Pc=0.0;
+                                WhiteWins=(if gm.Result=GameResult.WhiteWins then 1 else 0);
+                                Draws=(if gm.Result=GameResult.Draw then 1 else 0);
+                                BlackWins=(if gm.Result=GameResult.BlackWins then 1 else 0);
                                 Score=0.0;DrawPc=0.0}
-                    createstats cigmmvl.Tail {bdst with TotCount=(bdst.TotCount+1);Mvstats=mvst::bdst.Mvstats}
+                    createstats cigmmvl.Tail {bdst with TotCount=(bdst.TotCount+1);
+                                                        TotWhiteWins=(if gm.Result=GameResult.WhiteWins then bdst.TotWhiteWins+1 else bdst.TotWhiteWins);
+                                                        TotDraws=(if gm.Result=GameResult.Draw then bdst.TotDraws+1 else bdst.TotDraws);
+                                                        TotBlackWins=(if gm.Result=GameResult.BlackWins then bdst.TotBlackWins+1 else bdst.TotBlackWins);
+                                                        Mvstats=mvst::bdst.Mvstats}
                 else
                     let cmvst = cmvstl.Head
                     let mvst = {cmvst with Count=(cmvst.Count+1);
@@ -22,34 +28,59 @@ module Stats =
                                            Draws=(if gm.Result=GameResult.Draw then cmvst.Draws+1 else cmvst.Draws);
                                            BlackWins=(if gm.Result=GameResult.BlackWins then cmvst.BlackWins+1 else cmvst.BlackWins)}
                     let nmvstl = bdst.Mvstats|>List.filter(fun mvst -> mvst.Mvstr<>mv)
-                    createstats cigmmvl.Tail {bdst with TotCount=(bdst.TotCount+1);Mvstats=mvst::nmvstl}
-        createstats igmmvl BrdStatsEMP
-
+                    createstats cigmmvl.Tail {bdst with TotCount=(bdst.TotCount+1);
+                                                        TotWhiteWins=(if gm.Result=GameResult.WhiteWins then bdst.TotWhiteWins+1 else bdst.TotWhiteWins);
+                                                        TotDraws=(if gm.Result=GameResult.Draw then bdst.TotDraws+1 else bdst.TotDraws);
+                                                        TotBlackWins=(if gm.Result=GameResult.BlackWins then bdst.TotBlackWins+1 else bdst.TotBlackWins);
+                                                        Mvstats=mvst::nmvstl}
+        let nbdst = createstats igmmvl BrdStatsEMP
+        let popmvst (mvst:MvStats) =
+            let npc = float(mvst.Count)/float(nbdst.TotCount)
+            let nscr = (float(mvst.WhiteWins) + 0.5 * float(mvst.Draws))/float(mvst.Count)
+            let ndpc = float(mvst.Draws)/float(mvst.Count)
+            {mvst with Pc=npc;Score=nscr;DrawPc=ndpc}
+        let ntscr =(float(nbdst.TotWhiteWins) + 0.5 * float(nbdst.TotDraws))/float(nbdst.TotCount)
+        let ntdpc = float(nbdst.TotDraws)/float(nbdst.TotCount)
+        {nbdst with TotScore=ntscr;TotDrawPc=ntdpc;Mvstats=nbdst.Mvstats|>List.map popmvst}
 
     let pretty (bdstat:BrdStats) =
         let nl  = System.Environment.NewLine
-        let hdr = "|  Move  | Count | Percent | WhiteWins |  Draws  | BlackWins | Score | DrawPc |"
-        let unl = "  |--------|-------|---------|-----------|---------|-----------|-------|--------|"
+        let hdr = "|  Move  | Count | Percent | WhiteWins |  Draws  | BlackWins |  Score  | DrawPc  |"
+        let unl = "  |--------|-------|---------|-----------|---------|-----------|---------|---------|"
         let domvst (mvst:MvStats) =
-            let mv = "  | " + mvst.Mvstr + ("       |").Substring(mvst.Mvstr.Length)
-            let ct = "  " + mvst.Count.ToString() + ("     |").Substring(mvst.Count.ToString().Length)
-            let pc = "  " + mvst.Pc.ToString() + ("       |").Substring(mvst.Pc.ToString().Length)
-            let ww = "  " + mvst.WhiteWins.ToString() + ("         |").Substring(mvst.WhiteWins.ToString().Length)
-            let dw = "  " + mvst.Draws.ToString() + ("       |").Substring(mvst.Draws.ToString().Length)
-            let bw = "  " + mvst.BlackWins.ToString() + ("         |").Substring(mvst.BlackWins.ToString().Length)
-            let sc = "  " + mvst.Score.ToString() + ("     |").Substring(mvst.Score.ToString().Length)
-            let dp = "  " + mvst.DrawPc.ToString() + ("      |").Substring(mvst.DrawPc.ToString().Length)
+            let mvstr = mvst.Mvstr
+            let mv = "  | " + mvstr + ("       |").Substring(mvstr.Length)
+            let ctstr = mvst.Count.ToString()
+            let ct = "  " + ctstr + ("     |").Substring(ctstr.Length)
+            let pcstr = mvst.Pc.ToString("###.0%")
+            let pc = "  " + pcstr + ("       |").Substring(pcstr.Length)
+            let wwstr = mvst.WhiteWins.ToString()
+            let ww = "  " + wwstr + ("         |").Substring(wwstr.Length)
+            let dwstr = mvst.Draws.ToString()
+            let dw = "  " + dwstr + ("       |").Substring(dwstr.Length)
+            let bwstr = mvst.BlackWins.ToString()
+            let bw = "  " + bwstr + ("         |").Substring(bwstr.Length)
+            let scstr = mvst.Score.ToString("###.0%")
+            let sc = "  " + scstr + ("       |").Substring(scstr.Length)
+            let dpstr = mvst.DrawPc.ToString("###.0%")
+            let dp = "  " + dpstr + ("       |").Substring(dpstr.Length)
             mv + ct + pc + ww + dw + bw + sc + dp
 
         let bdstl =
             let mv = "  | TOTAL  |"
-            let ct = "  " + bdstat.TotCount.ToString() + ("     |").Substring(bdstat.TotCount.ToString().Length)
-            let pc = "  100%   |"
-            let ww = "  " + bdstat.TotWhiteWins.ToString() + ("         |").Substring(bdstat.TotWhiteWins.ToString().Length)
-            let dw = "  " + bdstat.TotDraws.ToString() + ("       |").Substring(bdstat.TotDraws.ToString().Length)
-            let bw = "  " + bdstat.TotBlackWins.ToString() + ("         |").Substring(bdstat.TotBlackWins.ToString().Length)
-            let sc = "  " + bdstat.TotScore.ToString() + ("     |").Substring(bdstat.TotScore.ToString().Length)
-            let dp = "  " + bdstat.TotDrawPc.ToString() + ("      |").Substring(bdstat.TotDrawPc.ToString().Length)
+            let ctstr = bdstat.TotCount.ToString()
+            let ct = "  " + ctstr + ("     |").Substring(ctstr.Length)
+            let pc = "  100.0% |"
+            let wwstr = bdstat.TotWhiteWins.ToString()
+            let ww = "  " + wwstr + ("         |").Substring(wwstr.Length)
+            let dwstr = bdstat.TotDraws.ToString()
+            let dw = "  " + dwstr + ("       |").Substring(dwstr.Length)
+            let bwstr = bdstat.TotBlackWins.ToString()
+            let bw = "  " + bwstr + ("         |").Substring(bwstr.Length)
+            let scstr = bdstat.TotScore.ToString("###.0%")
+            let sc = "  " + scstr + ("       |").Substring(scstr.Length)
+            let dpstr = bdstat.TotDrawPc.ToString("###.0%")
+            let dp = "  " + dpstr + ("       |").Substring(dpstr.Length)
             mv + ct + pc + ww + dw + bw + sc + dp
 
 

@@ -100,23 +100,73 @@ A file containing the first 2 games is created as _test.pgn_.
 
 Working with individual games from a PGN file is done using the finctions in _FsChess_ in module _Game_. In addition functions relating to all the games in a PGN file are documented here.
 
-For small pgn files we provide a simple way to search for a board using the function _FindBoard_. The results can then be summarised using _GetStats_.
+For small pgn files we provide a simple way to search for a board using the function _FindBoard_ in the module _games_. The results can then be summarised using _Get_ from the module _Stats_.
 
 | Function         | Type                                        | Description                                                |
 |:-----------------|:--------------------------------------------|:-----------------------------------------------------------|
 | FindBoard        | Brd -> string -> (int * Game * string) list | Finds the Games that containing the specified Board        |
-| GetStats         | (int * Game * string) list -> BrdStats      | Get Statistics for the Board                               |
+| Get              | (int * Game * string) list -> BrdStats      | Get Statistics for the Board                               |
 
 This is illustrated by this code:
 
 
 ```fsharp
 
+#load "setup.fsx"
+open FsChess.Pgn
+open FsChess
+
+let pgn = __SOURCE_DIRECTORY__ + "/data/pgn/french_Qd7.pgn"
+
+//set seach board
+let fen = "r1b1kbnr/1pq2ppp/p3p3/8/2BN4/8/PPP2PPP/R1BQ1RK1 w kq - 1 11"
+let bd = fen|>Board.FromStr
+
+let gmmvl = Games.FindBoard bd pgn
+
+let len = gmmvl.Length
+
+let stats = gmmvl|>Stats.Get
+
 ```
 
 This produces these results:
 
 ```
+val pgn : string = "D:\GitHub\FsChessPgn\scripts/data/pgn/french_Qd7.pgn"
+val fen : string =
+  "r1b1kbnr/1pq2ppp/p3p3/8/2BN4/8/PPP2PPP/R1BQ1RK1 w kq - 1 11"
+val bd : FsChess.Types.Brd =
+  r1b1kbnr/1pq2ppp/p3p3/8/2BN4/8/PPP2PPP/R1BQ1RK1 w kq - 1 11
+val gmmvl : (int * FsChess.Types.Game * string) list =
+  [(2, moves: ...Kxh8 45. Qxg6 Rc4 46. Qe8+ 1/2-1/2, "Qe2");
+   (8, moves: ...Rxb7 38. Nxb7 Kxb7 39. g4 1-0, "Bb3");
+   (11, moves: ...61. Bf3 Kd7 62. Bd5 Kc7 1/2-1/2, "Bb3");
+   (22, moves: ...18. Qg2 Ne5 19. Be2 Bc5 1/2-1/2, "Qe2");
+   (28, moves: ...d4 51. Nxf3 d3 52. Rb4+ 1-0, "Bd3");
+   (30, moves: ...Rfd8 21. Rg4 g6 22. Rxg6+ 1-0, "Bb3");
+   (32, moves: ...Qxc4 19. Bxc4 Bf4 20. Bxf4 1/2-1/2, "Qe2");
+   (33, moves: ...Qe7 39. f4 exf3 40. Qh4+ 1-0, "Bb3");
+   (40, moves: ...34. Kg2 Rd2+ 35. Kh1 Rd1+ 1/2-1/2, "Bd3");
+   (44, moves: ...25. Rxe6 Qxb3 26. Qxg4 Rxd4 0-1, "Bb3");
+   (46, moves: ...26. Ba7 Qg3 27. Bf2 Qb8 1/2-1/2, "Qe2");
+   (48, moves: ...Kd7 36. Rc1 Ra8 37. Rxa8 1/2-1/2, "Qe2");
+   (54, moves: ...40. Rg2 Rf4 41. Re2 Rf1+ 0-1, "Bb3");
+   (61, moves: ...60. c6 bxc6 61. Ra5 Kxf2 0-1, "Bb3");
+   (64, moves: ...40. Kd4 Ra6 41. Kd3 Kxc5 0-1, "Bb3");
+   (70, moves: ...Ke6 45. Nc7+ Kd6 46. Na6 1/2-1/2, "Qe2");
+   (72, moves: ...b3 62. Bxb3 axb3 63. axb3 1-0, "Qe2");
+   (74, moves: ...55. Rxc5 Kxc5 56. h4 e5 0-1, "Bb3")]
+val len : int = 18
+val stats : FsChess.Types.BrdStats =
+  |  Move  | Count | Percent | WhiteWins |  Draws  | BlackWins |  Score  | DrawPc  |
+  |--------|-------|---------|-----------|---------|-----------|---------|---------|
+  | Bb3    |  9    |  50.0%  |  3        |  1      |  5        |  38.9%  |  11.1%  |
+  | Qe2    |  7    |  38.9%  |  1        |  6      |  0        |  57.1%  |  85.7%  |
+  | Bd3    |  2    |  11.1%  |  1        |  1      |  0        |  75.0%  |  50.0%  |
+  |--------|-------|---------|-----------|---------|-----------|---------|---------|
+  | TOTAL  |  18   |  100.0% |  5        |  8      |  5        |  50.0%  |  44.4%  |
+
 ```
 
 
