@@ -2,9 +2,17 @@
 
 open FsChess.Pgn
 open FsChess
+open System.IO
 
 [<EntryPoint>]
 let main argv =
+    
+    let fol = @"D:\GitHub\FsChessPgn\scripts"
+    let fns = [1..9]|>List.map(fun i -> Path.Combine(fol,"Readme" + i.ToString() + ".fsx"),Path.Combine(fol,"index" + i.ToString() + ".fsx"))
+    fns|>List.iter(fun (a,b) -> File.Copy(a,b))
+    
+    
+    
     let fol = @"D:\pgns"
     //let f1 = System.IO.Path.Combine(fol,"recent.pgn")
     //let pgn1 = f1|>Games.ReadSeqFromFile
