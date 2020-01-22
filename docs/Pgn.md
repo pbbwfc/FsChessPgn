@@ -100,7 +100,7 @@ A file containing the first 2 games is created as _test.pgn_.
 
 Working with individual games from a PGN file is done using the finctions in _FsChess_ in module _Game_. In addition functions relating to all the games in a PGN file are documented here.
 
-For small pgn files we provide a simple way to search for a board using the function _FindBoard_ in the module _games_. The results can then be summarised using _Get_ from the module _Stats_.
+For small pgn files we provide a simple way to search for a board using the function _FindBoard_ in the module _Games_. The results can then be summarised using _Get_ from the module _Stats_.
 
 | Function         | Type                                        | Description                                                |
 |:-----------------|:--------------------------------------------|:-----------------------------------------------------------|
