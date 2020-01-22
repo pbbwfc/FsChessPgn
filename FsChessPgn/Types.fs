@@ -293,3 +293,16 @@ module Types =
             MoveText = []
         }
 
+    type MvStats =
+        {
+            Mvstr : string
+            Count : int
+            Pc : float
+            WhitWins : int 
+            Draws : int 
+            BlackWins :string
+            Score : float
+            DrawPc : float
+        }
+    
+    type BrdStats = MvStats list

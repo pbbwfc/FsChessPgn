@@ -98,10 +98,26 @@ A file containing the first 2 games is created as _test.pgn_.
 
 ## Statistics
 
-Working with individual games from a PGN file is done using the finctions in _FsChess_ in module _Game_. In additiona functions relating to all the games in a PGN file are documented here.
+Working with individual games from a PGN file is done using the finctions in _FsChess_ in module _Game_. In addition functions relating to all the games in a PGN file are documented here.
+
+For small pgn files we provide a simple way to search for a board using this function.
 
 | Function         | Type                            | Description                                                                         |
 |:-----------------|:--------------------------------|:------------------------------------------------------------------------------------|
-| FindBoard        | Brd -> Game list-> Game list    | Finds the Games that containg the specified Board                                   |
+| FindBoard        | Brd -> Game list-> Game list    | Finds the Games that containing the specified Board                                   |
+
+This is illustrated by this code:
+
+
+```fsharp
+
+```
+
+This produces these results:
+
+```
+```
+
+
 
 TODO

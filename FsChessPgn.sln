@@ -9,17 +9,18 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FsChessPgn.Test", "FsChessP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D95D5E-660B-4DBE-9C0D-3C9FCA10CA2C}"
 	ProjectSection(SolutionItems) = preProject
+		scripts\index1.fsx = scripts\index1.fsx
+		scripts\index2.fsx = scripts\index2.fsx
+		scripts\index3.fsx = scripts\index3.fsx
+		scripts\index4.fsx = scripts\index4.fsx
+		scripts\index5.fsx = scripts\index5.fsx
+		scripts\index6.fsx = scripts\index6.fsx
+		scripts\index7.fsx = scripts\index7.fsx
+		scripts\index8.fsx = scripts\index8.fsx
+		scripts\index9.fsx = scripts\index9.fsx
 		scripts\Pgn1.fsx = scripts\Pgn1.fsx
 		scripts\Pgn2.fsx = scripts\Pgn2.fsx
-		scripts\Readme1.fsx = scripts\Readme1.fsx
-		scripts\Readme2.fsx = scripts\Readme2.fsx
-		scripts\Readme3.fsx = scripts\Readme3.fsx
-		scripts\Readme4.fsx = scripts\Readme4.fsx
-		scripts\Readme5.fsx = scripts\Readme5.fsx
-		scripts\Readme6.fsx = scripts\Readme6.fsx
-		scripts\Readme7.fsx = scripts\Readme7.fsx
-		scripts\Readme8.fsx = scripts\Readme8.fsx
-		scripts\Readme9.fsx = scripts\Readme9.fsx
+		scripts\Pgn3.fsx = scripts\Pgn3.fsx
 		scripts\setup.fsx = scripts\setup.fsx
 		scripts\setupdll.fsx = scripts\setupdll.fsx
 	EndProjectSection

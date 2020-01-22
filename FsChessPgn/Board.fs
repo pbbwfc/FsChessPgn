@@ -134,18 +134,12 @@ module Board =
         
         let bd = 
             if bd.CastleRights <> CstlFlgs.EMPTY then 
-                if (bd.CastleRights &&& CstlFlgs.WhiteShort) <> CstlFlgs.EMPTY 
-                   && (piece = Piece.WKing || mfrom = H1) then 
-                    { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.WhiteShort}
-                elif (bd.CastleRights &&& CstlFlgs.WhiteLong) <> CstlFlgs.EMPTY 
-                     && (piece = Piece.WKing || mfrom = A1) then 
-                    { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.WhiteLong}
-                elif (bd.CastleRights &&& CstlFlgs.BlackShort) <> CstlFlgs.EMPTY
-                     && (piece = Piece.BKing || mfrom = H8) then 
-                    { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.BlackShort}
-                elif (bd.CastleRights &&& CstlFlgs.BlackLong) <> CstlFlgs.EMPTY
-                     && (piece = Piece.BKing || mfrom = A8) then 
-                    { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.BlackLong}
+                if mfrom = H1 then { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.WhiteShort}
+                elif mfrom = A1 then { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.WhiteLong}
+                elif piece = Piece.WKing then { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.WhiteShort &&& ~~~CstlFlgs.WhiteLong}
+                elif mfrom = H8 then { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.BlackShort}
+                elif mfrom = A8 then { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.BlackLong}
+                elif piece = Piece.BKing then { bd with CastleRights = bd.CastleRights &&& ~~~CstlFlgs.BlackShort &&& ~~~CstlFlgs.BlackLong}
                 else bd
             else bd
         

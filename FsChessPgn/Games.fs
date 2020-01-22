@@ -117,8 +117,8 @@ module Games =
         let empties = prnks|>Array.filter(fun sq -> (sq|>Square.ToRank)=Rank2 && bd.[sq]<>Piece.WPawn || (sq|>Square.ToRank)=Rank7 && bd.[sq]<>Piece.BPawn)|>Set.ofArray
         let possibles = dct.[empties]|>Array.ofList
         let ngml = igml|>List.filter(fun (i,gm) -> possibles|>Array.contains i)
-        let gmfnds = ngml|>List.map (Game.GetBoard bd)
-        gmfnds|>List.filter fst|>List.map snd
+        let gmfnds = ngml|>List.choose (Game.GetBoard bd)
+        gmfnds//|>List.filter fst|>List.map snd
     
     let FindBoard (bd:Brd) (fn:string) =
         //TODO: consider doing in chunks for very large files
@@ -129,5 +129,5 @@ module Games =
             let dct = GetIndex fn
             FastFindBoard bd dct (gml|>List.indexed)
         else 
-            let gmfnds = gml|>List.indexed|>List.map (Game.GetBoard bd)
-            gmfnds|>List.filter fst|>List.map snd
+            let gmfnds = gml|>List.indexed|>List.choose (Game.GetBoard bd)
+            gmfnds//|>List.filter fst|>List.map snd

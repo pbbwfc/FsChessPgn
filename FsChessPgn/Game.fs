@@ -513,38 +513,43 @@ module Game =
             {gm with MoveText=nmtel}
 
     let GetBoard (bd:Brd) (indx:int,gm:Game) =
-        //option 1 brute force
-        let rec getbd cbd (imtel:MoveTextEntry list) =
-            if imtel.IsEmpty then false
+        let rec getbd cbd (ipmvl:pMove list) =
+            if ipmvl.IsEmpty then false,""
             else
-                let mte = imtel.Head
-                match mte with
-                |HalfMoveEntry(_,_,pmv,_) -> 
-                    let mv = pmv|>pMove.ToMove cbd
-                    //now check if a pawn move which is not on search board
-                    let pc = mv|>Move.MovingPiece
-                    if pc=Piece.WPawn then
-                        let sq = mv|>Move.From
-                        let rnk = sq|>Square.ToRank
-                        if rnk=Rank2 && bd.[sq]=Piece.WPawn then false
-                        else
-                            let nbd = cbd|>Board.MoveApply mv
-                            if nbd=bd then true
-                            else getbd nbd imtel.Tail
-                    elif pc=Piece.BPawn then
-                        let sq = mv|>Move.From
-                        let rnk = sq|>Square.ToRank
-                        if rnk=Rank7 && bd.[sq]=Piece.BPawn then false
-                        else
-                            let nbd = cbd|>Board.MoveApply mv
-                            if nbd=bd then true
-                            else getbd nbd imtel.Tail
+                let pmv = ipmvl.Head
+                let mv = pmv|>pMove.ToMove cbd
+                //now check if a pawn move which is not on search board
+                let pc = mv|>Move.MovingPiece
+                if pc=Piece.WPawn then
+                    let sq = mv|>Move.From
+                    let rnk = sq|>Square.ToRank
+                    if rnk=Rank2 && bd.[sq]=Piece.WPawn then false,""
                     else
                         let nbd = cbd|>Board.MoveApply mv
-                        if nbd=bd then true
-                        else getbd nbd imtel.Tail
-                |_ -> getbd cbd imtel.Tail
+                        if nbd.PieceAt=bd.PieceAt then
+                            let npmv = ipmvl.Tail.Head
+                            let mvstr = npmv|>PgnWrite.MoveStr
+                            true,mvstr
+                        else getbd nbd ipmvl.Tail
+                elif pc=Piece.BPawn then
+                    let sq = mv|>Move.From
+                    let rnk = sq|>Square.ToRank
+                    if rnk=Rank7 && bd.[sq]=Piece.BPawn then false,""
+                    else
+                        let nbd = cbd|>Board.MoveApply mv
+                        if nbd.PieceAt=bd.PieceAt then
+                            let npmv = ipmvl.Tail.Head
+                            let mvstr = npmv|>PgnWrite.MoveStr
+                            true,mvstr
+                        else getbd nbd ipmvl.Tail
+                else
+                    let nbd = cbd|>Board.MoveApply mv
+                    if nbd.PieceAt=bd.PieceAt then
+                        let npmv = ipmvl.Tail.Head
+                        let mvstr = npmv|>PgnWrite.MoveStr
+                        true,mvstr
+                    else getbd nbd ipmvl.Tail
         
         let initbd = if gm.BoardSetup.IsSome then gm.BoardSetup.Value else Board.Start
-        let fnd = getbd initbd gm.MoveText
-        fnd,gm
+        let fnd,mvstr = getbd initbd (gm.MoveText|>GetMoves)
+        if fnd then Some(indx,gm,mvstr) else None

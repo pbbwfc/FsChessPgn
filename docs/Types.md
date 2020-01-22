@@ -249,3 +249,20 @@ These are a means of storing a game. They are provided as a record type **Game**
 | BoardSetup        | Brd option         | The game optionally had this as a starting board  |
 | AdditionalInfo    | Map<string,string> | The game had these as extra headers               |
 | MoveText          | MoveTextEntry list | The game had these move entries                   |
+
+## Statistics
+
+These are a means of storing statistics for a position. They are provided as a list of record types **MvStats** with these fields:
+
+| Field             | Type               | Description                                       |
+|:------------------|:-------------------|:--------------------------------------------------|
+| Mvstr             | string             | The possible move in the postion in SAN format    |
+| Count             | int                | The number of games with this move                |
+| Pc                | float              | The percentage for this move relative to others   |
+| WhiteWins         | int                | The number of wins for White with this move       |
+| Draws             | int                | The number of draws with this move                |
+| BlackWins         | int                | The number of wins for Black with this move       |
+| Score             | float              | The percentage score with this move               |
+| DrawPc            | float              | The percentage of draws with this move            |
+
+The collection of these stats for a position is held in the type **BrdStats** which is defined as a **MvStats list**.
