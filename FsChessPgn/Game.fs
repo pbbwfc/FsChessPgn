@@ -512,7 +512,7 @@ module Game =
             let nmtel = getnmtel irs gm.MoveText
             {gm with MoveText=nmtel}
 
-    let GetBoard (bd:Brd) (gm:Game) =
+    let GetBoard (bd:Brd) (indx:int,gm:Game) =
         //option 1 brute force
         let rec getbd cbd (imtel:MoveTextEntry list) =
             if imtel.IsEmpty then false

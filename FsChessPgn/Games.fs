@@ -22,6 +22,8 @@ module Games =
         stream.Close()
         result
 
+    let ReadIndexListFromFile(file : string) = ReadFromFile(file)|>List.indexed
+
     let ReadFromString(str : string) = 
         let byteArray = Encoding.ASCII.GetBytes(str)
         let stream = new MemoryStream(byteArray)
@@ -37,7 +39,9 @@ module Games =
         gml|>List.map Game.SetaMoves
 
     
-    let CreateIndex (gml:Game list) =
+    let CreateIndex (fn:string) =
+        //TODO: consider doing in chunks for very large files
+        let gml = fn|>ReadFromFile
         let prnks = [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
         //keys list of empty squares,values is list of game indexes 
         let dct0 = new System.Collections.Generic.Dictionary<Set<Square>,int list>()
@@ -92,20 +96,38 @@ module Games =
             let bd = if gm.BoardSetup.IsNone then Board.Start else gm.BoardSetup.Value
             addgm i [] bd gm.MoveText
         gml|>List.iteri dogm
-        //dct
+        //now serialize
         let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
-        let stream = new FileStream(@"D:\MyFile.bin", FileMode.Create, FileAccess.Write, FileShare.None)
+        let stream = new FileStream(fn + ".bin", FileMode.Create, FileAccess.Write, FileShare.None)
         formatter.Serialize(stream, dct)
         stream.Close()
-        dct
+
+    let GetIndex (fn:string) =
+        let binfn = fn + ".bin"
+        if File.Exists(binfn) then
+            let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
+            let stream = new FileStream(binfn, FileMode.Open, FileAccess.Read, FileShare.Read)
+            let dct:System.Collections.Generic.Dictionary<Set<Square>,int list> = formatter.Deserialize(stream):?>System.Collections.Generic.Dictionary<Set<Square>,int list>
+            stream.Close()
+            dct
+        else failwith "index missing"
     
-    let FindBoard (bd:Brd) (gml:Game list) =
-        //get index of which games have what combination of pawns moved
-        let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
-        let stream = new FileStream(@"D:\MyFile.bin", FileMode.Open, FileAccess.Read, FileShare.Read)
-        let dct:System.Collections.Generic.Dictionary<Set<Square>,int list> = formatter.Deserialize(stream):?>System.Collections.Generic.Dictionary<Set<Square>,int list>
-        stream.Close()
-        
-        let gmfnds = gml|>List.map (Game.GetBoard bd)
-    
+    let FastFindBoard (bd:Brd) (dct:System.Collections.Generic.Dictionary<Set<Square>,int list>) (igml:(int * Game) list) =
+        let prnks = [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
+        let empties = prnks|>Array.filter(fun sq -> (sq|>Square.ToRank)=Rank2 && bd.[sq]<>Piece.WPawn || (sq|>Square.ToRank)=Rank7 && bd.[sq]<>Piece.BPawn)|>Set.ofArray
+        let possibles = dct.[empties]|>Array.ofList
+        let ngml = igml|>List.filter(fun (i,gm) -> possibles|>Array.contains i)
+        let gmfnds = ngml|>List.map (Game.GetBoard bd)
         gmfnds|>List.filter fst|>List.map snd
+    
+    let FindBoard (bd:Brd) (fn:string) =
+        //TODO: consider doing in chunks for very large files
+        let gml = fn|>ReadFromFile
+        //get index of which games have what combination of pawns moved
+        let binfn = fn + ".bin"
+        if File.Exists(binfn) then
+            let dct = GetIndex fn
+            FastFindBoard bd dct (gml|>List.indexed)
+        else 
+            let gmfnds = gml|>List.indexed|>List.map (Game.GetBoard bd)
+            gmfnds|>List.filter fst|>List.map snd
