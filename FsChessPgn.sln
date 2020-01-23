@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D9
 		scripts\Pgn1.fsx = scripts\Pgn1.fsx
 		scripts\Pgn2.fsx = scripts\Pgn2.fsx
 		scripts\Pgn3.fsx = scripts\Pgn3.fsx
+		scripts\Pgn4.fsx = scripts\Pgn4.fsx
 		scripts\setup.fsx = scripts\setup.fsx
 		scripts\setupdll.fsx = scripts\setupdll.fsx
 	EndProjectSection
