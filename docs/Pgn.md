@@ -180,11 +180,11 @@ For larger PGN files the above approach is slow. Instead a much quicker process 
 | FastFindBoard         | Brd -> Dictionary<Set<Square>,int list> -> (int * Game) list -> (int * Game * string) list | Does a fast search using the Index and the index list of Games |
 
 
-You first create an index for the PGN file using _CreateIndex_. This creates a file with teh same name as the PGN file but with a ".bin" extension. This only needs to be done once until the PGN file is changed.
+You first create an index for the PGN file using _CreateIndex_. This creates a file with the same name as the PGN file, but with a ".bin" extension. This only needs to be done once until the PGN file is changed.
 
 You then load this index using _GetIndex_ and then load the games but with their index for easier processing using _ReadIndexListFromFile_.
 
-You can then carry out multiple quick searches againse a specified Board using _FastFindBoard_.
+You can then carry out multiple quick searches against different Boards using _FastFindBoard_.
 
 
 
