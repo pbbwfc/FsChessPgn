@@ -5,7 +5,7 @@ module Games =
     ///Get a list of Games from a file
     let ReadListFromFile = FsChessPgn.Games.ReadFromFile
     
-    ///Get a list of index * Games from a file
+    ///Get a list of index * Game from a file
     let ReadIndexListFromFile = FsChessPgn.Games.ReadIndexListFromFile
 
     ///Get a Sequence of Games from a file
@@ -17,11 +17,15 @@ module Games =
     ///Finds the Games that containing the specified Board
     let FindBoard = FsChessPgn.Games.FindBoard
     
-    let FastFindBoard = FsChessPgn.Games.FastFindBoard
-
+    ///Creates index on PGN for fast searches
     let CreateIndex = FsChessPgn.Games.CreateIndex
 
+    ///Loads index for use in fast searches
     let GetIndex = FsChessPgn.Games.GetIndex
+
+    //Does a fast search using the Index and the index list of Games
+    let FastFindBoard = FsChessPgn.Games.FastFindBoard
+
 
 module Stats =
 

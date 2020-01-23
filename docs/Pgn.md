@@ -100,7 +100,7 @@ A file containing the first 2 games is created as _test.pgn_.
 
 Working with individual games from a PGN file is done using the finctions in _FsChess_ in module _Game_. In addition functions relating to all the games in a PGN file are documented here.
 
-For small pgn files we provide a simple way to search for a board using the function _FindBoard_ in the module _Games_. The results can then be summarised using _Get_ from the module _Stats_.
+For small PGN files we provide a simple way to search for a board using the function _FindBoard_ in the module _Games_. The results can then be summarised using _Get_ from the module _Stats_.
 
 | Function         | Type                                        | Description                                                |
 |:-----------------|:--------------------------------------------|:-----------------------------------------------------------|
@@ -168,6 +168,27 @@ val stats : FsChess.Types.BrdStats =
   | TOTAL  |  18   |  100.0% |  5        |  8      |  5        |  50.0%  |  44.4%  |
 
 ```
+
+
+For larger PGN files the above approach is slow. Instead a much quicker process uses these functions:
+
+| Function              | Type                                                                                       | Description                                                    |
+|:----------------------|:-------------------------------------------------------------------------------------------|:---------------------------------------------------------------|
+| CreateIndex           | string -> unit                                                                             | Creates index on PGN for fast searches                         |
+| GetIndex              | string -> Dictionary<Set<Square>,int list>                                                 | Get Statistics for the Board                                   |
+| ReadIndexListFromFile | string -> (int * Game) list                                                                | Get a list of index * Game from a file                         |
+| FastFindBoard         | Brd -> Dictionary<Set<Square>,int list> -> (int * Game) list -> (int * Game * string) list | Does a fast search using the Index and the index list of Games |
+
+
+You first create an index for the PGN file using _CreateIndex_. This creates a file with teh same name as the PGN file but with a ".bin" extension. This only needs to be done once until the PGN file is changed.
+
+You then load this index using _GetIndex_ and then load the games but with their index for easier processing using _ReadIndexListFromFile_.
+
+You can then carry out multiple quick searches againse a specified Board using _FastFindBoard_.
+
+
+
+
 
 
 
