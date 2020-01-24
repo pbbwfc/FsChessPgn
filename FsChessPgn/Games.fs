@@ -116,7 +116,7 @@ module Games =
     
     let private getInitStats (bd:Brd) (igml:(int * Game) list) =
         let rec getfirst (mtel:MoveTextEntry list) =
-            if mtel.IsEmpty then failwith "should have a move"
+            if mtel.IsEmpty then "None"
             else
                 let mte = mtel.Head
                 match mte with

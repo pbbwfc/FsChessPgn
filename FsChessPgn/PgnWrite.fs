@@ -8,12 +8,7 @@ module PgnWrite =
     let (-?) (lhs:string option) rhs = (if lhs.IsNone then rhs else lhs.Value)
     let (|?) (lhs:int option) rhs = (if lhs.IsNone then rhs else lhs.Value.ToString(CultureInfo.InvariantCulture))
 
-    let ResultString(result:GameResult) =
-        match result with
-        |GameResult.WhiteWins -> "1-0" 
-        |GameResult.BlackWins -> "0-1" 
-        |GameResult.Draw -> "1/2-1/2" 
-        |_ -> "*" 
+    let ResultString = GameResult.ToStr
 
     let Piece(pieceType: PieceType option) =
         if pieceType.IsNone then ""
@@ -115,19 +110,10 @@ module PgnWrite =
         writer.Write(value)
         writer.WriteLine("\"]")
 
-    let Date(game:Game, writer:TextWriter) =
-        writer.Write("[Date \"")
-        writer.Write(game.Year |? "????")
-        writer.Write(".")
-        writer.Write(game.Month |? "??")
-        writer.Write(".")
-        writer.Write(game.Day |? "??")
-        writer.WriteLine("\"]")
-
     let Game(game:Game, writer:TextWriter) =
         Tag("Event", game.Event, writer)
         Tag("Site", game.Site, writer)
-        Date(game, writer)
+        Tag("Date", game|>DateUtil.ToStr, writer)
         Tag("Round", game.Round, writer)
         Tag("White", game.WhitePlayer, writer)
         Tag("Black", game.BlackPlayer, writer)

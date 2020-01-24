@@ -3,6 +3,24 @@
 
 # Core Chess Functions
 
+## Game Result
+
+The following Game Result related functions are provided in the module Result:
+
+| Function        | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| ToStr           | GameResult -> string            | Gets the string matching the Game Result                                            |
+| ToUnicode       | GameResult -> string            | Gets the unicode string matching the Game Result                                    |
+
+## Date
+
+The following Date related functions are provided in the module Date:
+
+| Function        | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| ToStr           | Game -> string                  | Gets the string which represents the date of the Game                               |
+
+
 ## Square
 
 The following Square related functions are provided in the module Square:

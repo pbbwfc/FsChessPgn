@@ -12,6 +12,8 @@ module Library4 =
             Number : int
             White : string
             Black : string
+            Result : string
+
         }
     
     type DgvGames() as gms =
@@ -39,6 +41,7 @@ module Library4 =
                 Number = i
                 White = gm.WhitePlayer
                 Black = gm.BlackPlayer
+                Result = gm.Result|>Result.ToUnicode
             }
             
         

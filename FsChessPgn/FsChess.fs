@@ -1,5 +1,19 @@
 ﻿namespace FsChess
 
+module Date =
+
+    ///Gets the string symbol for a Piece
+    let ToStr = FsChessPgn.DateUtil.ToStr
+
+
+module Result =
+
+    ///Gets the string symbol for a Piece
+    let ToStr = FsChessPgn.GameResult.ToStr
+
+    ///Gets the string symbol for a Piece
+    let ToUnicode = FsChessPgn.GameResult.ToUnicode
+
 module Square =
 
     ///Gets the File for a Square
