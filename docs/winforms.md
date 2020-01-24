@@ -27,6 +27,7 @@ It generates the following events:
 | Event           | Type                            | Description                                                                         |
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
 | MvMade          | IEvent<Move>                    | Provides the Move made on the board                                                 |
+| BdChng          | IEvent<Brd>                     | Provides the new Board after a change                                               |
 
 
 

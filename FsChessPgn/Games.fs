@@ -40,67 +40,69 @@ module Games =
 
     
     let CreateIndex (fn:string) =
-        //TODO: consider doing in chunks for very large files
-        let gml = fn|>ReadFromFile
-        let prnks = [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
-        //keys list of empty squares,values is list of game indexes 
-        let dct0 = new System.Collections.Generic.Dictionary<Set<Square>,int list>()
-        let n_choose_k k = 
-            let rec choose lo hi =
-                if hi = 0 then [[]]
-                else
-                    [for j=lo to (Array.length prnks)-1 do
-                         for ks in choose (j+1) (hi-1) do
-                                yield prnks.[j] :: ks ]
-            choose 0 k                           
-        let full = [1..16]|>List.map(n_choose_k)|>List.concat
-        let dct =
-            full|>List.iter(fun sql -> dct0.Add(sql|>Set.ofList,[]))
-            dct0
-        let rec addgm id sql cbd (imtel:MoveTextEntry list) =
-            if not imtel.IsEmpty then
-                let mte = imtel.Head
-                match mte with
-                |HalfMoveEntry(_,_,pmv,_) -> 
-                    let mv = pmv|>pMove.ToMove cbd
-                    let nbd = cbd|>Board.MoveApply mv
-                    //now check if a pawn move which is not on search board
-                    let pc = mv|>Move.MovingPiece
-                    if pc=Piece.WPawn then
-                        let sq = mv|>Move.From
-                        let rnk = sq|>Square.ToRank
-                        if rnk=Rank2 then 
-                            let nsql = sq::sql
-                            let cvl = dct.[nsql|>Set.ofList]
-                            let nvl = id::cvl
-                            dct.[nsql|>Set.ofList] <- nvl
-                            addgm id nsql nbd imtel.Tail
-                        else
-                            addgm id sql nbd imtel.Tail
-                    elif pc=Piece.BPawn then
-                        let sq = mv|>Move.From
-                        let rnk = sq|>Square.ToRank
-                        if rnk=Rank7 then 
-                            let nsql = sq::sql
-                            let cvl = dct.[nsql|>Set.ofList]
-                            let nvl = id::cvl
-                            dct.[nsql|>Set.ofList] <- nvl
-                            addgm id nsql nbd imtel.Tail
-                        else
-                            addgm id sql nbd imtel.Tail
+        let binfn = fn + ".bin"
+        if not (File.Exists(binfn))||(File.Exists(binfn) && File.GetLastWriteTime(binfn)<File.GetLastWriteTime(fn)) then
+            //TODO: consider doing in chunks for very large files
+            let gml = fn|>ReadFromFile
+            let prnks = [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
+            //keys list of empty squares,values is list of game indexes 
+            let dct0 = new System.Collections.Generic.Dictionary<Set<Square>,int list>()
+            let n_choose_k k = 
+                let rec choose lo hi =
+                    if hi = 0 then [[]]
                     else
-                        addgm id sql nbd imtel.Tail
-                |_ -> addgm id sql cbd imtel.Tail
+                        [for j=lo to (Array.length prnks)-1 do
+                             for ks in choose (j+1) (hi-1) do
+                                    yield prnks.[j] :: ks ]
+                choose 0 k                           
+            let full = [1..16]|>List.map(n_choose_k)|>List.concat
+            let dct =
+                full|>List.iter(fun sql -> dct0.Add(sql|>Set.ofList,[]))
+                dct0
+            let rec addgm id sql cbd (imtel:MoveTextEntry list) =
+                if not imtel.IsEmpty then
+                    let mte = imtel.Head
+                    match mte with
+                    |HalfMoveEntry(_,_,pmv,_) -> 
+                        let mv = pmv|>pMove.ToMove cbd
+                        let nbd = cbd|>Board.MoveApply mv
+                        //now check if a pawn move which is not on search board
+                        let pc = mv|>Move.MovingPiece
+                        if pc=Piece.WPawn then
+                            let sq = mv|>Move.From
+                            let rnk = sq|>Square.ToRank
+                            if rnk=Rank2 then 
+                                let nsql = sq::sql
+                                let cvl = dct.[nsql|>Set.ofList]
+                                let nvl = id::cvl
+                                dct.[nsql|>Set.ofList] <- nvl
+                                addgm id nsql nbd imtel.Tail
+                            else
+                                addgm id sql nbd imtel.Tail
+                        elif pc=Piece.BPawn then
+                            let sq = mv|>Move.From
+                            let rnk = sq|>Square.ToRank
+                            if rnk=Rank7 then 
+                                let nsql = sq::sql
+                                let cvl = dct.[nsql|>Set.ofList]
+                                let nvl = id::cvl
+                                dct.[nsql|>Set.ofList] <- nvl
+                                addgm id nsql nbd imtel.Tail
+                            else
+                                addgm id sql nbd imtel.Tail
+                        else
+                            addgm id sql nbd imtel.Tail
+                    |_ -> addgm id sql cbd imtel.Tail
         
-        let dogm i gm =
-            let bd = if gm.BoardSetup.IsNone then Board.Start else gm.BoardSetup.Value
-            addgm i [] bd gm.MoveText
-        gml|>List.iteri dogm
-        //now serialize
-        let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
-        let stream = new FileStream(fn + ".bin", FileMode.Create, FileAccess.Write, FileShare.None)
-        formatter.Serialize(stream, dct)
-        stream.Close()
+            let dogm i gm =
+                let bd = if gm.BoardSetup.IsNone then Board.Start else gm.BoardSetup.Value
+                addgm i [] bd gm.MoveText
+            gml|>List.iteri dogm
+            //now serialize
+            let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
+            let stream = new FileStream(binfn, FileMode.Create, FileAccess.Write, FileShare.None)
+            formatter.Serialize(stream, dct)
+            stream.Close()
 
     let GetIndex (fn:string) =
         let binfn = fn + ".bin"

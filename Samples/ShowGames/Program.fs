@@ -22,7 +22,7 @@ module Main =
             let dlg = new OpenFileDialog(Filter = "pgn files (*.pgn)|*.pgn")
             if dlg.ShowDialog() = DialogResult.OK then
                 let pgnfil = dlg.FileName
-                gms.SetGames(Games.ReadIndexListFromFile(pgnfil))
+                gms.SetPgn(pgnfil)
 
 
         do
@@ -33,6 +33,8 @@ module Main =
             bd|>this.Controls.Add
             //Buttons
             ldbtn.Click.Add(fun e -> ldpgn())
+            //events
+            bd.BdChng |> Observable.add gms.SetBoard
 
     
     let frm = new FrmMain()

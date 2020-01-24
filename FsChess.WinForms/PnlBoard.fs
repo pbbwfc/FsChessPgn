@@ -82,6 +82,7 @@ module Library1 =
 
         //events
         let mvEvt = new Event<_>()
+        let bdEvt = new Event<_>()
 
         //functions
         /// get cursor given char
@@ -203,6 +204,7 @@ module Library1 =
                         board <- board|>Board.Push mvl.Head
                         setpcsmvs()
                         mvl.Head|>mvEvt.Trigger
+                        board|>bdEvt.Trigger
                     //need to allow for promotion
                     elif mvl.Length=4 then
                         dlgprom.ShowDialog() |> ignore
@@ -210,6 +212,7 @@ module Library1 =
                         board <- board|>Board.Push nmvl.Head
                         setpcsmvs()
                         nmvl.Head|>mvEvt.Trigger
+                        board|>bdEvt.Trigger
                     else p.Image <- oimg
                 else p.Image <- oimg
                 sqpnl.Cursor <- Cursors.Default
@@ -287,3 +290,5 @@ module Library1 =
         //publish
         ///Provides the Move made on the board
         member __.MvMade = mvEvt.Publish
+        ///Provides the New Board after a move
+        member __.BdChng = bdEvt.Publish
