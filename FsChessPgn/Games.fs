@@ -112,23 +112,42 @@ module Games =
             dct
         else failwith "index missing"
     
+    let private getInitStats (bd:Brd) (igml:(int * Game) list) =
+        let rec getfirst (mtel:MoveTextEntry list) =
+            if mtel.IsEmpty then failwith "should have a move"
+            else
+                let mte = mtel.Head
+                match mte with
+                |HalfMoveEntry(_,_,pmv,_) ->
+                    pmv|>PgnWrite.MoveStr
+                |_ -> getfirst mtel.Tail
+        igml
+        |>List.map(fun (i,gm) -> i,gm,(gm.MoveText|>getfirst))
+        |>List.filter(fun (_,gm,_) -> gm.BoardSetup.IsNone)
+    
     let FastFindBoard (bd:Brd) (dct:System.Collections.Generic.Dictionary<Set<Square>,int list>) (igml:(int * Game) list) =
-        let prnks = [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
-        let empties = prnks|>Array.filter(fun sq -> (sq|>Square.ToRank)=Rank2 && bd.[sq]<>Piece.WPawn || (sq|>Square.ToRank)=Rank7 && bd.[sq]<>Piece.BPawn)|>Set.ofArray
-        let possibles = dct.[empties]|>Array.ofList
-        let ngml = igml|>List.filter(fun (i,gm) -> possibles|>Array.contains i)
-        let gmfnds = ngml|>List.choose (Game.GetBoard bd)
-        gmfnds
+        if bd=Board.Start then
+            igml|>getInitStats bd
+        else
+            let prnks = [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
+            let empties = prnks|>Array.filter(fun sq -> (sq|>Square.ToRank)=Rank2 && bd.[sq]<>Piece.WPawn || (sq|>Square.ToRank)=Rank7 && bd.[sq]<>Piece.BPawn)|>Set.ofArray
+            let possibles = dct.[empties]|>Array.ofList
+            let ngml = igml|>List.filter(fun (i,gm) -> possibles|>Array.contains i)
+            let gmfnds = ngml|>List.choose (Game.GetBoard bd)
+            gmfnds
     
     let FindBoard (bd:Brd) (fn:string) =
         //TODO: consider doing in chunks for very large files
         let gml = fn|>ReadFromFile
-        //get index of which games have what combination of pawns moved
-        let binfn = fn + ".bin"
-        if File.Exists(binfn) then
-            let dct = GetIndex fn
-            FastFindBoard bd dct (gml|>List.indexed)
-        else 
-            let gmfnds = gml|>List.indexed|>List.choose (Game.GetBoard bd)
-            gmfnds
+        if bd=Board.Start then
+            gml|>List.indexed|>getInitStats bd
+        else
+            //get index of which games have what combination of pawns moved
+            let binfn = fn + ".bin"
+            if File.Exists(binfn) then
+                let dct = GetIndex fn
+                FastFindBoard bd dct (gml|>List.indexed)
+            else 
+                let gmfnds = gml|>List.indexed|>List.choose (Game.GetBoard bd)
+                gmfnds
 
