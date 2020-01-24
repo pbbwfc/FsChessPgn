@@ -9,7 +9,7 @@ module Main =
     Application.EnableVisualStyles()
     
     type FrmMain() as this =
-        inherit Form(Text = "Show Games", Width = 900, Height = 470)
+        inherit Form(Text = "Show Games", Width = 1200, Height = 470)
 
         let gms = new DgvGames()
         let bd = new PnlBoard(Dock=DockStyle.Left)

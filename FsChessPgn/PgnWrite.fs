@@ -2,11 +2,8 @@
 
 open FsChess
 open System.IO
-open System.Globalization
 
 module PgnWrite =
-    let (-?) (lhs:string option) rhs = (if lhs.IsNone then rhs else lhs.Value)
-    let (|?) (lhs:int option) rhs = (if lhs.IsNone then rhs else lhs.Value.ToString(CultureInfo.InvariantCulture))
 
     let ResultString = GameResult.ToStr
 

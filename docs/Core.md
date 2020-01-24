@@ -12,9 +12,9 @@ The following Game Result related functions are provided in the module Result:
 | ToStr           | GameResult -> string            | Gets the string matching the Game Result                                            |
 | ToUnicode       | GameResult -> string            | Gets the unicode string matching the Game Result                                    |
 
-## Date
+## Game Date
 
-The following Date related functions are provided in the module Date:
+The following Date related functions are provided in the module GameDate:
 
 | Function        | Type                            | Description                                                                         |
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|

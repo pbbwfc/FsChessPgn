@@ -13,11 +13,14 @@ module Library4 =
             White : string
             Black : string
             Result : string
-
+            Date : string
+            Event : string
+            Round : string
+            Site : string
         }
     
     type DgvGames() as gms =
-        inherit DataGridView(Width = 400, Height = 400, 
+        inherit DataGridView(Width = 800, Height = 400, 
                 AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders, 
                 ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single,
                 AllowUserToAddRows = false,
@@ -42,6 +45,10 @@ module Library4 =
                 White = gm.WhitePlayer
                 Black = gm.BlackPlayer
                 Result = gm.Result|>Result.ToUnicode
+                Date = gm|>GameDate.ToStr
+                Event = gm.Event
+                Round = gm.Round
+                Site = gm.Site
             }
             
         

@@ -1,6 +1,6 @@
 ﻿namespace FsChess
 
-module Date =
+module GameDate =
 
     ///Gets the string symbol for a Piece
     let ToStr = FsChessPgn.DateUtil.ToStr
