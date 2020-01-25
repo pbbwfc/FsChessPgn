@@ -271,6 +271,8 @@ module Types =
             WhitePlayer : string
             BlackPlayer : string
             Result : GameResult
+            WhiteElo : string
+            BlackElo : string
             BoardSetup : Brd option
             AdditionalInfo : Map<string,string>
             MoveText : MoveTextEntry list
@@ -287,6 +289,8 @@ module Types =
             WhitePlayer = "?"
             BlackPlayer = "?"
             Result = GameResult.Open
+            WhiteElo = "-"
+            BlackElo = "-"
             BoardSetup = None
             AdditionalInfo = Map.empty
             MoveText = []

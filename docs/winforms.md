@@ -30,7 +30,6 @@ It generates the following events:
 | BdChng          | IEvent<Brd>                     | Provides the new Board after a change                                               |
 
 
-
 # Pgn Game Panel
 
 This component is a panel holding the moves of a game in PGN format.
@@ -70,3 +69,26 @@ let bd,pgn = CreateLnkBrdPgn()
 ```
 
 There is a simple example of its use - see the sample application _ShowLink_.
+
+## Games Grid
+
+This component is a grid showing a list of games from a PGN file filterd by a position.
+
+It keeps track of a filtered list of Games and the PGN file used.
+
+There is a simple example of its use - see the sample application _ShowGames_.
+
+![showgames](showgames.png)
+
+It provides the following functions:
+
+| Function        | Type                            | Description                                                                         |
+|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
+| SetBoard        | Brd -> unit                     | Sets the Board to be filtered on                                                    |
+| SetPgn          | string -> unit                  | Sets the PGN file to be used                                                        |
+
+It generates the following events:
+
+| Event           | Type                               | Description                                                                         |
+|:----------------|:-----------------------------------|:------------------------------------------------------------------------------------|
+| FiltChng        | IEvent<(int * Game * string) list> | Provides the revised filtered list of Games                                         |

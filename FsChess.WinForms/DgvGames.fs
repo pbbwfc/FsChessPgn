@@ -9,9 +9,11 @@ open FsChess.Pgn
 module Library4 =
     type GmUI =
         {
-            Number : int
+            Num : int
             White : string
+            W_Elo : string
             Black : string
+            B_Elo : string
             Result : string
             Date : string
             Event : string
@@ -38,12 +40,17 @@ module Library4 =
         let mutable gmsui = new System.ComponentModel.BindingList<GmUI>()
         let bs = new BindingSource()
 
+        //events
+        let filtEvt = new Event<_>()
+
         let igm2gmui (igmmv:(int * Game * string)) =
             let i,gm,mv = igmmv
             {
-                Number = i
+                Num = i+1
                 White = gm.WhitePlayer
+                W_Elo = gm.WhiteElo
                 Black = gm.BlackPlayer
+                B_Elo = gm.BlackElo
                 Result = gm.Result|>Result.ToUnicode
                 Date = gm|>GameDate.ToStr
                 Event = gm.Event
@@ -59,6 +66,7 @@ module Library4 =
         do 
             setup()
 
+        ///Sets the PGN file to be used
         member gms.SetPgn(ipgn:string) =
             pgn <- ipgn
             allgms <- pgn|>Games.ReadIndexListFromFile
@@ -66,9 +74,20 @@ module Library4 =
             indx <- pgn|>Games.GetIndex
             Board.Start|>gms.SetBoard
 
+        ///Sets the Board to be filtered on
         member gms.SetBoard(ibd:Brd) =
             cbd <- ibd
             filtgms <- allgms|>Games.FastFindBoard cbd indx
             gmsui.Clear()
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
             dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
+            gms.Columns.[0].Width <- 50
+            gms.Columns.[2].Width <- 50
+            gms.Columns.[4].Width <- 50
+            gms.Columns.[5].Width <- 50
+            gms.Columns.[6].Width <- 70
+            gms.Columns.[8].Width <- 50
+            filtgms|>filtEvt.Trigger
+
+        ///Provides the revised filtered list of Games
+        member __.FiltChng = filtEvt.Publish

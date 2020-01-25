@@ -36,6 +36,8 @@ module Game =
         | "White" -> {gm with WhitePlayer = v}
         | "Black" -> {gm with BlackPlayer = v}
         | "Result" -> {gm with Result = v|>GameResult.Parse}
+        | "WhiteElo" -> {gm with WhiteElo = v}
+        | "BlackElo" -> {gm with BlackElo = v}
         | "FEN" -> {gm with BoardSetup = v|>FEN.Parse|>Board.FromFEN|>Some}
         | _ ->
             {gm with AdditionalInfo=gm.AdditionalInfo.Add(k,v)}
