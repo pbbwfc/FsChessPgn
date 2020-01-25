@@ -115,6 +115,8 @@ module PgnWrite =
         Tag("White", game.WhitePlayer, writer)
         Tag("Black", game.BlackPlayer, writer)
         Tag("Result", ResultString(game.Result), writer)
+        Tag("WhiteElo", game.WhiteElo, writer)
+        Tag("BlackElo", game.BlackElo, writer)
 
         for info in game.AdditionalInfo do
             Tag(info.Key, info.Value, writer)

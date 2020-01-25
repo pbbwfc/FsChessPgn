@@ -16,6 +16,8 @@ type PgnWriterTest () =
 [White ""Tarrasch, Siegbert""]
 [Black ""Mendelsohn, J.""]
 [Result ""1-0""]
+[WhiteElo ""-""]
+[BlackElo ""-""]
 
 {some moves} 1-0
 

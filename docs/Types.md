@@ -246,6 +246,8 @@ These are a means of storing a game. They are provided as a record type **Game**
 | WhitePlayer       | string             | The game had this player as white                 |
 | BlackPlayer       | string             | The game had this player as black                 |
 | Result            | GameResult         | The game had this result                          |
+| WhiteElo          | string             | The player as white had this Elo                  |
+| BlackElo          | string             | The player as black had this Elo                  |
 | BoardSetup        | Brd option         | The game optionally had this as a starting board  |
 | AdditionalInfo    | Map<string,string> | The game had these as extra headers               |
 | MoveText          | MoveTextEntry list | The game had these move entries                   |

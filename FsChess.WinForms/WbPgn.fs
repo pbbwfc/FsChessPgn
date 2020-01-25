@@ -79,7 +79,7 @@ module Library2 =
             if mt.IsEmpty then hdr+ftr
             else
                 hdr +
-                (game.MoveText|>List.mapi (mvtag 0)|>List.reduce(+))
+                (mt|>List.mapi (mvtag 0)|>List.reduce(+))
                 + ftr
         
         

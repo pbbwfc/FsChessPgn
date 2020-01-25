@@ -81,12 +81,7 @@ module Library4 =
             gmsui.Clear()
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
             dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
-            gms.Columns.[0].Width <- 50
-            gms.Columns.[2].Width <- 50
-            gms.Columns.[4].Width <- 50
-            gms.Columns.[5].Width <- 50
-            gms.Columns.[6].Width <- 70
-            gms.Columns.[8].Width <- 50
+            gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
             filtgms|>filtEvt.Trigger
 
         ///Provides the revised filtered list of Games

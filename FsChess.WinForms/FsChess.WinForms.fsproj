@@ -49,6 +49,7 @@
     <Compile Include="DgvGames.fs" />
     <Compile Include="PnlBoard.fs" />
     <Compile Include="WbPgn.fs" />
+    <Compile Include="WbStats.fs" />
     <Compile Include="LinkBrdPgn.fs" />
   </ItemGroup>
 
