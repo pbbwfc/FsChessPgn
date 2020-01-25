@@ -11,7 +11,7 @@ module Main =
     type FrmMain() as this =
         inherit Form(Text = "Show Stats", Width = 1000, Height = 850)
 
-        let sts = new WbStats() 
+        let sts = new WbStats(Dock=DockStyle.Fill) 
         let gms = new DgvGames(Dock=DockStyle.Bottom)
         let bd = new PnlBoard(Dock=DockStyle.Left)
         let rtpnl = new Panel(Dock=DockStyle.Fill)
@@ -27,9 +27,9 @@ module Main =
 
 
         do
-            sts|>rtpnl.Controls.Add
             ldbtn |>rbpnl.Controls.Add
             rbpnl|>rtpnl.Controls.Add
+            sts|>rtpnl.Controls.Add
             rtpnl|>this.Controls.Add
             bd|>this.Controls.Add
             gms|>this.Controls.Add
