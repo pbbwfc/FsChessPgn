@@ -51,6 +51,7 @@
     <Compile Include="WbPgn.fs" />
     <Compile Include="WbStats.fs" />
     <Compile Include="LinkBrdPgn.fs" />
+    <Compile Include="LinkAll.fs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -110,3 +110,15 @@ It provides the following functions:
 | SetStats        | BrdStats -> unit                   | Sets the Stats to be displayed                            |
 | CalcStats       | (int * Game * string) list -> unit | Calculates the Stats to be displayed                      |
 
+# Link for All
+
+I have also produced a slight simplification to usage by providing a function to create all Panels.
+
+These are then automatically linked together so that changes in one produce changes in the others. Sample usage:
+
+```fsharp
+let bd,pgn,gms,sts = CreateLnkAll()
+```
+
+There is an example of its use - see the sample application _PgnEditor_.
+
