@@ -41,7 +41,7 @@ module Stats =
             {mvst with Pc=npc;Score=nscr;DrawPc=ndpc}
         let ntscr =(float(nbdst.TotWhiteWins) + 0.5 * float(nbdst.TotDraws))/float(nbdst.TotCount)
         let ntdpc = float(nbdst.TotDraws)/float(nbdst.TotCount)
-        {nbdst with TotScore=ntscr;TotDrawPc=ntdpc;Mvstats=nbdst.Mvstats|>List.map popmvst}
+        {nbdst with TotScore=ntscr;TotDrawPc=ntdpc;Mvstats=nbdst.Mvstats|>List.map popmvst|>List.sortBy(fun mvst -> -mvst.Count)}
 
     let pretty (bdstat:BrdStats) =
         let nl  = System.Environment.NewLine
@@ -52,7 +52,7 @@ module Stats =
             let mv = "  | " + mvstr + ("       |").Substring(mvstr.Length)
             let ctstr = mvst.Count.ToString()
             let ct = "  " + ctstr + ("     |").Substring(ctstr.Length)
-            let pcstr = mvst.Pc.ToString("###.0%")
+            let pcstr = mvst.Pc.ToString("##0.0%")
             let pc = "  " + pcstr + ("       |").Substring(pcstr.Length)
             let wwstr = mvst.WhiteWins.ToString()
             let ww = "  " + wwstr + ("         |").Substring(wwstr.Length)
@@ -60,9 +60,9 @@ module Stats =
             let dw = "  " + dwstr + ("       |").Substring(dwstr.Length)
             let bwstr = mvst.BlackWins.ToString()
             let bw = "  " + bwstr + ("         |").Substring(bwstr.Length)
-            let scstr = mvst.Score.ToString("###.0%")
+            let scstr = mvst.Score.ToString("##0.0%")
             let sc = "  " + scstr + ("       |").Substring(scstr.Length)
-            let dpstr = mvst.DrawPc.ToString("###.0%")
+            let dpstr = mvst.DrawPc.ToString("##0.0%")
             let dp = "  " + dpstr + ("       |").Substring(dpstr.Length)
             mv + ct + pc + ww + dw + bw + sc + dp
 
@@ -77,9 +77,9 @@ module Stats =
             let dw = "  " + dwstr + ("       |").Substring(dwstr.Length)
             let bwstr = bdstat.TotBlackWins.ToString()
             let bw = "  " + bwstr + ("         |").Substring(bwstr.Length)
-            let scstr = bdstat.TotScore.ToString("###.0%")
+            let scstr = bdstat.TotScore.ToString("##0.0%")
             let sc = "  " + scstr + ("       |").Substring(scstr.Length)
-            let dpstr = bdstat.TotDrawPc.ToString("###.0%")
+            let dpstr = bdstat.TotDrawPc.ToString("##0.0%")
             let dp = "  " + dpstr + ("       |").Substring(dpstr.Length)
             mv + ct + pc + ww + dw + bw + sc + dp
 

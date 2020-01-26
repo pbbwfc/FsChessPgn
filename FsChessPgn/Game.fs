@@ -521,9 +521,11 @@ module Game =
                     else
                         let nbd = cbd|>Board.MoveApply mv
                         if nbd.PieceAt=bd.PieceAt then
-                            let npmv = ipmvl.Tail.Head
-                            let mvstr = npmv|>PgnWrite.MoveStr
-                            true,mvstr
+                            if ipmvl.Tail.IsEmpty then false,""
+                            else
+                                let npmv = ipmvl.Tail.Head
+                                let mvstr = npmv|>PgnWrite.MoveStr
+                                true,mvstr
                         else getbd nbd ipmvl.Tail
                 elif pc=Piece.BPawn then
                     let sq = mv|>Move.From
@@ -532,16 +534,20 @@ module Game =
                     else
                         let nbd = cbd|>Board.MoveApply mv
                         if nbd.PieceAt=bd.PieceAt then
-                            let npmv = ipmvl.Tail.Head
-                            let mvstr = npmv|>PgnWrite.MoveStr
-                            true,mvstr
+                            if ipmvl.Tail.IsEmpty then false,""
+                            else
+                                let npmv = ipmvl.Tail.Head
+                                let mvstr = npmv|>PgnWrite.MoveStr
+                                true,mvstr
                         else getbd nbd ipmvl.Tail
                 else
                     let nbd = cbd|>Board.MoveApply mv
                     if nbd.PieceAt=bd.PieceAt then
-                        let npmv = ipmvl.Tail.Head
-                        let mvstr = npmv|>PgnWrite.MoveStr
-                        true,mvstr
+                        if ipmvl.Tail.IsEmpty then false,""
+                        else
+                            let npmv = ipmvl.Tail.Head
+                            let mvstr = npmv|>PgnWrite.MoveStr
+                            true,mvstr
                     else getbd nbd ipmvl.Tail
         
         let initbd = if gm.BoardSetup.IsSome then gm.BoardSetup.Value else Board.Start

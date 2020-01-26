@@ -82,13 +82,31 @@ There is a simple example of its use - see the sample application _ShowGames_.
 
 It provides the following functions:
 
-| Function        | Type                            | Description                                                                         |
-|:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
-| SetBoard        | Brd -> unit                     | Sets the Board to be filtered on                                                    |
-| SetPgn          | string -> unit                  | Sets the PGN file to be used                                                        |
+| Function        | Type                            | Description                                |
+|:----------------|:--------------------------------|:-------------------------------------------|
+| SetBoard        | Brd -> unit                     | Sets the Board to be filtered on           |
+| SetPgn          | string -> unit                  | Sets the PGN file to be used               |
 
 It generates the following events:
 
-| Event           | Type                               | Description                                                                         |
-|:----------------|:-----------------------------------|:------------------------------------------------------------------------------------|
-| FiltChng        | IEvent<(int * Game * string) list> | Provides the revised filtered list of Games                                         |
+| Event           | Type                               | Description                                     |
+|:----------------|:-----------------------------------|:------------------------------------------------|
+| FiltChng        | IEvent<(int * Game * string) list> | Provides the revised filtered list of Games     |
+
+## Stats Panel
+
+This component is a panel summarising the Statistics for games from a PGN file for a position.
+
+It keeps track the stats for a position.
+
+There is a simple example of its use - see the sample application _ShowStats_.
+
+![showstats](showstats.png)
+
+It provides the following functions:
+
+| Function        | Type                               | Description                                               |
+|:----------------|:-----------------------------------|:----------------------------------------------------------|
+| SetStats        | BrdStats -> unit                   | Sets the Stats to be displayed                            |
+| CalcStats       | (int * Game * string) list -> unit | Calculates the Stats to be displayed                      |
+
