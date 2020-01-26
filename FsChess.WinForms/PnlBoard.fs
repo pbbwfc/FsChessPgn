@@ -287,6 +287,15 @@ module Library1 =
         member bd.Orient(isw:bool) =
             isw|>orient
 
+        ///Sets the board given a new move in SAN format
+        member bd.DoMove(san:string) =
+            let mv = san|>Move.FromSan board
+            board <- board|>Board.Push mv
+            setpcsmvs()
+            mv|>mvEvt.Trigger
+            board|>bdEvt.Trigger
+
+
         //publish
         ///Provides the Move made on the board
         member __.MvMade = mvEvt.Publish

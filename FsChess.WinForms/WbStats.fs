@@ -14,6 +14,9 @@ module Library5 =
         //mutables
         let mutable cbdst = BrdStatsEMP
 
+        //events
+        let mvselEvt = new Event<_>()
+
         //functions
         let nl = System.Environment.NewLine
         let hdr = 
@@ -35,7 +38,7 @@ module Library5 =
             wwd + drd + bwd
         
         let mvsttag i (mvst:MvStats) =  
-            "<tr><td>" + mvst.Mvstr + "</td><td>" + mvst.Count.ToString() + "</td>" + 
+            "<tr id=\"" + i.ToString() + "\"><td>" + mvst.Mvstr + "</td><td>" + mvst.Count.ToString() + "</td>" + 
             "<td>" + mvst.Pc.ToString("##0.0%") + "</td><td>" + (getdiv mvst.WhiteWins mvst.Draws mvst.BlackWins) + "</td>" + 
             "<td>" + mvst.Score.ToString("##0.0%") + "</td><td>" + mvst.DrawPc.ToString("##0.0%") + "</td></tr>" + nl
 
@@ -55,9 +58,19 @@ module Library5 =
                 cbdst.TotDrawPc.ToString("##0.0%") + "</td></tr>" + nl
                 + ftr
 
+
+        let onclick(el:HtmlElement) = 
+            let i = el.Id|>int
+            let san = cbdst.Mvstats.[i].Mvstr
+            san|>mvselEvt.Trigger
+
+        let setclicks e = 
+             for el in stats.Document.GetElementsByTagName("tr") do
+                 el.Click.Add(fun _ -> onclick(el))
+
         do
             stats.DocumentText <- bdsttags()
-            //stats.DocumentCompleted.Add(setclicks)
+            stats.DocumentCompleted.Add(setclicks)
             stats.ObjectForScripting <- stats
 
 
@@ -71,3 +84,6 @@ module Library5 =
             cbdst <- fgms|>Stats.Get
             stats.DocumentText <- bdsttags()
   
+        //publish
+        ///Provides the selected move in SAN format
+        member __.MvSel = mvselEvt.Publish

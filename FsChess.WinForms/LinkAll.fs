@@ -14,5 +14,6 @@ module Library6 =
         bd.MvMade|>Observable.add pgn.DoMove
         bd.BdChng |> Observable.add gms.SetBoard
         gms.FiltChng |> Observable.add sts.CalcStats
+        sts.MvSel |> Observable.add bd.DoMove
 
         bd,pgn,gms,sts

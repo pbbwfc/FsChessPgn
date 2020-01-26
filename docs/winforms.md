@@ -21,6 +21,7 @@ It provides the following functions:
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
 | SetBoard        | Brd -> unit                     | Sets the Board to be displayed                                                      |
 | Orient          | bool -> unit                    | Orients the Board depending on whether White                                        |
+| DoMove          | string -> unit                  | Sets the board given a new move in SAN format                                       |
 
 It generates the following events:
 
@@ -109,6 +110,12 @@ It provides the following functions:
 |:----------------|:-----------------------------------|:----------------------------------------------------------|
 | SetStats        | BrdStats -> unit                   | Sets the Stats to be displayed                            |
 | CalcStats       | (int * Game * string) list -> unit | Calculates the Stats to be displayed                      |
+
+It generates the following events:
+
+| Event           | Type                               | Description                                     |
+|:----------------|:-----------------------------------|:------------------------------------------------|
+| MvSel           | IEvent<string>                     | Provides the selected move in SAN format        |
 
 # Link for All
 
