@@ -18,18 +18,23 @@ module Form =
 
     type FrmMain() as this =
         inherit Form(Text = "PGN Editor", WindowState = FormWindowState.Maximized, Icon = ico "KindleChess.ico", IsMdiContainer = true)
-
         
         let bd,pgn,gms,sts = CreateLnkAll()
 
+        let ldpgn() =
+            let dlg = new OpenFileDialog(Filter = "pgn files (*.pgn)|*.pgn")
+            if dlg.ShowDialog() = DialogResult.OK then
+                let pgnfil = dlg.FileName
+                gms.SetPgn(pgnfil)
+
         let mm =
             let m = new MenuStrip()
-            //do book menu
+            //do file menu
             let bk = new ToolStripMenuItem("File")
             //do open
             let opnb =
                 new ToolStripMenuItem(Image = img "opn.png", Text = "&Open")
-            //opnb.Click.Add(fun _ -> (new DlgOpnBk()).ShowDialog() |> ignore)
+            opnb.Click.Add(fun _ -> ldpgn())
             bk.DropDownItems.Add(opnb) |> ignore
             //do save
             //let dosaveb (e) = 
@@ -73,7 +78,7 @@ module Form =
             //do open
             let opnb =
                 new ToolStripButton(Image = img "opn.png", Text = "&Open")
-            //opnb.Click.Add(fun _ -> (new DlgOpnBk()).ShowDialog() |> ignore)
+            opnb.Click.Add(fun _ -> ldpgn())
             ts.Items.Add(opnb) |> ignore
             //do save
             //let dosaveb (e) = 
@@ -90,14 +95,24 @@ module Form =
             ts.Items.Add(savab) |> ignore
             ts
 
-        let pnl = new Panel(Dock=DockStyle.Top,Height=30)
-        let rtpnl = new Panel(Dock=DockStyle.Fill)
+        let rtpnl = new Panel(Height=450,Width=1100,Dock=DockStyle.Left)
+        let tppnl = new Panel(Height=450,Dock=DockStyle.Top)
+        let btpnl = new Panel(Dock=DockStyle.Fill)
         
         do
-            pgn|>rtpnl.Controls.Add
-            rtpnl|>this.Controls.Add
-            bd|>this.Controls.Add
+            pgn|>btpnl.Controls.Add
+            btpnl|>this.Controls.Add
+            sts.Height <- 200
+            gms.Height <- 250
+            gms|>rtpnl.Controls.Add
+            sts|>rtpnl.Controls.Add
+            //bd.Width <- 400
+            rtpnl|>tppnl.Controls.Add
+            bd|>tppnl.Controls.Add
+            tppnl|>this.Controls.Add
             tb|>this.Controls.Add
             mm|>this.Controls.Add
+            
+
             //events
             //TODO 

@@ -22,7 +22,7 @@ module Library4 =
         }
     
     type DgvGames() as gms =
-        inherit DataGridView(Width = 800, Height = 400, 
+        inherit DataGridView(Width = 800, Height = 250, 
                 AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders, 
                 ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single,
                 AllowUserToAddRows = false,
