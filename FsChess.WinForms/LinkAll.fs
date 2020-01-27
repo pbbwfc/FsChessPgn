@@ -13,7 +13,10 @@ module Library6 =
         pgn.BdChng |> Observable.add bd.SetBoard
         bd.MvMade|>Observable.add pgn.DoMove
         bd.BdChng |> Observable.add gms.SetBoard
+        pgn.BdChng |> Observable.add gms.SetBoard
         gms.FiltChng |> Observable.add sts.CalcStats
         sts.MvSel |> Observable.add bd.DoMove
+        gms.GmSel |> Observable.add pgn.SetGame
+        pgn.GmChng |> Observable.add gms.ChangeGame
 
         bd,pgn,gms,sts

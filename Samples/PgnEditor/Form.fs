@@ -97,16 +97,19 @@ module Form =
 
         let rtpnl = new Panel(Height=450,Width=1100,Dock=DockStyle.Left)
         let tppnl = new Panel(Height=450,Dock=DockStyle.Top)
+        let lblpnl = new Panel(Height=30,Dock=DockStyle.Top)
+        let lbl = new Label(Text="Game Title",Width=200)
         let btpnl = new Panel(Dock=DockStyle.Fill)
         
         do
+            lbl|>lblpnl.Controls.Add
+            lblpnl|>btpnl.Controls.Add
             pgn|>btpnl.Controls.Add
             btpnl|>this.Controls.Add
             sts.Height <- 200
             gms.Height <- 250
             gms|>rtpnl.Controls.Add
             sts|>rtpnl.Controls.Add
-            //bd.Width <- 400
             rtpnl|>tppnl.Controls.Add
             bd|>tppnl.Controls.Add
             tppnl|>this.Controls.Add
@@ -115,4 +118,4 @@ module Form =
             
 
             //events
-            //TODO 
+            gms.GmSel|>Observable.add (fun gm -> lbl.Text <- gm.WhitePlayer + " vs. " + gm.BlackPlayer) 

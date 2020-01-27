@@ -37,11 +37,14 @@ module Library4 =
         let mutable cbd = Board.Start
         let mutable filtgms:(int * Game * string) list = []
         let mutable crw = -1
+        let mutable cgm = GameEMP
+        let mutable gmchg = false
         let mutable gmsui = new System.ComponentModel.BindingList<GmUI>()
         let bs = new BindingSource()
 
         //events
         let filtEvt = new Event<_>()
+        let selEvt = new Event<_>()
 
         let igm2gmui (igmmv:(int * Game * string)) =
             let i,gm,mv = igmmv
@@ -72,7 +75,19 @@ module Library4 =
             allgms <- pgn|>Games.ReadIndexListFromFile
             pgn|>Games.CreateIndex
             indx <- pgn|>Games.GetIndex
-            Board.Start|>gms.SetBoard
+            cbd <- Board.Start
+            filtgms <- allgms|>Games.FastFindBoard cbd indx
+            gmsui.Clear()
+            let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
+            dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
+            gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
+            filtgms|>filtEvt.Trigger
+            gmchg <- false
+            if not dispgms.IsEmpty then
+                let ci,cg,_ = dispgms.Head
+                crw <- ci
+                cgm <- cg
+                cgm|>selEvt.Trigger
 
         ///Sets the Board to be filtered on
         member gms.SetBoard(ibd:Brd) =
@@ -84,5 +99,13 @@ module Library4 =
             gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
             filtgms|>filtEvt.Trigger
 
+        ///Changes the contents of the Game that is selected
+        member gms.ChangeGame(igm:Game) =
+            cgm <- igm
+            gmchg <- true
+
         ///Provides the revised filtered list of Games
         member __.FiltChng = filtEvt.Publish
+        
+        ///Provides the selected Game
+        member __.GmSel = selEvt.Publish

@@ -21,6 +21,7 @@ module Library2 =
 
         //events
         let bdchngEvt = new Event<_>()
+        let gmchngEvt = new Event<_>()
         
         //functions
         let hdr = "<html><body>"
@@ -109,6 +110,7 @@ module Library2 =
                     game <- Game.EditComment game rirs comm.Text
                     pgn.DocumentText <- mvtags()
 
+                game|>gmchngEvt.Trigger
                 dlg.Close()
 
             do 
@@ -162,6 +164,7 @@ module Library2 =
                     game <- Game.DeleteNag game rirs
                     pgn.DocumentText <- mvtags()
 
+                game|>gmchngEvt.Trigger
                 dlg.Close()
 
             do 
@@ -431,6 +434,7 @@ module Library2 =
                 irs <- nirs
                 board <- board|>Board.Push mv
                 pgn.DocumentText <- mvtags()
+                game|>gmchngEvt.Trigger
             else
                 //Check if first move in RAV
                 let rec inrav oi ci (mtel:MoveTextEntry list) =
@@ -501,7 +505,11 @@ module Library2 =
                         irs <- nirs
                         board <- board|>Board.Push mv
                         pgn.DocumentText <- mvtags()
+                        game|>gmchngEvt.Trigger
 
         //publish
         ///Provides the new Board after a change
         member __.BdChng = bdchngEvt.Publish
+
+        ///Provides the new Game after a change
+        member __.GmChng = gmchngEvt.Publish

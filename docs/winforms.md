@@ -58,6 +58,7 @@ It generates the following events:
 | Event           | Type                            | Description                                                                         |
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
 | BdChng          | IEvent<Brd>                     | Provides the new Board after a change                                               |
+| GmChng          | IEvent<Game>                    | Provides the new Game after a change                                               |
 
 # Link for Board and Pgn
 
@@ -75,7 +76,7 @@ There is a simple example of its use - see the sample application _ShowLink_.
 
 This component is a grid showing a list of games from a PGN file filterd by a position.
 
-It keeps track of a filtered list of Games and the PGN file used.
+It keeps track of a filtered list of Games, the selected Game and the PGN file used.
 
 There is a simple example of its use - see the sample application _ShowGames_.
 
@@ -83,16 +84,18 @@ There is a simple example of its use - see the sample application _ShowGames_.
 
 It provides the following functions:
 
-| Function        | Type                            | Description                                |
-|:----------------|:--------------------------------|:-------------------------------------------|
-| SetBoard        | Brd -> unit                     | Sets the Board to be filtered on           |
-| SetPgn          | string -> unit                  | Sets the PGN file to be used               |
+| Function        | Type                            | Description                                       |
+|:----------------|:--------------------------------|:--------------------------------------------------|
+| SetBoard        | Brd -> unit                     | Sets the Board to be filtered on                  |
+| SetPgn          | string -> unit                  | Sets the PGN file to be used                      |
+| ChangeGame      | Game -> unit                    | Changes the contents of the Game that is selected |
 
 It generates the following events:
 
 | Event           | Type                               | Description                                     |
 |:----------------|:-----------------------------------|:------------------------------------------------|
 | FiltChng        | IEvent<(int * Game * string) list> | Provides the revised filtered list of Games     |
+| GmSel           | IEvent<Game>                       | Provides the selected Game                      |
 
 ## Stats Panel
 
