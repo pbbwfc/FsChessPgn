@@ -12,7 +12,7 @@ module PgnWriter =
             writer.WriteLine()
 
     let WriteFile (file:string) (pgnDatabase:Game list) =
-        let stream = new FileStream(file, FileMode.OpenOrCreate)
+        let stream = new FileStream(file, FileMode.Create)
         WriteStream(stream,pgnDatabase)
 
     let WriteString(pgnDatabase:Game list) =

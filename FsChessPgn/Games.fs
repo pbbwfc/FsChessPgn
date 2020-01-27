@@ -67,6 +67,8 @@ module Games =
                         let mv = pmv|>pMove.ToMove cbd
                         let nbd = cbd|>Board.MoveApply mv
                         //now check if a pawn move which is not on search board
+                        //TODO need to also include captures of pawns on starts square!!!!!
+                        //Broken for Game 11 (index 10) after qxb7
                         let pc = mv|>Move.MovingPiece
                         if pc=Piece.WPawn then
                             let sq = mv|>Move.From

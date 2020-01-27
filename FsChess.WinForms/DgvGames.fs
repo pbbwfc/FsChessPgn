@@ -29,7 +29,8 @@ module Library4 =
                 AllowUserToDeleteRows = false,
                 ReadOnly = true,
                 CellBorderStyle = DataGridViewCellBorderStyle.Single,
-                GridColor = Color.Black, MultiSelect = false)
+                GridColor = Color.Black, MultiSelect = false,
+                RowHeadersVisible=false)
 
         let mutable pgn = ""
         let mutable allgms:(int * Game) list = []
@@ -60,7 +61,38 @@ module Library4 =
                 Round = gm.Round
                 Site = gm.Site
             }
-            
+        
+        let dosave() =
+            if crw=0 then
+                ((0,cgm)::allgms.Tail)|>List.map snd|>Games.WriteFile pgn
+            elif crw=allgms.Length-1 then
+                (allgms.[..crw-1]@[crw,cgm])|>List.map snd|>Games.WriteFile pgn
+            else
+                (allgms.[..crw-1]@[crw,cgm]@allgms.[crw+1..])|>List.map snd|>Games.WriteFile pgn
+        
+        let doclick(e:DataGridViewCellEventArgs) =
+            let rw = e.RowIndex
+            //need to check if want to save
+            if gmchg then
+                let nm = cgm.WhitePlayer + " v. " + cgm.BlackPlayer
+                let dr = MessageBox.Show("Do you want to save the game: " + nm + " ?","Save Game",MessageBoxButtons.YesNoCancel)
+                if dr=DialogResult.Yes then
+                    dosave()
+                    let ci,cg,_ = filtgms.[rw]
+                    crw <- ci
+                    cgm <- cg
+                    cgm|>selEvt.Trigger
+                elif dr=DialogResult.No then
+                    let ci,cg,_ = filtgms.[rw]
+                    crw <- ci
+                    cgm <- cg
+                    cgm|>selEvt.Trigger
+            else
+                let ci,cg,_ = filtgms.[rw]
+                crw <- ci
+                cgm <- cg
+                cgm|>selEvt.Trigger
+            gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
         
         let setup() =
             bs.DataSource <- gmsui
@@ -68,6 +100,7 @@ module Library4 =
 
         do 
             setup()
+            gms.CellClick.Add(doclick)
 
         ///Sets the PGN file to be used
         member gms.SetPgn(ipgn:string) =

@@ -47,6 +47,7 @@ It provides the following functions:
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
 | GetGame         | unit -> Game                    | Gets the Game that is displayed                                                     |
 | SetGame         | Game -> unit                    | Sets the Game to be displayed                                                       |
+| SwitchGame      | Game -> unit                    | Switches to another game with the same position                                     |
 | NextMove        | unit -> unit                    | Goes to the next Move in the Game                                                   |
 | LastMove        | unit -> unit                    | Goes to the last Move in the Variation                                              |
 | PrevMove        | unit -> unit                    | Goes to the previous Move in the Game                                               |

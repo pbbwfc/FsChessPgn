@@ -36,11 +36,13 @@ module Library2 =
                 getirs nir (i::irl)
         //get a rav id from a list of indexes to locate
         //[2;,3;5] indicates go to RAV at index 2, withing this go to RAV at index 3 and then get item at index 5
-        let rec getir (irl:int list) ir =
-            if irl.IsEmpty then ir
-            else
-                let nir = irl.Head|||(ir<<<8)
-                getir irl.Tail nir
+        let getir (iirl:int list) =
+            let rec dogetir (irl:int list) ir =
+                if irl.IsEmpty then ir
+                else
+                    let nir = irl.Head|||(ir<<<8)
+                    dogetir irl.Tail nir
+            dogetir iirl 0
         
         let highlight (mve:HtmlElement) =
             if oldstyle.IsSome then
@@ -270,7 +272,7 @@ module Library2 =
                 if el.GetAttribute("className") = "cm" then 
                     el.MouseDown.Add(fun e -> if e.MouseButtonsPressed=MouseButtons.Left then () else onrightclick(el,e.MousePosition))
 
-            let id = getir irs 0
+            let id = getir irs
             for el in pgn.Document.GetElementsByTagName("span") do
                 if el.GetAttribute("className") = "mv" then
                     if el.Id=id.ToString() then
@@ -286,6 +288,31 @@ module Library2 =
         member pgn.GetGame() = 
             game
 
+        ///Switches to another game with the same position
+        member pgn.SwitchGame(gm:Game) = 
+            game <- gm|>Game.GetaMoves
+            pgn.DocumentText <- mvtags()
+            //need to select move that matches current board
+            let rec getnxt ci (mtel:MoveTextEntry list) =
+                if mtel.IsEmpty then -1
+                else
+                    let mte = mtel.Head
+                    match mte with
+                    |HalfMoveEntry(_,_,_,amv) ->
+                        if amv.IsNone then failwith "should have valid aMove"
+                        elif board = amv.Value.PostBrd then ci
+                        else getnxt (ci+1) mtel.Tail
+                    |_ -> getnxt (ci+1) mtel.Tail
+            let ni = getnxt 0 game.MoveText
+            irs <- [ni]
+            //now need to select the element
+            let id = getir irs
+            for el in pgn.Document.GetElementsByTagName("span") do
+                if el.GetAttribute("className") = "mv" then
+                    if el.Id=id.ToString() then
+                        el|>highlight
+
+ 
         ///Sets the Game to be displayed
         member pgn.SetGame(gm:Game) = 
             game <- gm|>Game.GetaMoves
@@ -327,7 +354,7 @@ module Library2 =
                 let ni = getnxt irs.Head (irs.Head+1) game.MoveText
                 irs <- [ni]
             //now need to select the element
-            let id = getir irs 0
+            let id = getir irs
             for el in pgn.Document.GetElementsByTagName("span") do
                 if el.GetAttribute("className") = "mv" then
                     if el.Id=id.ToString() then
@@ -372,7 +399,7 @@ module Library2 =
                 let ni = getprv irs.Head (irs.Head-1) game.MoveText
                 irs <- [ni]
             //now need to select the element
-            let id = getir irs 0
+            let id = getir irs
             for el in pgn.Document.GetElementsByTagName("span") do
                 if el.GetAttribute("className") = "mv" then
                     if el.Id=id.ToString() then
@@ -422,7 +449,7 @@ module Library2 =
                     fnd,isext
             if isnxt then
                 //now need to select the element
-                let id = getir irs 0
+                let id = getir irs
                 for el in pgn.Document.GetElementsByTagName("span") do
                     if el.GetAttribute("className") = "mv" then
                         if el.Id=id.ToString() then
@@ -493,7 +520,7 @@ module Library2 =
                         fnd
                 if isnxtrv then
                     //now need to select the element
-                    let id = getir irs 0
+                    let id = getir irs
                     for el in pgn.Document.GetElementsByTagName("span") do
                         if el.GetAttribute("className") = "mv" then
                             if el.Id=id.ToString() then

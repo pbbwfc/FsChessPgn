@@ -95,16 +95,16 @@ module Form =
             ts.Items.Add(savab) |> ignore
             ts
 
-        let rtpnl = new Panel(Height=450,Width=1100,Dock=DockStyle.Left)
-        let tppnl = new Panel(Height=450,Dock=DockStyle.Top)
-        let lblpnl = new Panel(Height=30,Dock=DockStyle.Top)
-        let lbl = new Label(Text="Game Title",Width=200)
-        let btpnl = new Panel(Dock=DockStyle.Fill)
+        let rtpnl = new Panel(Height=450,Width=1100,Dock=DockStyle.Left,BorderStyle=BorderStyle.FixedSingle)
+        let tppnl = new Panel(Height=450,Dock=DockStyle.Top,BorderStyle=BorderStyle.FixedSingle)
+        let lblpnl = new Panel(Height=30,Dock=DockStyle.Top,BorderStyle=BorderStyle.FixedSingle)
+        let lbl = new Label(Text="Game Title",Width=600,TextAlign=ContentAlignment.MiddleCenter,Font = new Font(new FontFamily("Arial"), 14.0f))
+        let btpnl = new Panel(Dock=DockStyle.Fill,BorderStyle=BorderStyle.FixedSingle)
         
         do
+            pgn|>btpnl.Controls.Add
             lbl|>lblpnl.Controls.Add
             lblpnl|>btpnl.Controls.Add
-            pgn|>btpnl.Controls.Add
             btpnl|>this.Controls.Add
             sts.Height <- 200
             gms.Height <- 250
