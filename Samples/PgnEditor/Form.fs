@@ -36,6 +36,8 @@ module Form =
                 let pgnfil = dlg.FileName
                 gms.SaveAsPgn(pgnfil)
                 this.Text <- "PGN Editor - " + pgnfil
+
+        let nwgm() = gms.NewGame()
         
         let mm =
             let m = new MenuStrip()
@@ -63,7 +65,7 @@ module Form =
             //do new
             let newg =
                 new ToolStripMenuItem(Text = "&New Game")
-            newg.Click.Add(fun _ -> ())
+            newg.Click.Add(fun _ -> nwgm())
             gm.DropDownItems.Add(newg) |> ignore
             m.Items.Add(gm) |> ignore
    

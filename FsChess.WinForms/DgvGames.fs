@@ -147,6 +147,27 @@ module Library4 =
             cgm <- igm
             gmchg <- true
 
+        ///Creates a new Game
+        member _.NewGame() =
+            //need to check if want to save
+            if gmchg then
+                let nm = cgm.WhitePlayer + " v. " + cgm.BlackPlayer
+                let dr = MessageBox.Show("Do you want to save the game: " + nm + " ?","Save Game",MessageBoxButtons.YesNo)
+                if dr=DialogResult.Yes then
+                    dosave()
+            cbd <- Board.Start
+            cgm <- GameEMP
+            crw <- allgms.Length
+            allgms <- allgms@[crw,cgm]
+            filtgms <- allgms|>Games.FastFindBoard cbd indx
+            gmsui.Clear()
+            let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
+            dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
+            gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
+            filtgms|>filtEvt.Trigger
+            gmchg <- false
+            cgm|>selEvt.Trigger
+
         ///Provides the revised filtered list of Games
         member __.FiltChng = filtEvt.Publish
         

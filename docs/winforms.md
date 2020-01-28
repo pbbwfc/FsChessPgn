@@ -91,6 +91,7 @@ It provides the following functions:
 | SetPgn          | string -> unit                  | Sets the PGN file to be used                      |
 | SavePgn         | unit -> unit                    | Saves the PGN file                                |
 | SaveAsPgn       | string -> unit                  | Saves the PGN file with a new name                |
+| NewGame         | unit -> unit                    | Creates a new Game                                |
 | ChangeGame      | Game -> unit                    | Changes the contents of the Game that is selected |
 
 It generates the following events:
