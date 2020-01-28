@@ -40,7 +40,7 @@ module Games =
 
     
     let CreateIndex (fn:string) =
-        let binfn = fn + ".bin"
+        let binfn = fn + ".indx"
         if not (File.Exists(binfn))||(File.Exists(binfn) && File.GetLastWriteTime(binfn)<File.GetLastWriteTime(fn)) then
             //TODO: consider doing in chunks for very large files
             let gml = fn|>ReadFromFile
@@ -70,28 +70,23 @@ module Games =
                         //TODO need to also include captures of pawns on starts square!!!!!
                         //Broken for Game 11 (index 10) after qxb7
                         let pc = mv|>Move.MovingPiece
-                        if pc=Piece.WPawn then
-                            let sq = mv|>Move.From
-                            let rnk = sq|>Square.ToRank
-                            if rnk=Rank2 then 
-                                let nsql = sq::sql
+                        let sq = mv|>Move.From
+                        let rnk = sq|>Square.ToRank
+                        let cpc = mv|>Move.CapturedPiece
+                        let sqto = mv|>Move.To
+                        let rnkto = sqto|>Square.ToRank
+                        if pc=Piece.WPawn && rnk=Rank2 || pc=Piece.BPawn && rnk=Rank7 then
+                            let nsql = sq::sql
+                            let cvl = dct.[nsql|>Set.ofList]
+                            let nvl = id::cvl
+                            dct.[nsql|>Set.ofList] <- nvl
+                            addgm id nsql nbd imtel.Tail
+                        elif cpc=Piece.WPawn && rnkto=Rank2 || cpc=Piece.BPawn && rnkto=Rank7 then
+                                let nsql = sqto::sql
                                 let cvl = dct.[nsql|>Set.ofList]
                                 let nvl = id::cvl
                                 dct.[nsql|>Set.ofList] <- nvl
                                 addgm id nsql nbd imtel.Tail
-                            else
-                                addgm id sql nbd imtel.Tail
-                        elif pc=Piece.BPawn then
-                            let sq = mv|>Move.From
-                            let rnk = sq|>Square.ToRank
-                            if rnk=Rank7 then 
-                                let nsql = sq::sql
-                                let cvl = dct.[nsql|>Set.ofList]
-                                let nvl = id::cvl
-                                dct.[nsql|>Set.ofList] <- nvl
-                                addgm id nsql nbd imtel.Tail
-                            else
-                                addgm id sql nbd imtel.Tail
                         else
                             addgm id sql nbd imtel.Tail
                     |_ -> addgm id sql cbd imtel.Tail
@@ -107,7 +102,7 @@ module Games =
             stream.Close()
 
     let GetIndex (fn:string) =
-        let binfn = fn + ".bin"
+        let binfn = fn + ".indx"
         if File.Exists(binfn) then
             let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
             let stream = new FileStream(binfn, FileMode.Open, FileAccess.Read, FileShare.Read)
