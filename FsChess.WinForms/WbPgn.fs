@@ -85,7 +85,6 @@ module Library2 =
                 (mt|>List.mapi (mvtag 0)|>List.reduce(+))
                 + ftr
         
-        
         //dialogs
         let dlgcomm(offset,cm) = 
             let txt = if offset= -1 then "Add Comment Before" elif offset=1 then "Add Comment After" else "Edit Comment"
@@ -187,6 +186,98 @@ module Library2 =
 
             dlg
 
+        let dlghdr() = 
+            let dlg = new Form(Text = "Edit Headers", Height = 370, Width = 370, FormBorderStyle = FormBorderStyle.FixedToolWindow,StartPosition=FormStartPosition.CenterParent)
+            let hc2 =
+                new FlowLayoutPanel(FlowDirection = FlowDirection.RightToLeft, 
+                                    Height = 30, Width = 400,Dock=DockStyle.Bottom)
+            let okbtn = new Button(Text = "OK")
+            let cnbtn = new Button(Text = "Cancel")
+            //if edit need to load NAG
+            let tc = 
+                new TableLayoutPanel(ColumnCount = 2, RowCount = 9, 
+                                    Height = 350, Width = 360,Dock=DockStyle.Fill)
+            let wlbl = new Label(Text="White")
+            let wtb = new TextBox(Text=game.WhitePlayer,Width=200)
+            let welbl = new Label(Text="White Elo")
+            let wetb = new TextBox(Text=game.WhiteElo,Width=200)
+            let blbl = new Label(Text="Black")
+            let btb = new TextBox(Text=game.BlackPlayer,Width=200)
+            let belbl = new Label(Text="Black Elo")
+            let betb = new TextBox(Text=game.BlackElo,Width=200)
+            let rslbl = new Label(Text="Result")
+            let rscb = new ComboBox(Text=(game.Result|>Result.ToStr),Width=200)
+            let dtlbl = new Label(Text="Date")
+            let dttb = new TextBox(Text=(game|>GameDate.ToStr),Width=200)
+            let evlbl = new Label(Text="Event")
+            let evtb = new TextBox(Text=game.Event,Width=200)
+            let rdlbl = new Label(Text="Round")
+            let rdtb = new TextBox(Text=game.Round,Width=200)
+            let stlbl = new Label(Text="Site")
+            let sttb = new TextBox(Text=game.Site,Width=200)
+
+            
+            let dook(e) = 
+                let results = [|GameResult.WhiteWins;GameResult.BlackWins;GameResult.Draw;GameResult.Open|]
+                let res = if rscb.SelectedIndex= -1 then game.Result else results.[rscb.SelectedIndex]
+                let yo,mo,dyo =
+                    let bits=dttb.Text.Split([|'.'|])
+                    if bits.Length=3 then
+                        let tryToInt (s:string) = 
+                            match System.Int32.TryParse s with
+                            | true, v -> Some v
+                            | false, _ -> None
+                        
+                        bits.[0]|>tryToInt,bits.[1]|>tryToInt,bits.[2]|>tryToInt
+                    else None,None,None
+                game <- {game with WhitePlayer=wtb.Text;WhiteElo=wetb.Text;
+                                   BlackPlayer=btb.Text;BlackElo=betb.Text;
+                                   Result=res;Year=yo;Month=mo;Day=dyo;
+                                   Event=evtb.Text;Round=rdtb.Text;Site=sttb.Text}
+                game|>gmchngEvt.Trigger
+                dlg.Close()
+
+                //TODO - need a new event to say header change and use this to update DgvGames
+
+
+            do 
+                dlg.MaximizeBox <- false
+                dlg.MinimizeBox <- false
+                dlg.ShowInTaskbar <- false
+                dlg.StartPosition <- FormStartPosition.CenterParent
+                hc2.Controls.Add(cnbtn)
+                hc2.Controls.Add(okbtn)
+                dlg.Controls.Add(hc2)
+                tc.Controls.Add(wlbl,0,0)
+                tc.Controls.Add(wtb,1,0)
+                tc.Controls.Add(welbl,0,1)
+                tc.Controls.Add(wetb,1,1)
+                tc.Controls.Add(blbl,0,2)
+                tc.Controls.Add(btb,1,2)
+                tc.Controls.Add(belbl,0,3)
+                tc.Controls.Add(betb,1,3)
+                tc.Controls.Add(rslbl,0,4)
+                [|GameResult.WhiteWins;GameResult.BlackWins;GameResult.Draw;GameResult.Open|]
+                |>Array.map(Result.ToStr)
+                |>Array.iter(fun r -> rscb.Items.Add(r)|>ignore)
+                tc.Controls.Add(rscb,1,4)
+                tc.Controls.Add(dtlbl,0,5)
+                tc.Controls.Add(dttb,1,5)
+                tc.Controls.Add(evlbl,0,6)
+                tc.Controls.Add(evtb,1,6)
+                tc.Controls.Add(rdlbl,0,7)
+                tc.Controls.Add(rdtb,1,7)
+                tc.Controls.Add(stlbl,0,8)
+                tc.Controls.Add(sttb,1,8)
+
+                dlg.Controls.Add(tc)
+                dlg.CancelButton <- cnbtn
+                //events
+                cnbtn.Click.Add(fun _ -> dlg.Close())
+                okbtn.Click.Add(dook)
+
+            dlg
+
         
         let onclick(mve:HtmlElement) = 
             let i = mve.Id|>int
@@ -231,6 +322,11 @@ module Library2 =
                 new ToolStripMenuItem(Text = "Add NAG")
             nag.Click.Add(fun _ -> dlgnag(1,NAG.Null).ShowDialog() |> ignore)
             m.Items.Add(nag) |> ignore
+            //do edit hdrs
+            let hdr =
+                new ToolStripMenuItem(Text = "Edit Game Headers")
+            hdr.Click.Add(fun _ -> dlghdr().ShowDialog() |> ignore)
+            m.Items.Add(hdr) |> ignore
             m
 
         let cmctxmnu = 
