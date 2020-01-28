@@ -89,6 +89,8 @@ It provides the following functions:
 |:----------------|:--------------------------------|:--------------------------------------------------|
 | SetBoard        | Brd -> unit                     | Sets the Board to be filtered on                  |
 | SetPgn          | string -> unit                  | Sets the PGN file to be used                      |
+| SavePgn         | unit -> unit                    | Saves the PGN file                                |
+| SaveAsPgn       | string -> unit                  | Saves the PGN file with a new name                |
 | ChangeGame      | Game -> unit                    | Changes the contents of the Game that is selected |
 
 It generates the following events:

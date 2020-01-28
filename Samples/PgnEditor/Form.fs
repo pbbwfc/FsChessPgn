@@ -26,33 +26,46 @@ module Form =
             if dlg.ShowDialog() = DialogResult.OK then
                 let pgnfil = dlg.FileName
                 gms.SetPgn(pgnfil)
+                this.Text <- "PGN Editor - " + pgnfil
 
+        let svpgn() = gms.SavePgn()
+
+        let svapgn() =
+            let dlg = new SaveFileDialog(Filter = "pgn files (*.pgn)|*.pgn")
+            if dlg.ShowDialog() = DialogResult.OK then
+                let pgnfil = dlg.FileName
+                gms.SaveAsPgn(pgnfil)
+                this.Text <- "PGN Editor - " + pgnfil
+        
         let mm =
             let m = new MenuStrip()
             //do file menu
-            let bk = new ToolStripMenuItem("File")
+            let fl = new ToolStripMenuItem("File")
             //do open
             let opnb =
                 new ToolStripMenuItem(Image = img "opn.png", Text = "&Open")
             opnb.Click.Add(fun _ -> ldpgn())
-            bk.DropDownItems.Add(opnb) |> ignore
+            fl.DropDownItems.Add(opnb) |> ignore
             //do save
-            //let dosaveb (e) = 
-            //    let cho = if stt.Chi>=0 then pgn.GetGame()|>Some else None
-            //    stt.SaveBook(cho) |> ignore
             let savb =
                 new ToolStripMenuItem(Image = img "sav.png", Text = "&Save")
-            //savb.Click.Add(dosaveb)
-            bk.DropDownItems.Add(savb) |> ignore
-            m.Items.Add(bk) |> ignore
+            savb.Click.Add(fun _ -> svpgn())
+            fl.DropDownItems.Add(savb) |> ignore
             //do save as 
             let savab =
                 new ToolStripMenuItem(Image = img "sava.png", Text = "Save &As")
-            //savab.Click.Add(fun _ -> (new DlgSaveAsBk()).ShowDialog() |> ignore)
-            bk.DropDownItems.Add(savab) |> ignore
+            savab.Click.Add(fun _ -> svapgn())
+            fl.DropDownItems.Add(savab) |> ignore
+            m.Items.Add(fl) |> ignore
 
-            //do chapter menu
-            let chp = new ToolStripMenuItem("Game")
+            //do gamer menu
+            let gm = new ToolStripMenuItem("Game")
+            //do new
+            let newg =
+                new ToolStripMenuItem(Text = "&New Game")
+            newg.Click.Add(fun _ -> ())
+            gm.DropDownItems.Add(newg) |> ignore
+            m.Items.Add(gm) |> ignore
    
             //do about menu
             let abt = new ToolStripMenuItem("About")
@@ -81,17 +94,14 @@ module Form =
             opnb.Click.Add(fun _ -> ldpgn())
             ts.Items.Add(opnb) |> ignore
             //do save
-            //let dosaveb (e) = 
-            //    let cho = if stt.Chi>=0 then pgn.GetGame()|>Some else None
-            //    stt.SaveBook(cho) |> ignore
             let savb =
                 new ToolStripButton(Image = img "sav.png", Text = "&Save")
-            //savb.Click.Add(dosaveb)
+            savb.Click.Add(fun _ -> svpgn())
             ts.Items.Add(savb) |> ignore
             //do save as 
             let savab =
                 new ToolStripButton(Image = img "sava.png", Text = "Save &As")
-            //savab.Click.Add(fun _ -> (new DlgSaveAsBk()).ShowDialog() |> ignore)
+            savab.Click.Add(fun _ -> svapgn())
             ts.Items.Add(savab) |> ignore
             ts
 

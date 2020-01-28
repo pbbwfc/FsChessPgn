@@ -122,6 +122,16 @@ module Library4 =
                 cgm <- cg
                 cgm|>selEvt.Trigger
 
+        ///Saves the PGN file
+        member _.SavePgn() = dosave()
+
+        ///Saves the PGN file with a new name
+        member _.SaveAsPgn(ipgn:string) = 
+            //copy index
+            System.IO.File.Copy(pgn + ".indx",ipgn + ".indx")
+            pgn <- ipgn
+            dosave()
+
         ///Sets the Board to be filtered on
         member gms.SetBoard(ibd:Brd) =
             cbd <- ibd
@@ -133,7 +143,7 @@ module Library4 =
             filtgms|>filtEvt.Trigger
 
         ///Changes the contents of the Game that is selected
-        member gms.ChangeGame(igm:Game) =
+        member _.ChangeGame(igm:Game) =
             cgm <- igm
             gmchg <- true
 
