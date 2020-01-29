@@ -24,28 +24,43 @@ module Form =
         let ldpgn() =
             let dlg = new OpenFileDialog(Filter = "pgn files (*.pgn)|*.pgn")
             if dlg.ShowDialog() = DialogResult.OK then
+                this.Cursor <- Cursors.WaitCursor
                 let pgnfil = dlg.FileName
                 gms.SetPgn(pgnfil)
                 this.Text <- "PGN Editor - " + pgnfil
+                this.Cursor <- Cursors.Default
 
-        let svpgn() = gms.SavePgn()
+        let svpgn() = 
+            this.Cursor <- Cursors.WaitCursor
+            gms.SavePgn()
+            this.Cursor <- Cursors.Default
 
         let svapgn() =
             let dlg = new SaveFileDialog(Filter = "pgn files (*.pgn)|*.pgn")
             if dlg.ShowDialog() = DialogResult.OK then
+                this.Cursor <- Cursors.WaitCursor
                 let pgnfil = dlg.FileName
                 gms.SaveAsPgn(pgnfil)
                 this.Text <- "PGN Editor - " + pgnfil
+                this.Cursor <- Cursors.Default
 
-        let nwgm() = gms.NewGame()
+        let nwgm() = 
+            this.Cursor <- Cursors.WaitCursor
+            gms.NewGame()
+            this.Cursor <- Cursors.Default
 
-        let delgm() = gms.DeleteGame()
+        let delgm() = 
+            this.Cursor <- Cursors.WaitCursor
+            gms.DeleteGame()
+            this.Cursor <- Cursors.Default
 
         let doexpf() = 
             let dlg = new SaveFileDialog(Title="Save Filtered Games as a PGN file", Filter = "pgn files (*.pgn)|*.pgn")
             if dlg.ShowDialog() = DialogResult.OK then
+                this.Cursor <- Cursors.WaitCursor
                 let filtfil = dlg.FileName
                 gms.ExportFilter(filtfil)
+                this.Cursor <- Cursors.Default
         
         let mm =
             let m = new MenuStrip()
