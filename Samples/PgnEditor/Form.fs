@@ -38,6 +38,14 @@ module Form =
                 this.Text <- "PGN Editor - " + pgnfil
 
         let nwgm() = gms.NewGame()
+
+        let delgm() = gms.DeleteGame()
+
+        let doexpf() = 
+            let dlg = new SaveFileDialog(Title="Save Filtered Games as a PGN file", Filter = "pgn files (*.pgn)|*.pgn")
+            if dlg.ShowDialog() = DialogResult.OK then
+                let filtfil = dlg.FileName
+                gms.ExportFilter(filtfil)
         
         let mm =
             let m = new MenuStrip()
@@ -58,6 +66,11 @@ module Form =
                 new ToolStripMenuItem(Image = img "sava.png", Text = "Save &As")
             savab.Click.Add(fun _ -> svapgn())
             fl.DropDownItems.Add(savab) |> ignore
+            //do save as 
+            let expfb =
+                new ToolStripMenuItem(Text = "&Export Filtered Games")
+            expfb.Click.Add(fun _ -> doexpf())
+            fl.DropDownItems.Add(expfb) |> ignore
             m.Items.Add(fl) |> ignore
 
             //do gamer menu
@@ -67,6 +80,11 @@ module Form =
                 new ToolStripMenuItem(Text = "&New Game")
             newg.Click.Add(fun _ -> nwgm())
             gm.DropDownItems.Add(newg) |> ignore
+            //do delete
+            let delg =
+                new ToolStripMenuItem(Text = "&Delete Game")
+            delg.Click.Add(fun _ -> delgm())
+            gm.DropDownItems.Add(delg) |> ignore
             m.Items.Add(gm) |> ignore
    
             //do about menu

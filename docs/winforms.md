@@ -59,7 +59,8 @@ It generates the following events:
 | Event           | Type                            | Description                                                                         |
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
 | BdChng          | IEvent<Brd>                     | Provides the new Board after a change                                               |
-| GmChng          | IEvent<Game>                    | Provides the new Game after a change                                               |
+| GmChng          | IEvent<Game>                    | Provides the new Game after a change                                                |
+| HdrChng         | IEvent<Game>                    | Provides the new Game after a change to the header                                  |
 
 # Link for Board and Pgn
 
@@ -93,13 +94,17 @@ It provides the following functions:
 | SaveAsPgn       | string -> unit                  | Saves the PGN file with a new name                |
 | NewGame         | unit -> unit                    | Creates a new Game                                |
 | ChangeGame      | Game -> unit                    | Changes the contents of the Game that is selected |
+| ChangeGameHdr   | Game -> unit                    | Changes the header of the Game that is selected   |
+| DeleteGame      | unit -> unit                    | Deletes selected Game                             |
+| ExportFilter    | string -> unit                  | Export filtered games                             |
 
 It generates the following events:
 
-| Event           | Type                               | Description                                     |
-|:----------------|:-----------------------------------|:------------------------------------------------|
-| FiltChng        | IEvent<(int * Game * string) list> | Provides the revised filtered list of Games     |
-| GmSel           | IEvent<Game>                       | Provides the selected Game                      |
+| Event           | Type                               | Description                                                   |
+|:----------------|:-----------------------------------|:--------------------------------------------------------------|
+| FiltChng        | IEvent<(int * Game * string) list> | Provides the revised filtered list of Games                   |
+| GmSel           | IEvent<Game>                       | Provides the selected Game                                    |
+| PgnChng         | IEvent<Brd >                       | Provides the initial Board when the PGN file selected changes |
 
 ## Stats Panel
 

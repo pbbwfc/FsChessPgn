@@ -46,6 +46,7 @@ module Library4 =
         //events
         let filtEvt = new Event<_>()
         let selEvt = new Event<_>()
+        let pgnEvt = new Event<_>()
 
         let igm2gmui (igmmv:(int * Game * string)) =
             let i,gm,mv = igmmv
@@ -121,6 +122,7 @@ module Library4 =
                 crw <- ci
                 cgm <- cg
                 cgm|>selEvt.Trigger
+                cbd|>pgnEvt.Trigger
 
         ///Saves the PGN file
         member _.SavePgn() = dosave()
@@ -147,6 +149,16 @@ module Library4 =
             cgm <- igm
             gmchg <- true
 
+        ///Changes the header of the Game that is selected
+        member _.ChangeGameHdr(igm:Game) =
+            cgm <- igm
+            gmchg <- true
+            let rw = gms.SelectedCells.[0].RowIndex
+            let chdr = gmsui.[rw]
+            let nchdr = {chdr with White=cgm.WhitePlayer;W_Elo=cgm.WhiteElo;Black=cgm.BlackPlayer;B_Elo=cgm.BlackElo;Result=cgm.Result|>Result.ToUnicode;
+                                   Date=cgm|>GameDate.ToStr;Event=cgm.Event;Round=cgm.Round;Site=cgm.Site}
+            gmsui.[rw] <- nchdr
+
         ///Creates a new Game
         member _.NewGame() =
             //need to check if want to save
@@ -168,8 +180,50 @@ module Library4 =
             gmchg <- false
             cgm|>selEvt.Trigger
 
+        ///Deletes selected Game
+        member gms.DeleteGame() =
+            let nm = cgm.WhitePlayer + " v. " + cgm.BlackPlayer
+            let dr = MessageBox.Show("Do you really want to permanently delete the game: " + nm + " ?","Delete Game",MessageBoxButtons.YesNo)
+            if dr=DialogResult.Yes then
+                let orw = gms.SelectedCells.[0].RowIndex
+                //save without gams
+                if crw=0 then
+                    (allgms.Tail)|>List.map snd|>Games.WriteFile pgn
+                elif crw=allgms.Length-1 then
+                    (allgms.[..crw-1])|>List.map snd|>Games.WriteFile pgn
+                else
+                    (allgms.[..crw-1]@allgms.[crw+1..])|>List.map snd|>Games.WriteFile pgn
+                //reload saves pgn
+                allgms <- pgn|>Games.ReadIndexListFromFile
+                pgn|>Games.CreateIndex
+                indx <- pgn|>Games.GetIndex
+                cbd <- Board.Start
+                filtgms <- allgms|>Games.FastFindBoard cbd indx
+                gmsui.Clear()
+                let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
+                dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
+                gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
+                filtgms|>filtEvt.Trigger
+                gmchg <- false
+                //select row
+                let rw = if orw=0 then 0 else orw-1
+                let ci,cg,_ = filtgms.[rw]
+                crw <- ci
+                cgm <- cg
+                cgm|>selEvt.Trigger
+                gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
+
+        ///Export filtered games
+        member gms.ExportFilter(filtfil:string) =
+            filtgms
+            |>List.map(fun (_,gm,_) -> gm)
+            |>Games.WriteFile filtfil
+        
         ///Provides the revised filtered list of Games
         member __.FiltChng = filtEvt.Publish
         
         ///Provides the selected Game
         member __.GmSel = selEvt.Publish
+
+        ///Provides the initial Board when the PGN file selected changes
+        member __.PgnChng = pgnEvt.Publish

@@ -22,6 +22,7 @@ module Library2 =
         //events
         let bdchngEvt = new Event<_>()
         let gmchngEvt = new Event<_>()
+        let hdrchngEvt = new Event<_>()
         
         //functions
         let hdr = "<html><body>"
@@ -235,9 +236,8 @@ module Library2 =
                                    Result=res;Year=yo;Month=mo;Day=dyo;
                                    Event=evtb.Text;Round=rdtb.Text;Site=sttb.Text}
                 game|>gmchngEvt.Trigger
+                game|>hdrchngEvt.Trigger
                 dlg.Close()
-
-                //TODO - need a new event to say header change and use this to update DgvGames
 
 
             do 
@@ -636,3 +636,6 @@ module Library2 =
 
         ///Provides the new Game after a change
         member __.GmChng = gmchngEvt.Publish
+
+        ///Provides the new Game after a change to the header
+        member __.HdrChng = hdrchngEvt.Publish

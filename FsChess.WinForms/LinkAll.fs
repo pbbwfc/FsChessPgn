@@ -18,5 +18,7 @@ module Library6 =
         sts.MvSel |> Observable.add bd.DoMove
         gms.GmSel |> Observable.add pgn.SwitchGame
         pgn.GmChng |> Observable.add gms.ChangeGame
+        pgn.HdrChng |> Observable.add gms.ChangeGameHdr
+        gms.PgnChng |> Observable.add bd.SetBoard 
 
         bd,pgn,gms,sts
