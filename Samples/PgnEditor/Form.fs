@@ -17,7 +17,7 @@ module Form =
         new Icon(file)
 
     type FrmMain() as this =
-        inherit Form(Text = "PGN Editor", WindowState = FormWindowState.Maximized, Icon = ico "KindleChess.ico", IsMdiContainer = true)
+        inherit Form(Text = "PGN Editor", WindowState = FormWindowState.Maximized, Icon = ico "PgnEditor.ico", IsMdiContainer = true)
         
         let bd,pgn,gms,sts = CreateLnkAll()
 

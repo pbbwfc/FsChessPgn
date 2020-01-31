@@ -72,7 +72,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowGames", "Samples\ShowGa
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowStats", "Samples\ShowStats\ShowStats.fsproj", "{435AE2A3-B0C0-44C9-A63F-0397EE1724AE}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PgnEditor", "Samples\PgnEditor\PgnEditor.fsproj", "{654AE05F-CAE1-42C1-901C-00A0C524A835}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PgnEditor", "Samples\PgnEditor\PgnEditor.fsproj", "{654AE05F-CAE1-42C1-901C-00A0C524A835}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Storage", "Storage\Storage.fsproj", "{81C27E60-DAA3-4556-A6C6-27B9F852B07A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,6 +130,10 @@ Global
 		{654AE05F-CAE1-42C1-901C-00A0C524A835}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{654AE05F-CAE1-42C1-901C-00A0C524A835}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{654AE05F-CAE1-42C1-901C-00A0C524A835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81C27E60-DAA3-4556-A6C6-27B9F852B07A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81C27E60-DAA3-4556-A6C6-27B9F852B07A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81C27E60-DAA3-4556-A6C6-27B9F852B07A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81C27E60-DAA3-4556-A6C6-27B9F852B07A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
