@@ -161,7 +161,7 @@ module Convert =
         let dct =
             let prnks = 
                 [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
-                |>Array.map(fun sq -> Square.Name)
+                |>Array.map(Square.Name)
             //keys list of empty squares,values is list of game indexes 
             let dct0 = new System.Collections.Generic.Dictionary<string,int[]>()
             let n_choose_k k = 
@@ -174,7 +174,7 @@ module Convert =
                 choose 0 k                           
             let full = 
                 [1..16]|>List.map(n_choose_k)|>List.concat
-                |>List.map(fun il -> il|>Set.ofList|>Set.toArray|>Array.map(fun i -> i.ToString())|>Array.reduce(fun a b -> a + " " + b))
+                |>List.map(fun il -> il|>Set.ofList|>Set.toArray|>Array.reduce(+))
             let dct =
                 full|>List.iter(fun sql -> dct0.Add(sql,[||]))
                 dct0
@@ -191,15 +191,15 @@ module Convert =
                 let sqto = mv|>Move.To
                 let rnkto = sqto|>Square.ToRank
                 if pc=Piece.WPawn && rnk=Rank2 || pc=Piece.BPawn && rnk=Rank7 then
-                    let nsql = sq::sql
-                    let nsqlstr = nsql|>Set.ofList|>Set.toArray|>Array.map(fun i -> i.ToString())|>Array.reduce(fun a b -> a + " " + b)
+                    let nsql = (sq|>Square.Name)::sql|>List.sort
+                    let nsqlstr = nsql|>List.toArray|>Array.reduce(+)
                     let cvl = dct.[nsqlstr]
                     let nvl = Array.append cvl [|id|]
                     dct.[nsqlstr] <- nvl
                     addgm id nsql imvl.Tail
                 elif cpc=Piece.WPawn && rnkto=Rank2 || cpc=Piece.BPawn && rnkto=Rank7 then
-                    let nsql = sqto::sql
-                    let nsqlstr = nsql|>Set.ofList|>Set.toArray|>Array.map(fun i -> i.ToString())|>Array.reduce(fun a b -> a + " " + b)
+                    let nsql = (sqto|>Square.Name)::sql|>List.sort
+                    let nsqlstr = nsql|>List.toArray|>Array.reduce(+)
                     let cvl = dct.[nsqlstr]
                     let nvl = Array.append cvl [|id|]
                     dct.[nsqlstr] <- nvl
