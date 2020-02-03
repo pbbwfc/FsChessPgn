@@ -1,57 +1,10 @@
-﻿namespace Storage
+﻿namespace FsChessDb
 
-//open FsChessPgn
 open FsChess
 open System.IO
 
-module T1 =
+module Convert =
 
-    type Hdr =
-        {
-            Num : int
-            White : string
-            W_Elo : string
-            Black : string
-            B_Elo : string
-            Result : string
-            Date : string
-            Event : string
-            Round : string
-            Site : string
-        }
-        member x.ToArr() = [|x.White;x.W_Elo;x.Black;x.B_Elo;x.Result;x.Date;x.Event;x.Round;x.Site|]
-        static member FromArr (i:int)(a:string[]) = {Num=i;White=a.[0];W_Elo=a.[1];Black=a.[2];B_Elo=a.[3];Result=a.[4];Date=a.[5];Event=a.[6];Round=a.[7];Site=a.[8]}
-        override x.ToString() =
-            let nl = System.Environment.NewLine
-            "[Event \"" + x.Event + "\"]" + nl +
-            "[Site \"" + x.Site + "\"]" + nl +
-            "[Date \"" + x.Date + "\"]" + nl +
-            "[Round \"" + x.Round + "\"]" + nl +
-            "[White \"" + x.White + "\"]" + nl +
-            "[Black \"" + x.Black + "\"]" + nl +
-            "[WhiteElo \"" + x.W_Elo + "\"]" + nl +
-            "[BlackElo \"" + x.B_Elo + "\"]" + nl +
-            "[Result \"" + x.Result + "\"]" + nl
-
-    type Mvs = Move[]
-    type BinPgn1 =
-        {
-            mutable Hdrs:Hdr[]
-            mutable MvsStrs:string[]
-            mutable Mvss:Mvs[]
-            mutable Indx:System.Collections.Generic.Dictionary<Set<Square>,int list>
-        }
-
-    let mutable CurPgn = {Hdrs=[||];MvsStrs=[||];Mvss=[||];Indx=System.Collections.Generic.Dictionary<Set<Square>,int list>()}
-    
-    //idea is to load pgn text file as array of Hdr plus array of MvsStr
-    //then parse as needed to change the MvsStr as MoveText
-    //Hdrs and this can use to create a normal pgn
-    //the also create Mvs for quick processing
-    //Then new binaries are Hdrs,MvsStr and Mvs
-    //Never need to laod the pgn text file again unless it is externally edited
-
-    //load pgn into Hdrs and MvsStr arrays
     type private State = 
         | Unknown
         | InMove
@@ -65,25 +18,28 @@ module T1 =
         | Invalid
         | FinishedInvalid
 
-    let ReadFromPgn(file : string) =
+    let FromPgn(file : string) =
+        let curPgn = new ChessPack()
         use stream = new FileStream(file, FileMode.Open)
         use sr = new StreamReader(stream)
         let nl = System.Environment.NewLine
         let hdremp i =
-            {Num=i;White="?";W_Elo="-";Black="?";B_Elo="-";Result="*";Date="???.??.??";Event="?";Round="?";Site="?"}
+            let h = new Hdr()
+            h.Num<-i;h.White<-"?";h.W_Elo<-"-";h.Black<-"?";h.B_Elo<-"-";h.Result<-"*";h.Date<-"???.??.??";h.Event<-"?";h.Round<-"?";h.Site<-"?"
+            h
 
         let addtag (tagstr:string) (ihdr:Hdr) =
             let k,v = tagstr.Trim([|'[';']'|]).Split([|'"'|])|>Array.map(fun s -> s.Trim())|>fun a -> a.[0],a.[1].Trim('"')
             match k with
-            | "Event" -> {ihdr with Event = v},true
-            | "Site" -> {ihdr with Site = v},true
-            | "Date" -> {ihdr with Date = v},true
-            | "Round" -> {ihdr with Round = v},true
-            | "White" -> {ihdr with White = v},true
-            | "Black" -> {ihdr with Black = v},true
-            | "Result" -> {ihdr with Result = v},true
-            | "WhiteElo" -> {ihdr with W_Elo = v},true
-            | "BlackElo" -> {ihdr with B_Elo = v},true
+            | "Event" -> ihdr.Event <- v;ihdr,true
+            | "Site" -> ihdr.Site  <- v;ihdr,true
+            | "Date" -> ihdr.Date <- v;ihdr,true
+            | "Round" -> ihdr.Round <- v;ihdr,true
+            | "White" -> ihdr.White <- v;ihdr,true
+            | "Black" -> ihdr.Black <- v;ihdr,true
+            | "Result" -> ihdr.Result <- v;ihdr,true
+            | "WhiteElo" -> ihdr.W_Elo <- v;ihdr,true
+            | "BlackElo" -> ihdr.B_Elo <- v;ihdr,true
             | "FEN" -> ihdr,false
             | _ ->
                 ihdr,true
@@ -107,8 +63,8 @@ module T1 =
                     getgms i false ok chdr (cmvtx+nl+lin) hdrs mvtxs
     
         let hdrs,mvstrs = getgms 0 true true (0|>hdremp) "" [] []
-        CurPgn.Hdrs <- hdrs|>List.rev|>List.toArray
-        CurPgn.MvsStrs <- mvstrs|>List.rev|>List.toArray
+        curPgn.Hdrs <- hdrs|>List.rev|>List.toArray
+        curPgn.MvsStrs <- mvstrs|>List.rev|>List.toArray
         //now need to extract the Mvs form each MvsStr
         let getmvs(mvsStr:string) =
             let byteArray = System.Text.Encoding.ASCII.GetBytes(mvsStr)
@@ -200,12 +156,14 @@ module T1 =
 
             let mvs = getmvs Unknown "" Board.Start []
             mvs
-        CurPgn.Mvss<- CurPgn.MvsStrs|>Array.map getmvs
+        curPgn.Mvss<- curPgn.MvsStrs|>Array.map getmvs
         //now need to create index from mvs
         let dct =
-            let prnks = [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
+            let prnks = 
+                [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
+                |>Array.map(fun sq -> Square.Name)
             //keys list of empty squares,values is list of game indexes 
-            let dct0 = new System.Collections.Generic.Dictionary<Set<Square>,int list>()
+            let dct0 = new System.Collections.Generic.Dictionary<string,int[]>()
             let n_choose_k k = 
                 let rec choose lo hi =
                     if hi = 0 then [[]]
@@ -214,9 +172,11 @@ module T1 =
                              for ks in choose (j+1) (hi-1) do
                                     yield prnks.[j] :: ks ]
                 choose 0 k                           
-            let full = [1..16]|>List.map(n_choose_k)|>List.concat
+            let full = 
+                [1..16]|>List.map(n_choose_k)|>List.concat
+                |>List.map(fun il -> il|>Set.ofList|>Set.toArray|>Array.map(fun i -> i.ToString())|>Array.reduce(fun a b -> a + " " + b))
             let dct =
-                full|>List.iter(fun sql -> dct0.Add(sql|>Set.ofList,[]))
+                full|>List.iter(fun sql -> dct0.Add(sql,[||]))
                 dct0
             dct
         let rec addgm id sql (imvl:Move list) =
@@ -232,75 +192,34 @@ module T1 =
                 let rnkto = sqto|>Square.ToRank
                 if pc=Piece.WPawn && rnk=Rank2 || pc=Piece.BPawn && rnk=Rank7 then
                     let nsql = sq::sql
-                    let cvl = dct.[nsql|>Set.ofList]
-                    let nvl = id::cvl
-                    dct.[nsql|>Set.ofList] <- nvl
+                    let nsqlstr = nsql|>Set.ofList|>Set.toArray|>Array.map(fun i -> i.ToString())|>Array.reduce(fun a b -> a + " " + b)
+                    let cvl = dct.[nsqlstr]
+                    let nvl = Array.append cvl [|id|]
+                    dct.[nsqlstr] <- nvl
                     addgm id nsql imvl.Tail
                 elif cpc=Piece.WPawn && rnkto=Rank2 || cpc=Piece.BPawn && rnkto=Rank7 then
-                        let nsql = sqto::sql
-                        let cvl = dct.[nsql|>Set.ofList]
-                        let nvl = id::cvl
-                        dct.[nsql|>Set.ofList] <- nvl
-                        addgm id nsql imvl.Tail
+                    let nsql = sqto::sql
+                    let nsqlstr = nsql|>Set.ofList|>Set.toArray|>Array.map(fun i -> i.ToString())|>Array.reduce(fun a b -> a + " " + b)
+                    let cvl = dct.[nsqlstr]
+                    let nvl = Array.append cvl [|id|]
+                    dct.[nsqlstr] <- nvl
+                    addgm id nsql imvl.Tail
                 else
                     addgm id sql imvl.Tail
         let dogm i mvs =
             addgm i [] (mvs|>List.ofArray)
-        CurPgn.Mvss|>Array.iteri dogm
-        CurPgn.Indx <- dct
+        curPgn.Mvss|>Array.iteri dogm
+        curPgn.Indx <- dct
+        curPgn
 
-    let ExportPgn(fn:string) = 
+    let ToPgn(fn:string) (curPgn:ChessPack) = 
         use stream = new FileStream(fn, FileMode.Create)
         use writer = new StreamWriter(stream)
-        for i = 0 to CurPgn.Hdrs.Length-1 do
-            writer.Write(CurPgn.Hdrs.[i].ToString())
-            writer.WriteLine(CurPgn.MvsStrs.[i])
+        for i = 0 to curPgn.Hdrs.Length-1 do
+            writer.Write(curPgn.Hdrs.[i].ToString())
+            writer.WriteLine(curPgn.MvsStrs.[i])
             writer.WriteLine()
     
-    let Save(fn:string) = 
-        let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
-        let hdrsfn = fn + ".hdrs"
-        let stream = new FileStream(hdrsfn, FileMode.Create, FileAccess.Write, FileShare.None)
-        let hdrsarr = CurPgn.Hdrs|>Array.map(fun h -> h.ToArr())
-        formatter.Serialize(stream, hdrsarr)
-        stream.Close()
-        let mvsstrsfn = fn + ".mvsstrs"
-        let stream = new FileStream(mvsstrsfn, FileMode.Create, FileAccess.Write, FileShare.None)
-        formatter.Serialize(stream, CurPgn.MvsStrs)
-        stream.Close()
-        let mvssfn = fn + ".mvss"
-        let stream = new FileStream(mvssfn, FileMode.Create, FileAccess.Write, FileShare.None)
-        formatter.Serialize(stream, CurPgn.Mvss)
-        stream.Close()
-        let indxfn = fn + ".indx"
-        let stream = new FileStream(indxfn, FileMode.Create, FileAccess.Write, FileShare.None)
-        formatter.Serialize(stream, CurPgn.Indx)
-        stream.Close()
+    let Save(fn:string) (curPgn:ChessPack) = fn|>curPgn.Save
 
-    let Load(fn:string) =
-        let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
-        let hdrsfn = fn + ".hdrs"
-        if File.Exists(hdrsfn) then
-            let stream = new FileStream(hdrsfn, FileMode.Open, FileAccess.Read, FileShare.Read)
-            let hdrsarr:string[][] = formatter.Deserialize(stream):?>string[][]
-            stream.Close()
-            CurPgn.Hdrs <- hdrsarr|>Array.mapi Hdr.FromArr
-        else failwith "hdrs missing"
-        let mvsstrsfn = fn + ".mvsstrs"
-        if File.Exists(mvsstrsfn) then
-            let stream = new FileStream(mvsstrsfn, FileMode.Open, FileAccess.Read, FileShare.Read)
-            CurPgn.MvsStrs <- formatter.Deserialize(stream):?>string[]
-            stream.Close()
-        else failwith "mvsstrs missing"
-        let mvssfn = fn + ".mvss"
-        if File.Exists(mvssfn) then
-            let stream = new FileStream(mvssfn, FileMode.Open, FileAccess.Read, FileShare.Read)
-            CurPgn.Mvss <- formatter.Deserialize(stream):?>Mvs[]
-            stream.Close()
-        else failwith "mvss missing"
-        let indxfn = fn + ".indx"
-        if File.Exists(indxfn) then
-            let stream = new FileStream(indxfn, FileMode.Open, FileAccess.Read, FileShare.Read)
-            CurPgn.Indx <- formatter.Deserialize(stream):?>System.Collections.Generic.Dictionary<Set<Square>,int list>
-            stream.Close()
-        else failwith "indx missing"
+    let Load(fn:string) = fn|>ChessPack.Load

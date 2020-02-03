@@ -29,6 +29,7 @@ The following Square related functions are provided in the module Square:
 |:----------------|:--------------------------------|:------------------------------------------------------------------------------------|
 | ToFile          | Square -> File                  | Gets the File for a Square                                                          |
 | ToRank          | Square -> Rank                  | Gets the Rank for a Square                                                          |
+| Name            | Square -> string                | Gets the Name for a Square                                                          |
 
 ## Piece
 

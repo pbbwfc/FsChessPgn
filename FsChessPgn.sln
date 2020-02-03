@@ -74,7 +74,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ShowStats", "Samples\ShowSt
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PgnEditor", "Samples\PgnEditor\PgnEditor.fsproj", "{654AE05F-CAE1-42C1-901C-00A0C524A835}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Storage", "Storage\Storage.fsproj", "{81C27E60-DAA3-4556-A6C6-27B9F852B07A}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Storage", "Storage\Storage.fsproj", "{81C27E60-DAA3-4556-A6C6-27B9F852B07A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessPack", "ChessPack\ChessPack.csproj", "{3606F5D3-7425-48F8-B72D-F4CEB7DFF36C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,6 +136,10 @@ Global
 		{81C27E60-DAA3-4556-A6C6-27B9F852B07A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81C27E60-DAA3-4556-A6C6-27B9F852B07A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81C27E60-DAA3-4556-A6C6-27B9F852B07A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3606F5D3-7425-48F8-B72D-F4CEB7DFF36C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3606F5D3-7425-48F8-B72D-F4CEB7DFF36C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3606F5D3-7425-48F8-B72D-F4CEB7DFF36C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3606F5D3-7425-48F8-B72D-F4CEB7DFF36C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

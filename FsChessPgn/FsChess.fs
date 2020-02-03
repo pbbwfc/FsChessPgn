@@ -22,6 +22,9 @@ module Square =
     ///Gets the Rank for a Square
     let ToRank = FsChessPgn.Square.ToRank
 
+    ///Gets the Name for a Square
+    let Name = FsChessPgn.Square.Name
+
 module Piece =
 
     ///Gets the string symbol for a Piece
