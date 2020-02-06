@@ -23,7 +23,7 @@ module Form =
         let fchtb = new TextBox(Text="Please select FCH file", Width=320, Height=35)
         let fchbtn = new Button(Text = "...",Width=30)
     
-        let logtb = new TextBox(Width=380, Height=320, Multiline=true, BorderStyle=BorderStyle.FixedSingle)
+        let logtb = new TextBox(Width=380, Height=320, Multiline=true, BorderStyle=BorderStyle.FixedSingle, ScrollBars = ScrollBars.Vertical)
         
         let hc3 =
             new FlowLayoutPanel(FlowDirection = FlowDirection.RightToLeft, 
