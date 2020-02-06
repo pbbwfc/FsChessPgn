@@ -7,19 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Icons\PgnEditor.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\opn.png" />
-    <EmbeddedResource Include="Images\sav.png" />
-    <EmbeddedResource Include="Images\sava.png" />
-    <Compile Include="DgvDb.fs" />
     <Compile Include="Form.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FsChess.WinForms\FsChess.WinForms.fsproj" />
+    <ProjectReference Include="..\FsChessDbLib\FsChessDbLib.fsproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
