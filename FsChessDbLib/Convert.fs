@@ -169,7 +169,7 @@ module Convert =
                 log("Black: " + cp.Hdrs.[i].Black)
                 [||]
 
-        cp.Mvss<- cp.MvsStrs|>Array.mapi getmvs
+        cp.Mvss<- cp.MvsStrs|>Array.Parallel.mapi getmvs
         log("Finished encoding moves")
         log("Starting creating index")
         //now need to create index from mvs
@@ -228,18 +228,21 @@ module Convert =
         log("Finished creating index")
         cp
 
-    let ToPgn(fn:string, curPgn:ChessPack, log:string -> unit) = 
+    let ToPgn(fn:string, cp:ChessPack, log:string -> unit) = 
         log("Starting saving file " + fn + " to disk")
 
         use stream = new FileStream(fn, FileMode.Create)
         use writer = new StreamWriter(stream)
-        for i = 0 to curPgn.Hdrs.Length-1 do
-            writer.Write(curPgn.Hdrs.[i].ToString())
-            writer.WriteLine(curPgn.MvsStrs.[i])
+        for i = 0 to cp.Hdrs.Length-1 do
+            writer.Write(cp.Hdrs.[i].ToString())
+            writer.WriteLine(cp.MvsStrs.[i])
             writer.WriteLine()
         log("Finished saving file")
     
-    let Save(fn:string) (curPgn:ChessPack) = fn|>curPgn.Save
+    let Save(fn:string, cp:ChessPack, log:string -> unit) = 
+        log("Starting saving file " + fn + " to disk")
+        fn|>cp.Save
+        log("Finished saving file")
 
     let Load(fn:string) = fn|>ChessPack.Load
 

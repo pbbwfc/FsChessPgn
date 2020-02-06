@@ -1,4 +1,4 @@
-﻿namespace PgnEditor
+﻿namespace FsChessDb
 
 open System
 open System.Windows.Forms

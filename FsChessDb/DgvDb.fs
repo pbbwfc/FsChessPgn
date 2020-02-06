@@ -1,4 +1,4 @@
-﻿namespace FsChess.WinForms
+﻿namespace FsChessDb
 
 open System.Drawing
 open System.Windows.Forms
