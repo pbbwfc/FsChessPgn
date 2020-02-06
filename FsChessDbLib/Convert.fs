@@ -18,8 +18,11 @@ module Convert =
         | Invalid
         | FinishedInvalid
 
-    let FromPgn(file : string) =
-        let curPgn = new ChessPack()
+    let FromPgn(file:string, log:string -> unit) =
+        log("Starting conversion from " + file)
+        log("Starting loading headers")
+        
+        let cp = new ChessPack()
         use stream = new FileStream(file, FileMode.Open)
         use sr = new StreamReader(stream)
         let nl = System.Environment.NewLine
@@ -63,100 +66,112 @@ module Convert =
                     getgms i false ok chdr (cmvtx+nl+lin) hdrs mvtxs
     
         let hdrs,mvstrs = getgms 0 true true (0|>hdremp) "" [] []
-        curPgn.Hdrs <- hdrs|>List.rev|>List.toArray
-        curPgn.MvsStrs <- mvstrs|>List.rev|>List.toArray
+        cp.Hdrs <- hdrs|>List.rev|>List.toArray
+        cp.MvsStrs <- mvstrs|>List.rev|>List.toArray
+        log("Finished loading header")
+        log("Starting encoding moves")
         //now need to extract the Mvs form each MvsStr
-        let getmvs(mvsStr:string) =
-            let byteArray = System.Text.Encoding.ASCII.GetBytes(mvsStr)
-            use streamm = new MemoryStream(byteArray)
-            use srm = new StreamReader(streamm)
-            let nl = System.Environment.NewLine
+        let getmvs i (mvsStr:string) =
+            try
+                let byteArray = System.Text.Encoding.ASCII.GetBytes(mvsStr)
+                use streamm = new MemoryStream(byteArray)
+                use srm = new StreamReader(streamm)
+                let nl = System.Environment.NewLine
 
-            let rec proclin st cstr s bd mvl = 
-                if s = "" then 
-                    match st with
-                    |InMove ->
-                        let mv = cstr|>FsChessPgn.MoveUtil.fromSAN bd
-                        let nbd = bd|>Board.Push mv
-                        Unknown,"",nbd, mv::mvl
-                    |InComment(_) |InRAV(_) -> st, "", bd, mvl
-                    |Unknown |InNum -> st, "", bd, mvl
-                    |Invalid |FinishedOK |FinishedInvalid -> failwith "Invalid state at end of line"
-                    |_ ->  Unknown,"",bd,mvl
-                else 
-                    let hd = s.[0]
-                    let tl = s.[1..]
-                    match st with
-                    |InComment(cl) -> 
-                        if hd='}' && cl=1 then
-                            proclin Unknown "" tl bd mvl
-                        elif hd='}' then
-                            proclin (InComment(cl-1)) "" tl bd mvl
-                        elif hd='{' then
-                            proclin (InComment(cl+1)) "" tl bd mvl
-                        else
-                            proclin st "" tl bd mvl
-                    |InSingleLineComment ->
-                        proclin st "" tl bd mvl
-                    |InRAV(cl) -> 
-                        if hd=')' && cl=1 then
-                            proclin Unknown "" tl bd mvl
-                        elif hd=')' then
-                            proclin (InRAV(cl-1)) "" tl bd mvl
-                        elif hd='(' then
-                            proclin (InRAV(cl+1)) "" tl bd mvl
-                        else
-                            proclin st "" tl bd mvl
-                    |InNAG -> 
-                        if hd=' ' then
-                            proclin Unknown "" tl bd mvl
-                        else
-                            proclin st "" tl bd mvl
-                    |InNum -> 
-                        if System.Char.IsNumber(hd) || hd = '.' || hd = ' ' //&& tl.Length>0 && tl.StartsWith(".")
-                        then
-                            proclin st "" tl bd mvl
-                        elif hd='/'||hd='-' then
-                            proclin InRes "" tl bd mvl
-                        else
-                            proclin InMove (hd.ToString()) tl bd mvl
-                    |InRes -> 
-                        proclin st "" tl bd mvl
-                    |Invalid -> 
-                        proclin st "" tl bd mvl
-                    |InMove -> 
-                        if hd=' ' then
+                let rec proclin st cstr s bd mvl = 
+                    if s = "" then 
+                        match st with
+                        |InMove ->
                             let mv = cstr|>FsChessPgn.MoveUtil.fromSAN bd
                             let nbd = bd|>Board.Push mv
-                            proclin Unknown "" tl nbd (mv::mvl)
-                        else
-                            proclin st (cstr+hd.ToString()) tl bd mvl
-                    |FinishedOK |FinishedInvalid -> st, cstr, bd, mvl
-                    |Unknown -> 
-                        let st, ns = 
-                            match hd with
-                            | '{' -> InComment(1), s.[1..]
-                            | '(' -> InRAV(1), s.[1..]
-                            | '$' -> InNAG, s.[1..]
-                            | '*' -> InRes, s
-                            | ';' -> InSingleLineComment, s.[1..]
-                            | c when System.Char.IsNumber(c) || c = '.' -> InNum, s
-                            | ' ' -> Unknown, s.[1..]
-                            | _ -> InMove, s
-                        proclin st cstr ns bd mvl
+                            Unknown,"",nbd, mv::mvl
+                        |InComment(_) |InRAV(_) -> st, "", bd, mvl
+                        |Unknown |InNum -> st, "", bd, mvl
+                        |Invalid |FinishedOK |FinishedInvalid -> failwith "Invalid state at end of line"
+                        |_ ->  Unknown,"",bd,mvl
+                    else 
+                        let hd = s.[0]
+                        let tl = s.[1..]
+                        match st with
+                        |InComment(cl) -> 
+                            if hd='}' && cl=1 then
+                                proclin Unknown "" tl bd mvl
+                            elif hd='}' then
+                                proclin (InComment(cl-1)) "" tl bd mvl
+                            elif hd='{' then
+                                proclin (InComment(cl+1)) "" tl bd mvl
+                            else
+                                proclin st "" tl bd mvl
+                        |InSingleLineComment ->
+                            proclin st "" tl bd mvl
+                        |InRAV(cl) -> 
+                            if hd=')' && cl=1 then
+                                proclin Unknown "" tl bd mvl
+                            elif hd=')' then
+                                proclin (InRAV(cl-1)) "" tl bd mvl
+                            elif hd='(' then
+                                proclin (InRAV(cl+1)) "" tl bd mvl
+                            else
+                                proclin st "" tl bd mvl
+                        |InNAG -> 
+                            if hd=' ' then
+                                proclin Unknown "" tl bd mvl
+                            else
+                                proclin st "" tl bd mvl
+                        |InNum -> 
+                            if System.Char.IsNumber(hd) || hd = '.' || hd = ' ' //&& tl.Length>0 && tl.StartsWith(".")
+                            then
+                                proclin st "" tl bd mvl
+                            elif hd='/'||hd='-' then
+                                proclin InRes "" tl bd mvl
+                            else
+                                proclin InMove (hd.ToString()) tl bd mvl
+                        |InRes -> 
+                            proclin st "" tl bd mvl
+                        |Invalid -> 
+                            proclin st "" tl bd mvl
+                        |InMove -> 
+                            if hd=' ' then
+                                let mv = cstr|>FsChessPgn.MoveUtil.fromSAN bd
+                                let nbd = bd|>Board.Push mv
+                                proclin Unknown "" tl nbd (mv::mvl)
+                            else
+                                proclin st (cstr+hd.ToString()) tl bd mvl
+                        |FinishedOK |FinishedInvalid -> st, cstr, bd, mvl
+                        |Unknown -> 
+                            let st, ns = 
+                                match hd with
+                                | '{' -> InComment(1), s.[1..]
+                                | '(' -> InRAV(1), s.[1..]
+                                | '$' -> InNAG, s.[1..]
+                                | '*' -> InRes, s
+                                | ';' -> InSingleLineComment, s.[1..]
+                                | c when System.Char.IsNumber(c) || c = '.' -> InNum, s
+                                | ' ' -> Unknown, s.[1..]
+                                | _ -> InMove, s
+                            proclin st cstr ns bd mvl
 
-            let rec getmvs st cstr bd mvl = 
-                let lin = srm.ReadLine()
-                if lin |> isNull then mvl|>List.rev|>List.toArray
-                else 
-                    let nst, ncstr, nbd, nmvl = proclin st cstr lin bd mvl
-                    if nst = FinishedOK then nmvl|>List.rev|>List.toArray
-                    elif nst = FinishedInvalid then [||]
-                    else getmvs nst ncstr nbd nmvl
+                let rec getmvs st cstr bd mvl = 
+                    let lin = srm.ReadLine()
+                    if lin |> isNull then mvl|>List.rev|>List.toArray
+                    else 
+                        let nst, ncstr, nbd, nmvl = proclin st cstr lin bd mvl
+                        if nst = FinishedOK then nmvl|>List.rev|>List.toArray
+                        elif nst = FinishedInvalid then [||]
+                        else getmvs nst ncstr nbd nmvl
 
-            let mvs = getmvs Unknown "" Board.Start []
-            mvs
-        curPgn.Mvss<- curPgn.MvsStrs|>Array.map getmvs
+                let mvs = getmvs Unknown "" Board.Start []
+                mvs
+            with ex ->
+                log("Exception: " + ex.Message)
+                log("Game number: " + i.ToString())
+                log("White: " + cp.Hdrs.[i].White)
+                log("Black: " + cp.Hdrs.[i].Black)
+                [||]
+
+        cp.Mvss<- cp.MvsStrs|>Array.mapi getmvs
+        log("Finished encoding moves")
+        log("Starting creating index")
         //now need to create index from mvs
         let dct =
             let prnks = 
@@ -208,18 +223,26 @@ module Convert =
                     addgm id sql imvl.Tail
         let dogm i mvs =
             addgm i [] (mvs|>List.ofArray)
-        curPgn.Mvss|>Array.iteri dogm
-        curPgn.Indx <- dct
-        curPgn
+        cp.Mvss|>Array.iteri dogm
+        cp.Indx <- dct
+        log("Finished creating index")
+        cp
 
-    let ToPgn(fn:string) (curPgn:ChessPack) = 
+    let ToPgn(fn:string, curPgn:ChessPack, log:string -> unit) = 
+        log("Starting saving file " + fn + " to disk")
+
         use stream = new FileStream(fn, FileMode.Create)
         use writer = new StreamWriter(stream)
         for i = 0 to curPgn.Hdrs.Length-1 do
             writer.Write(curPgn.Hdrs.[i].ToString())
             writer.WriteLine(curPgn.MvsStrs.[i])
             writer.WriteLine()
+        log("Finished saving file")
     
     let Save(fn:string) (curPgn:ChessPack) = fn|>curPgn.Save
 
     let Load(fn:string) = fn|>ChessPack.Load
+
+    let PgnToFch(pgnfn:string, fchfn:string, log:string -> unit) =
+        let cp = FromPgn(pgnfn,log)
+        ToPgn(fchfn,cp,log)
