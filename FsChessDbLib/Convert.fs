@@ -248,4 +248,4 @@ module Convert =
 
     let PgnToFch(pgnfn:string, fchfn:string, log:string -> unit) =
         let cp = FromPgn(pgnfn,log)
-        ToPgn(fchfn,cp,log)
+        Save(fchfn,cp,log)
