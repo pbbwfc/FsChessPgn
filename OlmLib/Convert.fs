@@ -1,4 +1,4 @@
-﻿namespace FsChessDb
+﻿namespace Olm
 
 open FsChess
 open System.IO

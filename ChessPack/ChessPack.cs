@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using MessagePack;
 
-namespace FsChessDb
+namespace Olm
 {
     [MessagePackObject]
 

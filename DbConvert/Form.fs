@@ -2,7 +2,7 @@
 
 open System
 open System.Windows.Forms
-open FsChessDb
+open Olm
 
 module Form =
 
@@ -42,12 +42,13 @@ module Form =
                 fchtb.Text <- dlg.FileName
             
         let convert(e) =
+            this.Cursor <- Cursors.WaitCursor
             let nl = System.Environment.NewLine
             let log txt =
                 logtb.Text <- logtb.Text + nl + DateTime.Now.ToLongTimeString() + "  " + txt
                 Application.DoEvents()
             Convert.PgnToFch(pgntb.Text,fchtb.Text,log)
-
+            this.Cursor <- Cursors.Default
 
         do 
             hc1.Controls.Add(pgnbtn)

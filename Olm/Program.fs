@@ -1,5 +1,4 @@
-﻿namespace FsChessDb
-
+﻿namespace Olm
 open System
 open System.Windows.Forms
 open Form

@@ -1,33 +1,35 @@
-﻿namespace FsChessDb
+﻿namespace Olm
 
 open System
 open System.Drawing
 open System.Windows.Forms
 open FsChess
-open FsChess.WinForms
 
 module Form =
     let img nm =
         let thisExe = System.Reflection.Assembly.GetExecutingAssembly()
-        let file = thisExe.GetManifestResourceStream("PgnEditor.Images." + nm)
+        let file = thisExe.GetManifestResourceStream("Olm.Images." + nm)
         Image.FromStream(file)
     let ico nm =
         let thisExe = System.Reflection.Assembly.GetExecutingAssembly()
-        let file = thisExe.GetManifestResourceStream("PgnEditor.Icons." + nm)
+        let file = thisExe.GetManifestResourceStream("Olm.Icons." + nm)
         new Icon(file)
 
     type FrmMain() as this =
-        inherit Form(Text = "PGN Editor", WindowState = FormWindowState.Maximized, Icon = ico "PgnEditor.ico", IsMdiContainer = true)
+        inherit Form(Text = "Olm", WindowState = FormWindowState.Maximized, Icon = ico "PgnEditor.ico", IsMdiContainer = true)
         
-        let bd,pgn,gms,sts = CreateLnkAll()
+        let bd = new PnlBoard(Dock=DockStyle.Left)
+        let pgn = new WbPgn(Dock=DockStyle.Fill)
+        let sts = new WbStats(Dock=DockStyle.Top)
+        let gms = new DgvDb(Dock=DockStyle.Top)
 
         let ldpgn() =
-            let dlg = new OpenFileDialog(Filter = "pgn files (*.pgn)|*.pgn")
+            let dlg = new OpenFileDialog(Filter = "fch files (*.fch)|*.fch")
             if dlg.ShowDialog() = DialogResult.OK then
                 this.Cursor <- Cursors.WaitCursor
                 let pgnfil = dlg.FileName
                 gms.SetPgn(pgnfil)
-                this.Text <- "PGN Editor - " + pgnfil
+                this.Text <- "Olm - " + pgnfil
                 this.Cursor <- Cursors.Default
 
         let svpgn() = 
@@ -36,12 +38,12 @@ module Form =
             this.Cursor <- Cursors.Default
 
         let svapgn() =
-            let dlg = new SaveFileDialog(Filter = "pgn files (*.pgn)|*.pgn")
+            let dlg = new SaveFileDialog(Filter = "fch files (*.fch)|*.fch")
             if dlg.ShowDialog() = DialogResult.OK then
                 this.Cursor <- Cursors.WaitCursor
                 let pgnfil = dlg.FileName
                 gms.SaveAsPgn(pgnfil)
-                this.Text <- "PGN Editor - " + pgnfil
+                this.Text <- "Olm - " + pgnfil
                 this.Cursor <- Cursors.Default
 
         let nwgm() = 
@@ -160,7 +162,16 @@ module Form =
             tppnl|>this.Controls.Add
             tb|>this.Controls.Add
             mm|>this.Controls.Add
-            
-
             //events
+            pgn.BdChng |> Observable.add bd.SetBoard
+            bd.MvMade|>Observable.add pgn.DoMove
+            bd.BdChng |> Observable.add gms.SetBoard
+            pgn.BdChng |> Observable.add gms.SetBoard
+            gms.FiltChng |> Observable.add sts.CalcStats
+            sts.MvSel |> Observable.add bd.DoMove
+            gms.GmSel |> Observable.add pgn.SwitchGame
+            pgn.GmChng |> Observable.add gms.ChangeGame
+            pgn.HdrChng |> Observable.add gms.ChangeGameHdr
+            gms.PgnChng |> Observable.add bd.SetBoard 
+
             gms.GmSel|>Observable.add (fun gm -> lbl.Text <- gm.WhitePlayer + " vs. " + gm.BlackPlayer) 

@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FsChessDbLib\FsChessDbLib.fsproj" />
+    <ProjectReference Include="..\OlmLib\OlmLib.fsproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

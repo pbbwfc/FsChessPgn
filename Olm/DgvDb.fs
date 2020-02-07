@@ -1,4 +1,4 @@
-﻿namespace FsChessDb
+﻿namespace Olm
 
 open System.Drawing
 open System.Windows.Forms
@@ -21,7 +21,7 @@ module Library4 =
             Site : string
         }
     
-    type DgvGames() as gms =
+    type DgvDb() as gms =
         inherit DataGridView(Width = 800, Height = 250, 
                 AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders, 
                 ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single,
