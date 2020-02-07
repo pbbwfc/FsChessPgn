@@ -391,21 +391,23 @@ module Library2 =
         member pgn.SwitchGame(gm:Game,hdr:Hdr,mvstr:string,mvs:Move[]) = 
             chdr <- hdr
             cmvs <- mvs
-            //TODO need to parse string into entries
+            //parse string into entries
+            msel <- mvstr|>Game.GetEntries
             game <- gm|>Game.GetaMoves
             pgn.DocumentText <- mvtags()
             //need to select move that matches current board
-            let rec getnxt ci (mtel:MoveTextEntry list) =
+            let rec getnxt cbd ci (mtel:MvStrEntry list) =
                 if mtel.IsEmpty then -1
                 else
                     let mte = mtel.Head
                     match mte with
-                    |HalfMoveEntry(_,_,_,amv) ->
-                        if amv.IsNone then failwith "should have valid aMove"
-                        elif board = amv.Value.PostBrd then ci
-                        else getnxt (ci+1) mtel.Tail
-                    |_ -> getnxt (ci+1) mtel.Tail
-            let ni = getnxt 0 game.MoveText
+                    |MvEntry(_,_,_) ->
+                        let mv = cmvs.[ci]
+                        let nbd = cbd|>Board.Push mv
+                        if nbd=board then ci
+                        else getnxt nbd (ci+1) mtel.Tail
+                    |_ -> getnxt cbd (ci+1) mtel.Tail
+            let ni = getnxt Board.Start 0 msel
             irs <- [ni]
             //now need to select the element
             let id = getir irs

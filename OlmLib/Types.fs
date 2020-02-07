@@ -23,13 +23,14 @@ module Types =
         |Bmoderate =17
         |Wdecisive = 18
         |Bdecisive = 19
+    let Ng i = enum<Nag> (i)
 
     type MvStrEntry =
         |MvEntry of int * bool * string
         |CommEntry of string
         |EndEntry of GmResult
         |NagEntry of Nag
-        |RAVEntry of MvStrEntry list
+        |RvEntry of MvStrEntry list
 
     type MvStats =
         {
