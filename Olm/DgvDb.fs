@@ -58,7 +58,7 @@ module Library4 =
                     cmvstr <- cp.MvsStrs.[crw]
                     cmvs <- cp.Mvss.[crw]
                     cgm <- Game.Set(cp,crw)
-                    cgm|>selEvt.Trigger
+                    (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
                 elif dr=DialogResult.No then
                     let hdr,mv = filtgms.[rw]
                     crw <- hdr.Num
@@ -66,7 +66,7 @@ module Library4 =
                     cmvstr <- cp.MvsStrs.[crw]
                     cmvs <- cp.Mvss.[crw]
                     cgm <- Game.Set(cp,crw)
-                    cgm|>selEvt.Trigger
+                    (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
             else
                 let hdr,mv = filtgms.[rw]
                 crw <- hdr.Num
@@ -74,7 +74,7 @@ module Library4 =
                 cmvstr <- cp.MvsStrs.[crw]
                 cmvs <- cp.Mvss.[crw]
                 cgm <- Game.Set(cp,crw)
-                cgm|>selEvt.Trigger
+                (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
             gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
         
         let setup() =
@@ -104,7 +104,7 @@ module Library4 =
                 cmvstr <- cp.MvsStrs.[crw]
                 cmvs <- cp.Mvss.[crw]
                 cgm <- Game.Set(cp,crw)
-                cgm|>selEvt.Trigger
+                (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
                 cbd|>pgnEvt.Trigger
 
         ///Saves the PGN file
@@ -170,7 +170,7 @@ module Library4 =
             cmvstr <- ""
             cmvs <- [||]
             gmchg <- false
-            cgm|>selEvt.Trigger
+            (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
 
         ///Deletes selected Game
         member gms.DeleteGame() =
@@ -197,7 +197,7 @@ module Library4 =
                 cmvstr <- cp.MvsStrs.[crw]
                 cmvs <- cp.Mvss.[crw]
                 cgm <- Game.Set(cp,crw)
-                cgm|>selEvt.Trigger
+                (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
                 gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
 
         ///Export filtered games

@@ -12,6 +12,9 @@ module Library2 =
         
         //mutables
         let mutable game = Game.Start
+        let mutable msel:MvStrEntry list = []
+        let mutable chdr:Hdr = new Hdr()
+        let mutable cmvs:Move[] = [||]
         let mutable board = Board.Start
         let mutable oldstyle:(HtmlElement*string) option = None
         let mutable irs = [-1]
@@ -385,7 +388,10 @@ module Library2 =
             game
 
         ///Switches to another game with the same position
-        member pgn.SwitchGame(gm:Game) = 
+        member pgn.SwitchGame(gm:Game,hdr:Hdr,mvstr:string,mvs:Move[]) = 
+            chdr <- hdr
+            cmvs <- mvs
+            //TODO need to parse string into entries
             game <- gm|>Game.GetaMoves
             pgn.DocumentText <- mvtags()
             //need to select move that matches current board
