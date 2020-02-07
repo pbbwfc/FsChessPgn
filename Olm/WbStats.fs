@@ -2,8 +2,6 @@ namespace Olm
 
 open System.Windows.Forms
 open System.Drawing
-open FsChess
-open FsChess.Pgn
 
 [<AutoOpen>]
 module Library5 =
@@ -80,8 +78,8 @@ module Library5 =
             stats.DocumentText <- bdsttags()
   
         ///Calculates the Stats to be displayed
-        member stats.CalcStats(fgms:(int * Game * string) list) = 
-            cbdst <- fgms|>Stats.Get
+        member stats.CalcStats(fgms:(Hdr*FsChess.Types.Move)[],bd:FsChess.Types.Brd,cp:ChessPack) = 
+            cbdst <- (fgms,bd,cp)|>Stats.Get
             stats.DocumentText <- bdsttags()
   
         //publish

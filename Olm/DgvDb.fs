@@ -24,7 +24,7 @@ module Library4 =
         let mutable allgms:(int * Game) list = []
         let mutable indx = new System.Collections.Generic.Dictionary<Set<Square>,int list>()
         let mutable cbd = Board.Start
-        let mutable filtgms:Hdr[] = [||]
+        let mutable filtgms:(Hdr*Move)[] = [||]
         let mutable crw = -1
         let mutable cgm = GameEMP
         let mutable gmchg = false
@@ -36,21 +36,6 @@ module Library4 =
         let selEvt = new Event<_>()
         let pgnEvt = new Event<_>()
 
-        //let igm2gmui (igmmv:(int * Game * string)) =
-        //    let i,gm,mv = igmmv
-        //    {
-        //        Num = i+1
-        //        White = gm.WhitePlayer
-        //        W_Elo = gm.WhiteElo
-        //        Black = gm.BlackPlayer
-        //        B_Elo = gm.BlackElo
-        //        Result = gm.Result|>Result.ToUnicode
-        //        Date = gm|>GameDate.ToStr
-        //        Event = gm.Event
-        //        Round = gm.Round
-        //        Site = gm.Site
-        //    }
-        
         let dosave() =
             if crw=0 then
                 ((0,cgm)::allgms.Tail)|>List.map snd|>Games.WriteFile fch
@@ -96,15 +81,15 @@ module Library4 =
             fch <- ifch
             cp <- fch|>Pack.Load
             cbd <- Board.Start
-            filtgms <- cp.Hdrs
+            filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then FsChess.Types.MoveEmpty else cp.Mvss.[i].[0]))
             gmsui.Clear()
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
-            dispgms|>Array.iter(fun hdr -> gmsui.Add(hdr))
+            dispgms|>Array.iter(fun (hdr,mv) -> gmsui.Add(hdr))
             gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
-            filtgms|>filtEvt.Trigger
+            (filtgms,cbd,cp)|>filtEvt.Trigger
             gmchg <- false
             if dispgms.Length>0 then
-                let hdr = dispgms.[0]
+                let hdr,mv = dispgms.[0]
                 crw <- hdr.Num
                 cgm <- Game.Set(cp,crw)
                 cgm|>selEvt.Trigger
@@ -128,7 +113,7 @@ module Library4 =
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
             //dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
             gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
-            filtgms|>filtEvt.Trigger
+            (filtgms,cbd,cp)|>filtEvt.Trigger
 
         ///Changes the contents of the Game that is selected
         member _.ChangeGame(igm:Game) =
@@ -169,7 +154,7 @@ module Library4 =
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
             //dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
             gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
-            filtgms|>filtEvt.Trigger
+            (filtgms,cbd,cp)|>filtEvt.Trigger
             gmchg <- false
             cgm|>selEvt.Trigger
 

@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="GameResult.fs" />
     <Compile Include="Pack.fs" />
     <Compile Include="Game.fs" />
     <Compile Include="Convert.fs" />
