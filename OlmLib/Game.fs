@@ -99,7 +99,7 @@ module Game =
                     elif hd='/'||hd='-' then
                         proclin InRes (cstr+hd.ToString()) tl mno isw msel
                     else
-                        proclin InMove (cstr+hd.ToString()) tl mno isw msel
+                        proclin InMove (hd.ToString()) tl mno isw msel
                 |InRes -> 
                     proclin st (cstr+hd.ToString()) tl mno isw msel
                 |Invalid -> 
@@ -139,8 +139,30 @@ module Game =
         let msel = getgm Unknown "" 1 true []
         msel
 
-    
-    
+    let rec MoveStr(writer:TextWriter) (entry:MvStrEntry) =
+        match entry with
+        |MvEntry(mn,isw,mv) -> 
+            if isw then
+                writer.Write(mn)
+                writer.Write(". ")
+            writer.Write(mv)
+        |CommEntry(str) -> writer.Write("{" + str + "}")
+        |EndEntry(gr) -> writer.Write(GmResult.ToUnicode(gr))
+        |NagEntry(cd) -> writer.Write("$" + (cd|>int).ToString())
+        |RvEntry(ml) -> 
+            writer.Write("(")
+            writer.Write(MoveText(ml))
+            writer.Write(")")
+        writer.ToString()
+
+     and MoveText(ml:MvStrEntry list) :string =
+         let writer = new StringWriter()
+         let doent i m =
+             let str = MoveStr writer m
+             if i<ml.Length-1 then str + " " else str
+
+         let str = ml|>List.mapi doent|>List.reduce(+)
+         str
     
     
     //TODO need to remove all code from FsChessPgn

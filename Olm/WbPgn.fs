@@ -56,24 +56,25 @@ module Library2 =
             oldstyle <- Some(mve,curr)
             mve.Style <- "BACKGROUND-COLOR: powderblue"
         
-        let rec mvtag ravno i (mte:MoveTextEntry) =
+        let rec mvtag ravno i (mte:MvStrEntry) =
             let ir = i|||(ravno<<<8)
             let idstr = "id = \"" + ir.ToString() + "\""
+            let writer = new System.IO.StringWriter()
             match mte with
-            |HalfMoveEntry(_,_,_,_) ->
-                let str = mte|>Game.MoveStr
+            |MvEntry(_,_,_) ->
+                let str = mte|>Olm.Game.MoveStr writer
                 if ravno=0 then " <span " + idstr + " class=\"mv\" style=\"color:black\">" + str + "</span>"
                 else " <span " + idstr + " class=\"mv\" style=\"color:darkslategray\">" + str + "</span>"
-            |CommentEntry(_) ->
-                let str = (mte|>Game.MoveStr).Trim([|'{';'}'|])
+            |CommEntry(_) ->
+                let str = (mte|>Olm.Game.MoveStr writer).Trim([|'{';'}'|])
                 "<div " + idstr + " class=\"cm\" style=\"color:green\">" + str + "</div>"
-            |GameEndEntry(_) ->
-                let str = mte|>Game.MoveStr
+            |EndEntry(_) ->
+                let str = mte|>Olm.Game.MoveStr writer
                 " <span " + idstr + " class=\"ge\" style=\"color:blue\">" + str + "</span>"
-            |NAGEntry(ng) ->
-                let str = ng|>Game.NAGHtm
+            |NagEntry(ng) ->
+                let str = mte|>Olm.Game.MoveStr writer
                 "<span " + idstr + " class=\"ng\" style=\"color:darkred\">" + str + "</span>"
-            |RAVEntry(mtel) ->
+            |RvEntry(mtel) ->
                 let indent = 
                     let rirs = irs|>getirs ir
                     let ind = rirs.Length * 2
@@ -82,11 +83,10 @@ module Library2 =
                 "<div style=\"color:darkslategray" + indent + "\">(" + str + ")</div>"
 
         let mvtags() = 
-            let mt = game.MoveText
-            if mt.IsEmpty then hdr+ftr
+            if msel.IsEmpty then hdr+ftr
             else
                 hdr +
-                (mt|>List.mapi (mvtag 0)|>List.reduce(+))
+                (msel|>List.mapi (mvtag 0)|>List.reduce(+))
                 + ftr
         
         //dialogs
