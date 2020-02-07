@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Pack.fs" />
+    <Compile Include="Game.fs" />
     <Compile Include="Convert.fs" />
+    <Compile Include="Stats.fs" />
   </ItemGroup>
 
   <ItemGroup>

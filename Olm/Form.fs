@@ -27,9 +27,9 @@ module Form =
             let dlg = new OpenFileDialog(Filter = "fch files (*.fch)|*.fch")
             if dlg.ShowDialog() = DialogResult.OK then
                 this.Cursor <- Cursors.WaitCursor
-                let pgnfil = dlg.FileName
-                gms.SetPgn(pgnfil)
-                this.Text <- "Olm - " + pgnfil
+                let fchfil = dlg.FileName
+                gms.SetFch(fchfil)
+                this.Text <- "Olm - " + fchfil
                 this.Cursor <- Cursors.Default
 
         let svpgn() = 
@@ -61,7 +61,7 @@ module Form =
             if dlg.ShowDialog() = DialogResult.OK then
                 this.Cursor <- Cursors.WaitCursor
                 let filtfil = dlg.FileName
-                gms.ExportFilter(filtfil)
+                //gms.ExportFilter(filtfil)
                 this.Cursor <- Cursors.Default
         
         let mm =

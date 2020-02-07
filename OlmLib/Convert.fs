@@ -239,13 +239,6 @@ module Convert =
             writer.WriteLine()
         log("Finished saving file")
     
-    let Save(fn:string, cp:ChessPack, log:string -> unit) = 
-        log("Starting saving file " + fn + " to disk")
-        fn|>cp.Save
-        log("Finished saving file")
-
-    let Load(fn:string) = fn|>ChessPack.Load
-
     let PgnToFch(pgnfn:string, fchfn:string, log:string -> unit) =
         let cp = FromPgn(pgnfn,log)
-        Save(fchfn,cp,log)
+        Pack.Save(fchfn,cp,log)
