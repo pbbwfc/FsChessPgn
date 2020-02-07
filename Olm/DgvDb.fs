@@ -24,6 +24,9 @@ module Library4 =
         let mutable cbd = Board.Start
         let mutable filtgms:(Hdr*Move)[] = [||]
         let mutable crw = -1
+        let mutable chdr = new Hdr()
+        let mutable cmvstr = ""
+        let mutable cmvs = [||]
         let mutable cgm = GameEMP
         let mutable gmchg = false
         let mutable gmsui = new System.ComponentModel.BindingList<Hdr>()
@@ -35,7 +38,10 @@ module Library4 =
         let pgnEvt = new Event<_>()
 
         let dosave() =
-            //TODO need to update the hdr and mvtxt
+            //TODO need to update index
+            cp.Hdrs.[crw] <- chdr
+            cp.MvsStrs.[crw] <- cmvstr
+            cp.Mvss.[crw] <- cmvs
             fch|>cp.Save
         
         let doclick(e:DataGridViewCellEventArgs) =
@@ -48,16 +54,25 @@ module Library4 =
                     dosave()
                     let hdr,mv = filtgms.[rw]
                     crw <- hdr.Num
+                    chdr <- hdr
+                    cmvstr <- cp.MvsStrs.[crw]
+                    cmvs <- cp.Mvss.[crw]
                     cgm <- Game.Set(cp,crw)
                     cgm|>selEvt.Trigger
                 elif dr=DialogResult.No then
                     let hdr,mv = filtgms.[rw]
                     crw <- hdr.Num
+                    chdr <- hdr
+                    cmvstr <- cp.MvsStrs.[crw]
+                    cmvs <- cp.Mvss.[crw]
                     cgm <- Game.Set(cp,crw)
                     cgm|>selEvt.Trigger
             else
                 let hdr,mv = filtgms.[rw]
                 crw <- hdr.Num
+                chdr <- hdr
+                cmvstr <- cp.MvsStrs.[crw]
+                cmvs <- cp.Mvss.[crw]
                 cgm <- Game.Set(cp,crw)
                 cgm|>selEvt.Trigger
             gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
@@ -85,6 +100,9 @@ module Library4 =
             if dispgms.Length>0 then
                 let hdr,mv = dispgms.[0]
                 crw <- hdr.Num
+                chdr <- hdr
+                cmvstr <- cp.MvsStrs.[crw]
+                cmvs <- cp.Mvss.[crw]
                 cgm <- Game.Set(cp,crw)
                 cgm|>selEvt.Trigger
                 cbd|>pgnEvt.Trigger
@@ -119,7 +137,7 @@ module Library4 =
             cgm <- igm
             gmchg <- true
             let rw = gms.SelectedCells.[0].RowIndex
-            let chdr = gmsui.[rw]
+            chdr <- gmsui.[rw]
             chdr.White<-cgm.WhitePlayer
             chdr.W_Elo<-cgm.WhiteElo
             chdr.Black<-cgm.BlackPlayer
@@ -148,6 +166,9 @@ module Library4 =
             dispgms|>Array.iter(fun (hdr,mv) -> gmsui.Add(hdr))
             gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
             (filtgms,cbd,cp)|>filtEvt.Trigger
+            chdr <- new Hdr()
+            cmvstr <- ""
+            cmvs <- [||]
             gmchg <- false
             cgm|>selEvt.Trigger
 
@@ -172,6 +193,9 @@ module Library4 =
                 let rw = if orw=0 then 0 else orw-1
                 let hdr,mv = dispgms.[rw]
                 crw <- hdr.Num
+                chdr <- hdr
+                cmvstr <- cp.MvsStrs.[crw]
+                cmvs <- cp.Mvss.[crw]
                 cgm <- Game.Set(cp,crw)
                 cgm|>selEvt.Trigger
                 gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
