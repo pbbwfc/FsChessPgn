@@ -23,7 +23,7 @@ module Form =
         let sts = new WbStats(Dock=DockStyle.Top)
         let gms = new DgvDb(Dock=DockStyle.Top)
 
-        let ldpgn() =
+        let ldfch() =
             let dlg = new OpenFileDialog(Filter = "fch files (*.fch)|*.fch")
             if dlg.ShowDialog() = DialogResult.OK then
                 this.Cursor <- Cursors.WaitCursor
@@ -32,12 +32,12 @@ module Form =
                 this.Text <- "Olm - " + fchfil
                 this.Cursor <- Cursors.Default
 
-        let svpgn() = 
+        let svfch() = 
             this.Cursor <- Cursors.WaitCursor
-            gms.SavePgn()
+            gms.SaveFch()
             this.Cursor <- Cursors.Default
 
-        let svapgn() =
+        let svafch() =
             let dlg = new SaveFileDialog(Filter = "fch files (*.fch)|*.fch")
             if dlg.ShowDialog() = DialogResult.OK then
                 this.Cursor <- Cursors.WaitCursor
@@ -71,17 +71,17 @@ module Form =
             //do open
             let opnb =
                 new ToolStripMenuItem(Image = img "opn.png", Text = "&Open")
-            opnb.Click.Add(fun _ -> ldpgn())
+            opnb.Click.Add(fun _ -> ldfch())
             fl.DropDownItems.Add(opnb) |> ignore
             //do save
             let savb =
                 new ToolStripMenuItem(Image = img "sav.png", Text = "&Save")
-            savb.Click.Add(fun _ -> svpgn())
+            savb.Click.Add(fun _ -> svfch())
             fl.DropDownItems.Add(savb) |> ignore
             //do save as 
             let savab =
                 new ToolStripMenuItem(Image = img "sava.png", Text = "Save &As")
-            savab.Click.Add(fun _ -> svapgn())
+            savab.Click.Add(fun _ -> svafch())
             fl.DropDownItems.Add(savab) |> ignore
             //do save as 
             let expfb =
@@ -128,17 +128,17 @@ module Form =
             //do open
             let opnb =
                 new ToolStripButton(Image = img "opn.png", Text = "&Open")
-            opnb.Click.Add(fun _ -> ldpgn())
+            opnb.Click.Add(fun _ -> ldfch())
             ts.Items.Add(opnb) |> ignore
             //do save
             let savb =
                 new ToolStripButton(Image = img "sav.png", Text = "&Save")
-            savb.Click.Add(fun _ -> svpgn())
+            savb.Click.Add(fun _ -> svfch())
             ts.Items.Add(savb) |> ignore
             //do save as 
             let savab =
                 new ToolStripButton(Image = img "sava.png", Text = "Save &As")
-            savab.Click.Add(fun _ -> svapgn())
+            savab.Click.Add(fun _ -> svafch())
             ts.Items.Add(savab) |> ignore
             ts
 

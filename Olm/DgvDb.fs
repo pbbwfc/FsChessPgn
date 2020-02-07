@@ -21,8 +21,6 @@ module Library4 =
 
         let mutable fch = ""
         let mutable cp = new ChessPack()
-        let mutable allgms:(int * Game) list = []
-        let mutable indx = new System.Collections.Generic.Dictionary<Set<Square>,int list>()
         let mutable cbd = Board.Start
         let mutable filtgms:(Hdr*Move)[] = [||]
         let mutable crw = -1
@@ -37,35 +35,31 @@ module Library4 =
         let pgnEvt = new Event<_>()
 
         let dosave() =
-            if crw=0 then
-                ((0,cgm)::allgms.Tail)|>List.map snd|>Games.WriteFile fch
-            elif crw=allgms.Length-1 then
-                (allgms.[..crw-1]@[crw,cgm])|>List.map snd|>Games.WriteFile fch
-            else
-                (allgms.[..crw-1]@[crw,cgm]@allgms.[crw+1..])|>List.map snd|>Games.WriteFile fch
+            //TODO need to update the hdr and mvtxt
+            fch|>cp.Save
         
         let doclick(e:DataGridViewCellEventArgs) =
             let rw = e.RowIndex
             //need to check if want to save
-            //if gmchg then
-            //    let nm = cgm.WhitePlayer + " v. " + cgm.BlackPlayer
-            //    let dr = MessageBox.Show("Do you want to save the game: " + nm + " ?","Save Game",MessageBoxButtons.YesNoCancel)
-            //    if dr=DialogResult.Yes then
-            //        dosave()
-            //        let ci,cg,_ = filtgms.[rw]
-            //        crw <- ci
-            //        cgm <- cg
-            //        cgm|>selEvt.Trigger
-            //    elif dr=DialogResult.No then
-            //        let ci,cg,_ = filtgms.[rw]
-            //        crw <- ci
-            //        cgm <- cg
-            //        cgm|>selEvt.Trigger
-            //else
-            //    let ci,cg,_ = filtgms.[rw]
-            //    crw <- ci
-            //    cgm <- cg
-            //    cgm|>selEvt.Trigger
+            if gmchg then
+                let nm = cgm.WhitePlayer + " v. " + cgm.BlackPlayer
+                let dr = MessageBox.Show("Do you want to save the game: " + nm + " ?","Save Game",MessageBoxButtons.YesNoCancel)
+                if dr=DialogResult.Yes then
+                    dosave()
+                    let hdr,mv = filtgms.[rw]
+                    crw <- hdr.Num
+                    cgm <- Game.Set(cp,crw)
+                    cgm|>selEvt.Trigger
+                elif dr=DialogResult.No then
+                    let hdr,mv = filtgms.[rw]
+                    crw <- hdr.Num
+                    cgm <- Game.Set(cp,crw)
+                    cgm|>selEvt.Trigger
+            else
+                let hdr,mv = filtgms.[rw]
+                crw <- hdr.Num
+                cgm <- Game.Set(cp,crw)
+                cgm|>selEvt.Trigger
             gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
         
         let setup() =
@@ -96,7 +90,7 @@ module Library4 =
                 cbd|>pgnEvt.Trigger
 
         ///Saves the PGN file
-        member _.SavePgn() = dosave()
+        member _.SaveFch() = dosave()
 
         ///Saves the PGN file with a new name
         member _.SaveAsPgn(ipgn:string) = 
@@ -108,10 +102,10 @@ module Library4 =
         ///Sets the Board to be filtered on
         member gms.SetBoard(ibd:Brd) =
             cbd <- ibd
-            //filtgms <- allgms|>Games.FastFindBoard cbd indx
+            filtgms <- Find.Board cbd cp
             gmsui.Clear()
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
-            //dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
+            dispgms|>Array.iter(fun (hdr,mv) -> gmsui.Add(hdr))
             gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
             (filtgms,cbd,cp)|>filtEvt.Trigger
 
@@ -147,12 +141,11 @@ module Library4 =
                     dosave()
             cbd <- Board.Start
             cgm <- GameEMP
-            crw <- allgms.Length
-            allgms <- allgms@[crw,cgm]
-            //filtgms <- allgms|>Games.FastFindBoard cbd indx
+            crw <- cp.Hdrs.Length
+            filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then FsChess.Types.MoveEmpty else cp.Mvss.[i].[0]))
             gmsui.Clear()
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
-            //dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
+            dispgms|>Array.iter(fun (hdr,mv) -> gmsui.Add(hdr))
             gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
             (filtgms,cbd,cp)|>filtEvt.Trigger
             gmchg <- false
@@ -165,37 +158,31 @@ module Library4 =
             if dr=DialogResult.Yes then
                 let orw = gms.SelectedCells.[0].RowIndex
                 //save without gams
-                if crw=0 then
-                    (allgms.Tail)|>List.map snd|>Games.WriteFile fch
-                elif crw=allgms.Length-1 then
-                    (allgms.[..crw-1])|>List.map snd|>Games.WriteFile fch
-                else
-                    (allgms.[..crw-1]@allgms.[crw+1..])|>List.map snd|>Games.WriteFile fch
+                //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 //reload saves fch
-                allgms <- fch|>Games.ReadIndexListFromFile
-                fch|>Games.CreateIndex
-                indx <- fch|>Games.GetIndex
                 cbd <- Board.Start
-                //filtgms <- allgms|>Games.FastFindBoard cbd indx
+                filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then FsChess.Types.MoveEmpty else cp.Mvss.[i].[0]))
                 gmsui.Clear()
                 let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
-                //dispgms|>List.map igm2gmui|>List.iter(fun gmui -> gmsui.Add(gmui))
-                //gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
-                //filtgms|>filtEvt.Trigger
-                //gmchg <- false
-                ////select row
+                dispgms|>Array.iter(fun (hdr,mv) -> gmsui.Add(hdr))
+                gms.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
+                (filtgms,cbd,cp)|>filtEvt.Trigger
+                gmchg <- false
+                //select row
                 let rw = if orw=0 then 0 else orw-1
-                //let ci,cg,_ = filtgms.[rw]
-                //crw <- ci
-                //cgm <- cg
-                //cgm|>selEvt.Trigger
+                let hdr,mv = dispgms.[rw]
+                crw <- hdr.Num
+                cgm <- Game.Set(cp,crw)
+                cgm|>selEvt.Trigger
                 gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
 
         ///Export filtered games
         member gms.ExportFilter(filtfil:string) =
-            filtgms
-            //|>List.map(fun (_,gm,_) -> gm)
-            //|>Games.WriteFile filtfil
+            let fcp = new ChessPack()
+            let filtnms = filtgms|>Array.map fst|>Array.map(fun h -> h.Num)  
+            fcp.Hdrs <- filtgms|>Array.map fst
+            fcp.MvsStrs <- filtnms|>Array.map(fun i -> cp.MvsStrs.[i])
+            Convert.ToPgn(filtfil,fcp,fun s -> ())
         
         ///Provides the revised filtered list of Games
         member __.FiltChng = filtEvt.Publish

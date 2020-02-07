@@ -11,6 +11,7 @@
     <Compile Include="Game.fs" />
     <Compile Include="Convert.fs" />
     <Compile Include="Stats.fs" />
+    <Compile Include="Find.fs" />
   </ItemGroup>
 
   <ItemGroup>
