@@ -27,8 +27,8 @@ module Game =
             if s = "" then 
                 match st with
                 |InMove ->
-                    let mv = cstr|>FsChessPgn.MoveUtil.fromSAN bd
-                    let nbd = bd|>FsChess.Board.Push mv
+                    let mv = cstr|>Convert.SanToMove bd
+                    let nbd = bd|>Board.Push mv
                     let mte = MvEntry(mno,isw,cstr,{PreBrd=bd;Mv=mv;PostBrd=nbd})
                     let nmsel = mte::msel
                     let nmno = if isw then mno else mno+1
@@ -107,8 +107,8 @@ module Game =
                     proclin st cstr tl mno isw bd msel
                 |InMove -> 
                     if hd=' ' then
-                        let mv = cstr|>FsChessPgn.MoveUtil.fromSAN bd
-                        let nbd = bd|>FsChess.Board.Push mv
+                        let mv = cstr|>Convert.SanToMove bd
+                        let nbd = bd|>Board.Push mv
                         let mte = MvEntry(mno,isw,cstr,{PreBrd=bd;Mv=mv;PostBrd=nbd})
                         let nmsel = mte::msel
                         let nmno = if isw then mno else mno+1
@@ -139,7 +139,7 @@ module Game =
                 elif nst = FinishedInvalid then []
                 else getgm nst ncstr nmno nisw nbd nmsel
     
-        let msel = getgm Unknown "" 1 true FsChess.Board.Start []
+        let msel = getgm Unknown "" 1 true Board.Start []
         msel
 
     let rec MoveStr(writer:TextWriter) (entry:MvStrEntry) =
@@ -199,7 +199,7 @@ module Game =
                     |_ -> failwith "should be a move"
                 let mn = if lisw then lmn else lmn+1
                 //TODO
-                let nmse = MvEntry(mn,bd.WhosTurn=FsChess.Types.Player.Black,"",amv)
+                let nmse = MvEntry(mn,bd.WhosTurn=Player.Black,"",amv)
 
                 let nmsel,ni = getadd 0 (irs.Head+1) nmse msel []
                 nmsel,[ni;0]
@@ -223,7 +223,7 @@ module Game =
                 |_ -> failwith "should be a move"
             let mn = if lisw then lmn else lmn+1
             //TODO
-            let nmse = MvEntry(mn,bd.WhosTurn=FsChess.Types.Player.Black,"",amv)
+            let nmse = MvEntry(mn,bd.WhosTurn=Player.Black,"",amv)
             let rec getnmsel (cirs:int list) (imsel:MvStrEntry list) =
                 if cirs.Length=1 then 
                     let nmsel,_ = getadd 0 (cirs.Head+1) nmse imsel []
@@ -285,7 +285,7 @@ module Game =
                     |_ -> failwith "should be a move"
                 let mn = if lisw then lmn else lmn+1
                 //TODO
-                let nmse = MvEntry(mn,bd.WhosTurn=FsChess.Types.Player.Black,"",amv)
+                let nmse = MvEntry(mn,bd.WhosTurn=Player.Black,"",amv)
                 let nmsel,ni = getext (irs.Head+1) nmse msel []
                 nmsel,[ni]
         else
@@ -308,7 +308,7 @@ module Game =
                 |_ -> failwith "should be a move"
             let mn = if lisw then lmn else lmn+1
             //TODO
-            let nmse = MvEntry(mn,bd.WhosTurn=FsChess.Types.Player.Black,"",amv)
+            let nmse = MvEntry(mn,bd.WhosTurn=Player.Black,"",amv)
             let rec getnmsel (cirs:int list) (imsel:MvStrEntry list) =
                 if cirs.Length=1 then 
                     let nmsel,_ = getext (cirs.Head+1) nmse imsel []

@@ -2,8 +2,6 @@
 
 open System.Drawing
 open System.Windows.Forms
-open FsChess
-open FsChess.Pgn
 
 [<AutoOpen>]
 module Library4 =
@@ -27,7 +25,6 @@ module Library4 =
         let mutable chdr = new Hdr()
         let mutable cmvstr = ""
         let mutable cmvs = [||]
-        let mutable cgm = GameEMP
         let mutable gmchg = false
         let mutable gmsui = new System.ComponentModel.BindingList<Hdr>()
         let bs = new BindingSource()
@@ -48,7 +45,7 @@ module Library4 =
             let rw = e.RowIndex
             //need to check if want to save
             if gmchg then
-                let nm = cgm.WhitePlayer + " v. " + cgm.BlackPlayer
+                let nm = chdr.White + " v. " + chdr.Black
                 let dr = MessageBox.Show("Do you want to save the game: " + nm + " ?","Save Game",MessageBoxButtons.YesNoCancel)
                 if dr=DialogResult.Yes then
                     dosave()
@@ -57,7 +54,6 @@ module Library4 =
                     chdr <- hdr
                     cmvstr <- cp.MvsStrs.[crw]
                     cmvs <- cp.Mvss.[crw]
-                    cgm <- Game.Set(cp,crw)
                     (chdr,cmvstr,cmvs)|>selEvt.Trigger
                 elif dr=DialogResult.No then
                     let hdr,mv = filtgms.[rw]
@@ -65,7 +61,6 @@ module Library4 =
                     chdr <- hdr
                     cmvstr <- cp.MvsStrs.[crw]
                     cmvs <- cp.Mvss.[crw]
-                    cgm <- Game.Set(cp,crw)
                     (chdr,cmvstr,cmvs)|>selEvt.Trigger
             else
                 let hdr,mv = filtgms.[rw]
@@ -73,7 +68,6 @@ module Library4 =
                 chdr <- hdr
                 cmvstr <- cp.MvsStrs.[crw]
                 cmvs <- cp.Mvss.[crw]
-                cgm <- Game.Set(cp,crw)
                 (chdr,cmvstr,cmvs)|>selEvt.Trigger
             gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
         
@@ -144,12 +138,11 @@ module Library4 =
         member _.NewGame() =
             //need to check if want to save
             if gmchg then
-                let nm = cgm.WhitePlayer + " v. " + cgm.BlackPlayer
+                let nm = chdr.White + " v. " + chdr.Black
                 let dr = MessageBox.Show("Do you want to save the game: " + nm + " ?","Save Game",MessageBoxButtons.YesNo)
                 if dr=DialogResult.Yes then
                     dosave()
             cbd <- Board.Start
-            cgm <- GameEMP
             crw <- cp.Hdrs.Length
             filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then FsChess.Types.MoveEmpty else cp.Mvss.[i].[0]))
             gmsui.Clear()
@@ -165,7 +158,7 @@ module Library4 =
 
         ///Deletes selected Game
         member gms.DeleteGame() =
-            let nm = cgm.WhitePlayer + " v. " + cgm.BlackPlayer
+            let nm = chdr.White + " v. " + chdr.Black
             let dr = MessageBox.Show("Do you really want to permanently delete the game: " + nm + " ?","Delete Game",MessageBoxButtons.YesNo)
             if dr=DialogResult.Yes then
                 let orw = gms.SelectedCells.[0].RowIndex
@@ -187,7 +180,6 @@ module Library4 =
                 chdr <- hdr
                 cmvstr <- cp.MvsStrs.[crw]
                 cmvs <- cp.Mvss.[crw]
-                cgm <- Game.Set(cp,crw)
                 (chdr,cmvstr,cmvs)|>selEvt.Trigger
                 gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
 

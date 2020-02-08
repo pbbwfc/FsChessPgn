@@ -202,9 +202,9 @@ module Types =
 
     type aMove =
         {
-            PreBrd : FsChess.Types.Brd
-            Mv : FsChess.Types.Move
-            PostBrd : FsChess.Types.Brd
+            PreBrd : Brd
+            Mv : Move
+            PostBrd : Brd
         }
     
     type GmResult = 

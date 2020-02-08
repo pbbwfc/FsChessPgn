@@ -2,7 +2,6 @@
 
 open System.Drawing
 open System.Windows.Forms
-open FsChess
 
 [<AutoOpen>]
 module Library1 =
@@ -123,7 +122,7 @@ module Library1 =
         let setpcsmvs () =
             let setpcsmvs() =
                 board.PieceAt
-                |>List.map Piece.ToStr
+                |>List.map Piece.PieceToString
                 |> List.iteri (fun i c -> sqs.[i].Image <- if c = " " then null else getim c)
             if (bd.InvokeRequired) then 
                 try 
@@ -189,13 +188,13 @@ module Library1 =
             if e.Button = MouseButtons.Left then 
                 let sqFrom = System.Convert.ToInt32(p.Tag)
                 let sqf:Square = sqFrom|>int16
-                let psmvs = sqf|>Board.PossMoves board
+                let psmvs = sqf|>MoveGenerate.PossMoves board
                 let pssqs = psmvs|>List.map(fun m -> m|>Move.To|>int)
                 pssqs|>highlightsqs
                 let oimg = p.Image
                 p.Image <- null
                 p.Refresh()
-                let c = board.PieceAt.[sqFrom]|>Piece.ToStr
+                let c = board.PieceAt.[sqFrom]|>Piece.PieceToString
                 cCur <- getcur c
                 sqpnl.Cursor <- cCur
                 if pssqs.Length > 0 && (p.DoDragDrop(oimg, DragDropEffects.Move) = DragDropEffects.Move) then 
@@ -208,7 +207,7 @@ module Library1 =
                     //need to allow for promotion
                     elif mvl.Length=4 then
                         dlgprom.ShowDialog() |> ignore
-                        let nmvl = mvl|>List.filter(fun mv -> mv|>Move.PromPcTp=prompctp)
+                        let nmvl = mvl|>List.filter(fun mv -> mv|>Move.PromoteType=prompctp)
                         board <- board|>Board.Push nmvl.Head
                         setpcsmvs()
                         nmvl.Head|>mvEvt.Trigger
@@ -289,7 +288,7 @@ module Library1 =
 
         ///Sets the board given a new move in SAN format
         member bd.DoMove(san:string) =
-            let mv = san|>Move.FromSan board
+            let mv = san|>Convert.SanToMove board
             board <- board|>Board.Push mv
             setpcsmvs()
             mv|>mvEvt.Trigger

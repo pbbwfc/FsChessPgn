@@ -1,6 +1,7 @@
 ﻿namespace Olm
 
 open System.IO
+open System.Text.RegularExpressions
 
 module Convert =
 
@@ -17,6 +18,321 @@ module Convert =
         | Invalid
         | FinishedInvalid
 
+
+    let MoveToSan (board:Brd) (move:Move) =
+        let piece = board.PieceAt.[int(move|>Move.From)]
+        let pct = piece|>Piece.ToPieceType
+        let fromrank = move|>Move.From|>Square.ToRank
+        let fromfile = move|>Move.From|>Square.ToFile
+        let pcprom = move|>Move.Promote
+        let isprom = pcprom <> Piece.EMPTY
+        let ptprom = pcprom|>Piece.ToPieceType
+        let sTo = move|>Move.To
+        let sFrom = move|>Move.From
+    
+        let iscap = 
+            if (sTo = board.EnPassant && (piece = Piece.WPawn || piece = Piece.BPawn)) then true
+            else board.PieceAt.[int(sTo)] <> Piece.EMPTY
+
+        let nbd = board|>Board.Push(move)
+        let ischk = nbd|>Board.IsChk
+        let ismt = nbd|>MoveGenerate.IsMate
+
+        if piece = Piece.WKing && sFrom = E1 && sTo = G1 then 
+            "O-O"
+        elif piece = Piece.BKing && sFrom = E8 && sTo = G8 then 
+            "O-O"
+        elif piece = Piece.WKing && sFrom = E1 && sTo = C1 then 
+            "O-O-O"
+        elif piece = Piece.BKing && sFrom = E8 && sTo = C8 then 
+            "O-O-O"
+        else 
+            //do not need this check for pawn moves
+            let rec getuniqs pu fu ru attl = 
+                if List.isEmpty attl then pu, fu, ru
+                else 
+                    let att = attl.Head
+                    if att = sFrom then getuniqs pu fu ru attl.Tail
+                    else 
+                        let otherpiece = board.PieceAt.[int(att)]
+                        if otherpiece = piece then 
+                            let npu = false
+                            let nru = 
+                                if (att|>Square.ToRank) = fromrank then false
+                                else ru
+                        
+                            let nfu = 
+                                if (att|>Square.ToFile) = fromfile then false
+                                else fu
+                        
+                            getuniqs npu nfu nru attl.Tail
+                        else getuniqs pu fu ru attl.Tail
+        
+            let pu, fu, ru = 
+                if ((piece=Piece.WPawn)||(piece=Piece.BPawn)) then
+                    if iscap then false,true,false else true,true,true
+                else getuniqs true true true ((board|>Board.AttacksTo sTo (piece|>Piece.PieceToPlayer))|>Bitboard.ToSquares)
+
+            let uf,ur =
+                if pu then None,None
+                else
+                    if fu then Some(fromfile), None
+                    elif ru then None,Some(fromrank)
+                    else Some(fromfile),Some(fromrank)
+            let pcstr = 
+                match pct with
+                |PieceType.Pawn -> ""
+                |PieceType.Knight -> "N"
+                |PieceType.Bishop -> "B"
+                |PieceType.Rook -> "R"
+                |PieceType.Queen -> "Q"
+                |PieceType.King -> "K"
+                |_ -> ""
+            let origf = if uf.IsSome then FILE_NAMES.[int(uf.Value)] else ""
+            let origr = if ur.IsSome then RANK_NAMES.[int(ur.Value)] else ""
+            let capstr = if iscap then "x" else ""
+            let targstr =
+                if sTo <> OUTOFBOUNDS then
+                    SQUARE_NAMES.[int(sTo)]
+                else ""
+            let promstr =
+                if isprom then
+                    match ptprom with
+                     |PieceType.Pawn -> ""
+                     |PieceType.Knight -> "=N"
+                     |PieceType.Bishop -> "=B"
+                     |PieceType.Rook -> "=R"
+                     |PieceType.Queen -> "=Q"
+                     |PieceType.King -> "=K"
+                     |_ -> ""
+                else ""
+            let extrastr =
+                if ismt then "#"
+                //elif ischk then "++"
+                elif ischk then "+"
+                else ""
+
+            pcstr + origf + origr + capstr + targstr + promstr + extrastr
+
+    let SanToMove (bd:Brd) (san:string) =
+        //Active pattern to parse move string
+        let (|SimpleMove|Castle|PawnCapture|AmbiguousFile|AmbiguousRank|Promotion|PromCapture|) s =
+            if Regex.IsMatch(s, "^[BNRQK][a-h][1-8]$") then 
+                SimpleMove(s.[0]|>PieceType.Parse, s.[1..]|>Square.Parse)
+            elif Regex.IsMatch(s, "^[a-h][1-8]$") then SimpleMove(PieceType.Pawn, s|>Square.Parse)
+            elif s = "O-O" then Castle('K')
+            elif s = "O-O-O" then Castle('Q')
+            elif Regex.IsMatch(s, "^[a-h][a-h][1-8]$") then 
+                PawnCapture(s.[0]|>File.Parse, s.[1..]|>Square.Parse)
+            elif Regex.IsMatch(s, "^[BNRQK][a-h][a-h][1-8]$") then 
+                AmbiguousFile(s.[0]|>PieceType.Parse, s.[1]|>File.Parse, s.[2..]|>Square.Parse)
+            elif Regex.IsMatch(s, "^[BNRQK][1-8][a-h][1-8]$") then 
+                AmbiguousRank(s.[0]|>PieceType.Parse, s.[1]|>Rank.Parse, s.[2..]|>Square.Parse)
+            elif Regex.IsMatch(s, "^[a-h][1-8][BNRQ]$") then 
+                Promotion(s.[0..1]|>Square.Parse, s.[2]|>PieceType.Parse)
+            elif Regex.IsMatch(s, "^[a-h][a-h][1-8][BNRQ]$") then 
+                PromCapture(s.[0]|>File.Parse, s.[1..2]|>Square.Parse, s.[3]|>PieceType.Parse)
+            else failwith ("invalid move: " + s)
+
+        let strip chars =
+            String.collect (fun c -> 
+                if Seq.exists ((=) c) chars then ""
+                else string c)
+          
+        let m = san |> strip "+x#="|>fun x ->x.Replace("e.p.", "")
+        
+        let mv =
+            match m with
+            | SimpleMove(p, sq) -> 
+                match p with
+                 |PieceType.Pawn ->
+                     let mvs = 
+                        bd|>MoveGenerate.PawnMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                     if mvs.Length=1 then mvs.Head
+                     else
+                         failwith ("p " + san)
+                 |PieceType.Knight ->
+                     let mvs = 
+                         bd|>MoveGenerate.KnightMoves
+                         |>List.filter(fun mv -> sq=(mv|>Move.To))
+                     if mvs.Length=1 then mvs.Head
+                     else
+                         failwith ("n " + san)
+                 |PieceType.Bishop ->
+                     let mvs = 
+                         bd|>MoveGenerate.BishopMoves
+                         |>List.filter(fun mv -> sq=(mv|>Move.To))
+                     if mvs.Length=1 then mvs.Head
+                     else
+                         failwith ("b " + san)
+                 |PieceType.Rook ->
+                     let mvs = 
+                         bd|>MoveGenerate.RookMoves
+                         |>List.filter(fun mv -> sq=(mv|>Move.To))
+                     if mvs.Length=1 then mvs.Head
+                     else
+                         failwith ("r " + san)
+                 |PieceType.Queen ->
+                     let mvs = 
+                         bd|>MoveGenerate.QueenMoves
+                         |>List.filter(fun mv -> sq=(mv|>Move.To))
+                     if mvs.Length=1 then mvs.Head
+                     else
+                         failwith ("q " + san)
+                 |PieceType.King ->
+                     let mvs = 
+                         bd|>MoveGenerate.KingMoves
+                         |>List.filter(fun mv -> sq=(mv|>Move.To))
+                     if mvs.Length=1 then mvs.Head
+                     else
+                         failwith ("k " + san)
+                 |_ -> failwith ("all " + san)
+
+            | Castle(c) ->
+                if c='K' then
+                    let mvs = 
+                        bd|>MoveGenerate.CastleMoves
+                        |>List.filter(fun mv -> FileG=(mv|>Move.To|>Square.ToFile))
+                    if mvs.Length=1 then mvs.Head
+                    else failwith "kc"
+                else
+                    let mvs = 
+                        bd|>MoveGenerate.CastleMoves
+                        |>List.filter(fun mv -> FileC=(mv|>Move.To|>Square.ToFile))
+                    if mvs.Length=1 then mvs.Head
+                    else failwith "qc"
+            | PawnCapture(f, sq) -> 
+                let mvs = 
+                    bd|>MoveGenerate.PawnMoves
+                    |>List.filter(fun mv -> sq=(mv|>Move.To))
+                if mvs.Length=1 then mvs.Head
+                else
+                    let mvs1=mvs|>List.filter(fun mv -> f=(mv|>Move.From|>Square.ToFile))
+                    if mvs1.Length=1 then mvs1.Head else failwith ("pf " + san)
+            | AmbiguousFile(p, f, sq) -> 
+                match p with
+                |PieceType.Pawn ->
+                    let mvs = 
+                        bd|>MoveGenerate.PawnMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> f=(mv|>Move.From|>Square.ToFile))
+                        if mvs1.Length=1 then mvs1.Head else failwith("pf " + san)
+                |PieceType.Knight ->
+                    let mvs = 
+                        bd|>MoveGenerate.KnightMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> f=(mv|>Move.From|>Square.ToFile))
+                        if mvs1.Length=1 then mvs1.Head else failwith("nf " + san)
+                |PieceType.Bishop ->
+                    let mvs = 
+                        bd|>MoveGenerate.BishopMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> f=(mv|>Move.From|>Square.ToFile))
+                        if mvs1.Length=1 then mvs1.Head else failwith("bf " + san)
+                |PieceType.Rook ->
+                    let mvs = 
+                        bd|>MoveGenerate.RookMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> f=(mv|>Move.From|>Square.ToFile))
+                        if mvs1.Length=1 then mvs1.Head else failwith("rf " + san)
+                |PieceType.Queen ->
+                    let mvs = 
+                        bd|>MoveGenerate.QueenMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> f=(mv|>Move.From|>Square.ToFile))
+                        if mvs1.Length=1 then mvs1.Head else failwith("qf " + san)
+                |PieceType.King ->
+                    let mvs = 
+                        bd|>MoveGenerate.KingMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        failwith("k " + san)
+                |_ -> failwith "all"
+
+            | AmbiguousRank(p, r, sq) -> 
+                match p with
+                |PieceType.Pawn ->
+                    let mvs = 
+                        bd|>MoveGenerate.PawnMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        failwith ("p " + san)
+                |PieceType.Knight ->
+                    let mvs = 
+                        bd|>MoveGenerate.KnightMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> r=(mv|>Move.From|>Square.ToRank))
+                        if mvs1.Length=1 then mvs1.Head else failwith("nr " + san)
+                |PieceType.Bishop ->
+                    let mvs = 
+                        bd|>MoveGenerate.BishopMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> r=(mv|>Move.From|>Square.ToRank))
+                        if mvs1.Length=1 then mvs1.Head else failwith("br " + san)
+                |PieceType.Rook ->
+                    let mvs = 
+                        bd|>MoveGenerate.RookMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> r=(mv|>Move.From|>Square.ToRank))
+                        if mvs1.Length=1 then mvs1.Head else failwith("rr " + san)
+                |PieceType.Queen ->
+                    let mvs = 
+                        bd|>MoveGenerate.QueenMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        let mvs1=mvs|>List.filter(fun mv -> r=(mv|>Move.From|>Square.ToRank))
+                        if mvs1.Length=1 then mvs1.Head else failwith("qr " + san)
+                |PieceType.King ->
+                    let mvs = 
+                        bd|>MoveGenerate.KingMoves
+                        |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    if mvs.Length=1 then mvs.Head
+                    else
+                        failwith ("k " + san)
+                |_ -> failwith "all"
+
+            | Promotion(sq, p) -> 
+                let mvs = 
+                    bd|>MoveGenerate.PawnMoves
+                    |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    |>List.filter(fun mv -> p=(mv|>Move.PromoteType))
+                if mvs.Length=1 then mvs.Head
+                else
+                    failwith ("p " + san)
+
+            | PromCapture(f, sq, p) -> 
+                let mvs = 
+                    bd|>MoveGenerate.PawnMoves
+                    |>List.filter(fun mv -> sq=(mv|>Move.To))
+                    |>List.filter(fun mv -> p=(mv|>Move.PromoteType))
+                if mvs.Length=1 then mvs.Head
+                else
+                    let mvs1=mvs|>List.filter(fun mv -> f=(mv|>Move.From|>Square.ToFile))
+                    if mvs1.Length=1 then mvs1.Head else failwith ("pf " + san)
+      
+        mv
+    
+    
     let FromPgn(file:string, log:string -> unit) =
         log("Starting conversion from " + file)
         log("Starting loading headers")
@@ -81,7 +397,7 @@ module Convert =
                     if s = "" then 
                         match st with
                         |InMove ->
-                            let mv = cstr|>FsChessPgn.MoveUtil.fromSAN bd
+                            let mv = cstr|>SanToMove bd
                             let nbd = bd|>Board.Push mv
                             Unknown,"",nbd, mv::mvl
                         |InComment(_) |InRAV(_) -> st, "", bd, mvl
@@ -131,7 +447,7 @@ module Convert =
                             proclin st "" tl bd mvl
                         |InMove -> 
                             if hd=' ' then
-                                let mv = cstr|>FsChessPgn.MoveUtil.fromSAN bd
+                                let mv = cstr|>SanToMove bd
                                 let nbd = bd|>Board.Push mv
                                 proclin Unknown "" tl nbd (mv::mvl)
                             else
@@ -198,10 +514,10 @@ module Convert =
                 let mv = imvl.Head
                 //now check if a pawn move which is not on search board
                 //need to also include captures of pawns on starts square
-                let pc = mv|>FsChessPgn.Move.MovingPiece
-                let sq = mv|>FsChessPgn.Move.From
+                let pc = mv|>Move.MovingPiece
+                let sq = mv|>Move.From
                 let rnk = sq|>Square.ToRank
-                let cpc = mv|>FsChessPgn.Move.CapturedPiece
+                let cpc = mv|>Move.CapturedPiece
                 let sqto = mv|>Move.To
                 let rnkto = sqto|>Square.ToRank
                 if pc=Piece.WPawn && rnk=Rank2 || pc=Piece.BPawn && rnk=Rank7 then

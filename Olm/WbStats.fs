@@ -78,7 +78,7 @@ module Library5 =
             stats.DocumentText <- bdsttags()
   
         ///Calculates the Stats to be displayed
-        member stats.CalcStats(fgms:(Hdr*FsChess.Types.Move)[],bd:FsChess.Types.Brd,cp:ChessPack) = 
+        member stats.CalcStats(fgms:(Hdr*Move)[],bd:Brd,cp:ChessPack) = 
             cbdst <- (fgms,bd,cp)|>Stats.Get
             stats.DocumentText <- bdsttags()
   

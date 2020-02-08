@@ -13,7 +13,7 @@ module Find =
                     let rnk = sq|>Square.ToRank
                     if rnk=Rank2 && bd.[sq]=Piece.WPawn then false,MoveEmpty
                     else
-                        let nbd = cbd|>Board.MoveApply mv
+                        let nbd = cbd|>Board.Push mv
                         if nbd.PieceAt=bd.PieceAt then
                             if imvl.Tail.IsEmpty then false,MoveEmpty
                             else
@@ -25,7 +25,7 @@ module Find =
                     let rnk = sq|>Square.ToRank
                     if rnk=Rank7 && bd.[sq]=Piece.BPawn then false,MoveEmpty
                     else
-                        let nbd = cbd|>Board.MoveApply mv
+                        let nbd = cbd|>Board.Push mv
                         if nbd.PieceAt=bd.PieceAt then
                             if imvl.Tail.IsEmpty then false,MoveEmpty
                             else
@@ -33,7 +33,7 @@ module Find =
                                 true,nmv
                         else getbd nbd imvl.Tail
                 else
-                    let nbd = cbd|>Board.MoveApply mv
+                    let nbd = cbd|>Board.Push mv
                     if nbd.PieceAt=bd.PieceAt then
                         if imvl.Tail.IsEmpty then false,MoveEmpty
                         else

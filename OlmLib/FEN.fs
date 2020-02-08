@@ -15,37 +15,37 @@ type Fen =
       Fullmove : int }
 
 module FEN = 
-    //let ToStr(fen : Fen) = 
-    //    let sb = new StringBuilder(50)
-    //    for irank = 0 to 7 do
-    //        let rec getect ect ifile = 
-    //            if ifile > 7 then ect
-    //            else 
-    //                let rank = RANKS.[irank]
-    //                let file = FILES.[ifile]
-    //                let piece = fen.Pieceat.[int(Sq(file,rank))] 
-    //                if piece = Piece.EMPTY then getect (ect + 1) (ifile + 1)
-    //                else 
-    //                    if ect > 0 then sb.Append(ect.ToString()) |> ignore
-    //                    sb.Append(piece |> Piece.PieceToString) |> ignore
-    //                    getect 0 (ifile + 1)
+    let ToStr(fen : Fen) = 
+        let sb = new StringBuilder(50)
+        for irank = 0 to 7 do
+            let rec getect ect ifile = 
+                if ifile > 7 then ect
+                else 
+                    let rank = RANKS.[irank]
+                    let file = FILES.[ifile]
+                    let piece = fen.Pieceat.[int(Sq(file,rank))] 
+                    if piece = Piece.EMPTY then getect (ect + 1) (ifile + 1)
+                    else 
+                        if ect > 0 then sb.Append(ect.ToString()) |> ignore
+                        sb.Append(piece |> Piece.PieceToString) |> ignore
+                        getect 0 (ifile + 1)
             
-    //        let ect = getect 0 0
-    //        if ect > 0 then sb.Append(ect.ToString()) |> ignore
-    //        if irank < 7 then sb.Append("/") |> ignore
-    //    if fen.Whosturn = Player.White then sb.Append(" w ") |> ignore
-    //    else sb.Append(" b ") |> ignore
-    //    if (fen.CastleWS || fen.CastleWL || fen.CastleBS || fen.CastleBL) then 
-    //        if fen.CastleWS then sb.Append("K") |> ignore
-    //        if fen.CastleWL then sb.Append("Q") |> ignore
-    //        if fen.CastleBS then sb.Append("k") |> ignore
-    //        if fen.CastleBL then sb.Append("q") |> ignore
-    //    else sb.Append("-") |> ignore
-    //    if fen.Enpassant |> Square.IsInBounds then sb.Append(" " + (fen.Enpassant |> Square.Name)) |> ignore
-    //    else sb.Append(" -") |> ignore
-    //    sb.Append(" " + fen.Fiftymove.ToString()) |> ignore
-    //    sb.Append(" " + fen.Fullmove.ToString()) |> ignore
-    //    sb.ToString()
+            let ect = getect 0 0
+            if ect > 0 then sb.Append(ect.ToString()) |> ignore
+            if irank < 7 then sb.Append("/") |> ignore
+        if fen.Whosturn = Player.White then sb.Append(" w ") |> ignore
+        else sb.Append(" b ") |> ignore
+        if (fen.CastleWS || fen.CastleWL || fen.CastleBS || fen.CastleBL) then 
+            if fen.CastleWS then sb.Append("K") |> ignore
+            if fen.CastleWL then sb.Append("Q") |> ignore
+            if fen.CastleBS then sb.Append("k") |> ignore
+            if fen.CastleBL then sb.Append("q") |> ignore
+        else sb.Append("-") |> ignore
+        if fen.Enpassant |> Square.IsInBounds then sb.Append(" " + (fen.Enpassant |> Square.Name)) |> ignore
+        else sb.Append(" -") |> ignore
+        sb.Append(" " + fen.Fiftymove.ToString()) |> ignore
+        sb.Append(" " + fen.Fullmove.ToString()) |> ignore
+        sb.ToString()
     
     let FromBd(bd : Brd) = 
         { Pieceat = bd.PieceAt

@@ -16,12 +16,14 @@
     <Compile Include="PieceType.fs" />
     <Compile Include="Piece.fs" />
     <Compile Include="Pack.fs" />
-    <Compile Include="Game.fs" />
     <Compile Include="Bitboard.fs" />
     <Compile Include="Attacks.fs" />
     <Compile Include="FEN.fs" />
+    <Compile Include="Move.fs" />
     <Compile Include="Board.fs" />
+    <Compile Include="MoveGenerate.fs" />
     <Compile Include="Convert.fs" />
+    <Compile Include="Game.fs" />
     <Compile Include="Stats.fs" />
     <Compile Include="Find.fs" />
   </ItemGroup>

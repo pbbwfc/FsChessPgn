@@ -2,7 +2,7 @@
 
 module Stats = 
     
-    let Get (igms:(Hdr*FsChess.Types.Move)[],bd:FsChess.Types.Brd,cp:ChessPack) =
+    let Get (igms:(Hdr*Move)[],bd:Brd,cp:ChessPack) =
         let rec createstats (cigmmvl:(Hdr*FsChess.Types.Move) list) (bdst:BrdStats) =
             if cigmmvl.IsEmpty then bdst
             else
@@ -10,7 +10,7 @@ module Stats =
                 let result = hdr.Result|>GmResult.Parse
                 let cmvstl = bdst.Mvstats|>List.filter(fun mvst -> mvst.Mv=mv)
                 if cmvstl.IsEmpty then 
-                    let mvst = {Mv=mv;Mvstr=mv|>FsChess.Move.ToSan bd;Count=1;Pc=0.0;
+                    let mvst = {Mv=mv;Mvstr=mv|>Convert.MoveToSan bd;Count=1;Pc=0.0;
                                 WhiteWins=(if result=GmResult.WhiteWins then 1 else 0);
                                 Draws=(if result=GmResult.Draw then 1 else 0);
                                 BlackWins=(if result=GmResult.BlackWins then 1 else 0);

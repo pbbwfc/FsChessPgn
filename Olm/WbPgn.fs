@@ -12,8 +12,8 @@ module Library2 =
         //mutables
         let mutable msel:MvStrEntry list = []
         let mutable chdr:Hdr = new Hdr()
-        let mutable cmvs:FsChess.Types.Move[] = [||]
-        let mutable board = FsChess.Board.Start
+        let mutable cmvs:Move[] = [||]
+        let mutable board = Board.Start
         let mutable oldstyle:(HtmlElement*string) option = None
         let mutable irs = [-1]
         let mutable rirs = [-1]
@@ -388,11 +388,11 @@ module Library2 =
                     match mte with
                     |MvEntry(_,_,_,_) ->
                         let mv = cmvs.[ci]
-                        let nbd = cbd|>FsChess.Board.Push mv
+                        let nbd = cbd|>Board.Push mv
                         if nbd=board then ci
                         else getnxt nbd (ci+1) mtel.Tail
                     |_ -> getnxt cbd (ci+1) mtel.Tail
-            let ni = getnxt FsChess.Board.Start 0 msel
+            let ni = getnxt Board.Start 0 msel
             irs <- [ni]
             //now need to select the element
             let id = getir irs
@@ -444,7 +444,7 @@ module Library2 =
                         if el.Id=id.ToString() then
                             el|>highlight
             elif isext then
-                let nbd = board|>FsChess.Board.Push mv
+                let nbd = board|>Board.Push mv
                 let nmsel,nirs = Game.AddMv msel irs {PreBrd=board;Mv=mv;PostBrd=nbd} 
                 msel <- nmsel
                 irs <- nirs
@@ -515,7 +515,7 @@ module Library2 =
                                 el|>highlight
                     else
                         //need to create a new RAV
-                        let nbd = board|>FsChess.Board.Push mv
+                        let nbd = board|>Board.Push mv
                         let nmsel,nirs = Game.AddRav msel irs {PreBrd=board;Mv=mv;PostBrd=nbd} 
                         msel <- nmsel
                         irs <- nirs
