@@ -374,7 +374,7 @@ module Library2 =
             pgn.ObjectForScripting <- pgn
 
         ///Switches to another game with the same position
-        member pgn.SwitchGame(hdr:Hdr,mvstr:string,mvs:FsChess.Types.Move[]) = 
+        member pgn.SwitchGame(hdr:Hdr,mvstr:string,mvs:Move[]) = 
             chdr <- hdr
             cmvs <- mvs
             //parse string into entries
@@ -403,7 +403,7 @@ module Library2 =
 
 
         ///Make a Move in the Game - may change the Game or just select a Move
-        member pgn.DoMove(mv:FsChess.Types.Move) =
+        member pgn.DoMove(mv:Move) =
             let rec getnxt oi ci (imsel:MvStrEntry list) =
                 if ci=imsel.Length then ci,false,true//implies is an extension
                 else

@@ -264,14 +264,14 @@ module Game =
         if irs.Length=1 then
             //allow for empty list
             if msel.IsEmpty then
-                let bd = FsChess.Board.Start
+                let bd = Board.Start
                 let mn = 1
                 //TODO
                 let nmse = MvEntry(mn,true,"",amv)
                 [nmse],[0]
             //if not with a selected move
             elif irs.Head = -1 then
-                let bd = FsChess.Board.Start
+                let bd = Board.Start
                 let mn = 1
                 //TODO
                 let nmse = MvEntry(mn,true,"",amv)
@@ -525,11 +525,3 @@ module Game =
             let nmsel = getnmsel irs msel
             nmsel
 
-
-    //TODO need to remove all code from FsChessPgn
-    let Set (cp:ChessPack,i:int) =
-        let hdr = cp.Hdrs.[i]
-        let mvsstr = cp.MvsStrs.[i]
-        let gmtxt = hdr.ToString() + mvsstr
-        let gm = gmtxt|>FsChessPgn.Games.ReadOneFromString
-        gm

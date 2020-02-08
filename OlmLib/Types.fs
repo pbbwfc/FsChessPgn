@@ -239,7 +239,7 @@ module Types =
 
     type MvStats =
         {
-            Mv : FsChess.Types.Move
+            Mv : Move
             Mvstr : string
             Count : int
             Pc : float

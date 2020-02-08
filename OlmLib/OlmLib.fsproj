@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChessPack\ChessPack.csproj" />
-    <ProjectReference Include="..\FsChessPgn\FsChessPgn.fsproj" />
   </ItemGroup>
 
 </Project>

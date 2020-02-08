@@ -84,7 +84,7 @@ module Library4 =
             fch <- ifch
             cp <- fch|>Pack.Load
             cbd <- Board.Start
-            filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then FsChess.Types.MoveEmpty else cp.Mvss.[i].[0]))
+            filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then MoveEmpty else cp.Mvss.[i].[0]))
             gmsui.Clear()
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
             dispgms|>Array.iter(fun (hdr,mv) -> gmsui.Add(hdr))
@@ -144,7 +144,7 @@ module Library4 =
                     dosave()
             cbd <- Board.Start
             crw <- cp.Hdrs.Length
-            filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then FsChess.Types.MoveEmpty else cp.Mvss.[i].[0]))
+            filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then MoveEmpty else cp.Mvss.[i].[0]))
             gmsui.Clear()
             let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
             dispgms|>Array.iter(fun (hdr,mv) -> gmsui.Add(hdr))
@@ -166,7 +166,7 @@ module Library4 =
                 //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 //reload saves fch
                 cbd <- Board.Start
-                filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then FsChess.Types.MoveEmpty else cp.Mvss.[i].[0]))
+                filtgms <- cp.Hdrs|>Array.mapi(fun i h -> (h,if cp.Mvss.[i].Length=0 then MoveEmpty else cp.Mvss.[i].[0]))
                 gmsui.Clear()
                 let dispgms = if filtgms.Length>201 then filtgms.[..200] else filtgms 
                 dispgms|>Array.iter(fun (hdr,mv) -> gmsui.Add(hdr))

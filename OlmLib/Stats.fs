@@ -3,7 +3,7 @@
 module Stats = 
     
     let Get (igms:(Hdr*Move)[],bd:Brd,cp:ChessPack) =
-        let rec createstats (cigmmvl:(Hdr*FsChess.Types.Move) list) (bdst:BrdStats) =
+        let rec createstats (cigmmvl:(Hdr*Move) list) (bdst:BrdStats) =
             if cigmmvl.IsEmpty then bdst
             else
                 let hdr,mv = cigmmvl.Head

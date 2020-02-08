@@ -3,7 +3,6 @@
 open System
 open System.Drawing
 open System.Windows.Forms
-open FsChess
 
 module Form =
     let img nm =
