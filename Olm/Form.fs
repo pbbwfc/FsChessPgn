@@ -174,4 +174,4 @@ module Form =
             pgn.HdrChng |> Observable.add gms.ChangeGameHdr
             gms.PgnChng |> Observable.add bd.SetBoard 
 
-            gms.GmSel|>Observable.add (fun (gm,_,_,_) -> lbl.Text <- gm.WhitePlayer + " vs. " + gm.BlackPlayer) 
+            gms.GmSel|>Observable.add (fun (hdr,_,_) -> lbl.Text <- hdr.White + " vs. " + hdr.Black) 

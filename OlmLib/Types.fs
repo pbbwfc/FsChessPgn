@@ -25,8 +25,14 @@ module Types =
         |Bdecisive = 19
     let Ng i = enum<Nag> (i)
 
+    type aMove =
+        {
+            PreBrd : FsChess.Types.Brd
+            Mv : FsChess.Types.Move
+            PostBrd : FsChess.Types.Brd
+        }
     type MvStrEntry =
-        |MvEntry of int * bool * string
+        |MvEntry of int * bool * string * aMove
         |CommEntry of string
         |EndEntry of GmResult
         |NagEntry of Nag

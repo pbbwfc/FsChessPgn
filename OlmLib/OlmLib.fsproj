@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="GmResult.fs" />
+    <Compile Include="Nag.fs" />
     <Compile Include="Pack.fs" />
     <Compile Include="Game.fs" />
     <Compile Include="Convert.fs" />

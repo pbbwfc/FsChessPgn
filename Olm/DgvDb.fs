@@ -58,7 +58,7 @@ module Library4 =
                     cmvstr <- cp.MvsStrs.[crw]
                     cmvs <- cp.Mvss.[crw]
                     cgm <- Game.Set(cp,crw)
-                    (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
+                    (chdr,cmvstr,cmvs)|>selEvt.Trigger
                 elif dr=DialogResult.No then
                     let hdr,mv = filtgms.[rw]
                     crw <- hdr.Num
@@ -66,7 +66,7 @@ module Library4 =
                     cmvstr <- cp.MvsStrs.[crw]
                     cmvs <- cp.Mvss.[crw]
                     cgm <- Game.Set(cp,crw)
-                    (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
+                    (chdr,cmvstr,cmvs)|>selEvt.Trigger
             else
                 let hdr,mv = filtgms.[rw]
                 crw <- hdr.Num
@@ -74,7 +74,7 @@ module Library4 =
                 cmvstr <- cp.MvsStrs.[crw]
                 cmvs <- cp.Mvss.[crw]
                 cgm <- Game.Set(cp,crw)
-                (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
+                (chdr,cmvstr,cmvs)|>selEvt.Trigger
             gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
         
         let setup() =
@@ -103,8 +103,7 @@ module Library4 =
                 chdr <- hdr
                 cmvstr <- cp.MvsStrs.[crw]
                 cmvs <- cp.Mvss.[crw]
-                cgm <- Game.Set(cp,crw)
-                (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
+                (chdr,cmvstr,cmvs)|>selEvt.Trigger
                 cbd|>pgnEvt.Trigger
 
         ///Saves the PGN file
@@ -133,20 +132,10 @@ module Library4 =
             gmchg <- true
 
         ///Changes the header of the Game that is selected
-        member _.ChangeGameHdr(igm:Game) =
-            cgm <- igm
+        member _.ChangeGameHdr(ihdr:Hdr) =
+            chdr <- ihdr
             gmchg <- true
             let rw = gms.SelectedCells.[0].RowIndex
-            chdr <- gmsui.[rw]
-            chdr.White<-cgm.WhitePlayer
-            chdr.W_Elo<-cgm.WhiteElo
-            chdr.Black<-cgm.BlackPlayer
-            chdr.B_Elo<-cgm.BlackElo
-            chdr.Result<-cgm.Result|>Result.ToUnicode
-            chdr.Date<-cgm|>GameDate.ToStr
-            chdr.Event<-cgm.Event
-            chdr.Round<-cgm.Round
-            chdr.Site<-cgm.Site
             gmsui.[rw] <- chdr
 
         ///Creates a new Game
@@ -170,7 +159,7 @@ module Library4 =
             cmvstr <- ""
             cmvs <- [||]
             gmchg <- false
-            (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
+            (chdr,cmvstr,cmvs)|>selEvt.Trigger
 
         ///Deletes selected Game
         member gms.DeleteGame() =
@@ -197,7 +186,7 @@ module Library4 =
                 cmvstr <- cp.MvsStrs.[crw]
                 cmvs <- cp.Mvss.[crw]
                 cgm <- Game.Set(cp,crw)
-                (cgm,chdr,cmvstr,cmvs)|>selEvt.Trigger
+                (chdr,cmvstr,cmvs)|>selEvt.Trigger
                 gms.CurrentCell <- gms.Rows.[rw].Cells.[0]
 
         ///Export filtered games

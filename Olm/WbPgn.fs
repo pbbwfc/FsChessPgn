@@ -61,7 +61,7 @@ module Library2 =
             let idstr = "id = \"" + ir.ToString() + "\""
             let writer = new System.IO.StringWriter()
             match mte with
-            |MvEntry(_,_,_) ->
+            |MvEntry(_,_,_,_) ->
                 let str = mte|>Olm.Game.MoveStr writer
                 if ravno=0 then " <span " + idstr + " class=\"mv\" style=\"color:black\">" + str + "</span>"
                 else " <span " + idstr + " class=\"mv\" style=\"color:darkslategray\">" + str + "</span>"
@@ -149,24 +149,24 @@ module Library2 =
             let nags =
                 //need to add radio buttons for each possible NAG
                 let rbs = 
-                   FsChess.Game.NAGlist|>List.toArray
-                   |>Array.map(fun ng -> (ng|>FsChess.Game.NAGStr) + "   " + (ng|>FsChess.Game.NAGDesc),ng)
+                   Nag.All|>List.toArray
+                   |>Array.map(fun ng -> (ng|>Nag.ToStr) + "   " + (ng|>Nag.Desc),ng)
                    |>Array.map(fun (lb,ng) -> new RadioButton(Text=lb,Width=200,Checked=(ng=ing)))
                 rbs
 
             let dook(e) = 
                 //get selected nag
                 let indx = nags|>Array.findIndex(fun rb -> rb.Checked)
-                let selNag = FsChess.Game.NAGlist.[indx]
+                let selNag = Nag.All.[indx]
                 //write nag to NAGEntry
                 if offset = 1 && indx<>0 then 
-                    game <- FsChess.Game.AddNag game rirs selNag
+                    msel <- Game.AddNag msel rirs selNag
                     pgn.DocumentText <- mvtags()
                 elif offset = 0 && indx<>0 then 
-                    game <- FsChess.Game.EditNag game rirs selNag
+                    msel <- Game.EditNag msel rirs selNag
                     pgn.DocumentText <- mvtags()
                 else 
-                    game <- FsChess.Game.DeleteNag game rirs
+                    msel <- Game.DeleteNag msel rirs
                     pgn.DocumentText <- mvtags()
 
                 game|>gmchngEvt.Trigger
@@ -202,44 +202,39 @@ module Library2 =
                 new TableLayoutPanel(ColumnCount = 2, RowCount = 9, 
                                     Height = 350, Width = 360,Dock=DockStyle.Fill)
             let wlbl = new Label(Text="White")
-            let wtb = new TextBox(Text=game.WhitePlayer,Width=200)
+            let wtb = new TextBox(Text=chdr.White,Width=200)
             let welbl = new Label(Text="White Elo")
-            let wetb = new TextBox(Text=game.WhiteElo,Width=200)
+            let wetb = new TextBox(Text=chdr.W_Elo,Width=200)
             let blbl = new Label(Text="Black")
-            let btb = new TextBox(Text=game.BlackPlayer,Width=200)
+            let btb = new TextBox(Text=chdr.Black,Width=200)
             let belbl = new Label(Text="Black Elo")
-            let betb = new TextBox(Text=game.BlackElo,Width=200)
+            let betb = new TextBox(Text=chdr.B_Elo,Width=200)
             let rslbl = new Label(Text="Result")
-            let rscb = new ComboBox(Text=(game.Result|>FsChess.Result.ToStr),Width=200)
+            let rscb = new ComboBox(Text=chdr.Result,Width=200)
             let dtlbl = new Label(Text="Date")
-            let dttb = new TextBox(Text=(game|>FsChess.GameDate.ToStr),Width=200)
+            let dttb = new TextBox(Text=chdr.Date,Width=200)
             let evlbl = new Label(Text="Event")
-            let evtb = new TextBox(Text=game.Event,Width=200)
+            let evtb = new TextBox(Text=chdr.Event,Width=200)
             let rdlbl = new Label(Text="Round")
-            let rdtb = new TextBox(Text=game.Round,Width=200)
+            let rdtb = new TextBox(Text=chdr.Round,Width=200)
             let stlbl = new Label(Text="Site")
-            let sttb = new TextBox(Text=game.Site,Width=200)
+            let sttb = new TextBox(Text=chdr.Site,Width=200)
 
             
             let dook(e) = 
-                let results = [|FsChess.Types.GameResult.WhiteWins;FsChess.Types.GameResult.BlackWins;FsChess.Types.GameResult.Draw;FsChess.Types.GameResult.Open|]
-                let res = if rscb.SelectedIndex= -1 then game.Result else results.[rscb.SelectedIndex]
-                let yo,mo,dyo =
-                    let bits=dttb.Text.Split([|'.'|])
-                    if bits.Length=3 then
-                        let tryToInt (s:string) = 
-                            match System.Int32.TryParse s with
-                            | true, v -> Some v
-                            | false, _ -> None
-                        
-                        bits.[0]|>tryToInt,bits.[1]|>tryToInt,bits.[2]|>tryToInt
-                    else None,None,None
-                game <- {game with WhitePlayer=wtb.Text;WhiteElo=wetb.Text;
-                                   BlackPlayer=btb.Text;BlackElo=betb.Text;
-                                   Result=res;Year=yo;Month=mo;Day=dyo;
-                                   Event=evtb.Text;Round=rdtb.Text;Site=sttb.Text}
+                let results = [|GmResult.WhiteWins;GmResult.BlackWins;GmResult.Draw;GmResult.Open|]
+                let res = if rscb.SelectedIndex= -1 then chdr.Result else (results.[rscb.SelectedIndex]|>GmResult.ToStr)
+                chdr.White<-wtb.Text
+                chdr.W_Elo<-wetb.Text
+                chdr.Black<-btb.Text
+                chdr.B_Elo<-betb.Text
+                chdr.Result<-res
+                chdr.Date<-dttb.Text
+                chdr.Event<-evtb.Text
+                chdr.Round<-rdtb.Text
+                chdr.Site<-sttb.Text
                 game|>gmchngEvt.Trigger
-                game|>hdrchngEvt.Trigger
+                chdr|>hdrchngEvt.Trigger
                 dlg.Close()
 
 
@@ -260,8 +255,8 @@ module Library2 =
                 tc.Controls.Add(belbl,0,3)
                 tc.Controls.Add(betb,1,3)
                 tc.Controls.Add(rslbl,0,4)
-                [|FsChess.Types.GameResult.WhiteWins;FsChess.Types.GameResult.BlackWins;FsChess.Types.GameResult.Draw;FsChess.Types.GameResult.Open|]
-                |>Array.map(FsChess.Result.ToStr)
+                [|GmResult.WhiteWins;GmResult.BlackWins;GmResult.Draw;GmResult.Open|]
+                |>Array.map(GmResult.ToStr)
                 |>Array.iter(fun r -> rscb.Items.Add(r)|>ignore)
                 tc.Controls.Add(rscb,1,4)
                 tc.Controls.Add(dtlbl,0,5)
@@ -287,24 +282,22 @@ module Library2 =
             irs <- getirs i []
             let mv =
                 if irs.Length>1 then 
-                    let rec getmv (mtel:FsChess.Types.MoveTextEntry list) (intl:int list) =
-                        if intl.Length=1 then mtel.[intl.Head]
+                    let rec getmv (imsel:MvStrEntry list) (intl:int list) =
+                        if intl.Length=1 then imsel.[intl.Head]
                         else
                             let ih = intl.Head
-                            let mte = mtel.[ih]
+                            let mte = imsel.[ih]
                             match mte with
-                            |FsChess.Types.RAVEntry(nmtel) -> getmv nmtel intl.Tail
+                            |RvEntry(nmsel) -> getmv nmsel intl.Tail
                             |_ -> failwith "should be a RAV"
-                    getmv game.MoveText irs
+                    getmv msel irs
                 else
-                    game.MoveText.[i]
+                    msel.[i]
             match mv with
-            |FsChess.Types.HalfMoveEntry(_,_,_,amv) ->
-                if amv.IsNone then failwith "should have valid aMove"
-                else
-                    board <- amv.Value.PostBrd
-                    board|>bdchngEvt.Trigger
-                    mve|>highlight
+            |MvEntry(_,_,_,amv) ->
+                board <- amv.PostBrd
+                board|>bdchngEvt.Trigger
+                mve|>highlight
 
             |_ -> failwith "not done yet"
         
@@ -323,7 +316,7 @@ module Library2 =
             //do add nag 
             let nag =
                 new ToolStripMenuItem(Text = "Add NAG")
-            nag.Click.Add(fun _ -> dlgnag(1,FsChess.Types.NAG.Null).ShowDialog() |> ignore)
+            nag.Click.Add(fun _ -> dlgnag(1,Nag.Null).ShowDialog() |> ignore)
             m.Items.Add(nag) |> ignore
             //do edit hdrs
             let hdr =
@@ -357,7 +350,7 @@ module Library2 =
                 ccm <- el.InnerText
                 cmctxmnu.Show(pgn,psn)
             elif el.GetAttribute("className") = "ng" then 
-                cng <- el.InnerText|>FsChess.Game.NAGFromStr
+                cng <- el.InnerText|>Nag.FromStr
                 ngctxmnu.Show(pgn,psn)
 
 
@@ -383,17 +376,12 @@ module Library2 =
             pgn.DocumentCompleted.Add(setclicks)
             pgn.ObjectForScripting <- pgn
 
-        ///Gets the Game that is displayed
-        member pgn.GetGame() = 
-            game
-
         ///Switches to another game with the same position
-        member pgn.SwitchGame(gm:FsChess.Types.Game,hdr:Hdr,mvstr:string,mvs:FsChess.Types.Move[]) = 
+        member pgn.SwitchGame(hdr:Hdr,mvstr:string,mvs:FsChess.Types.Move[]) = 
             chdr <- hdr
             cmvs <- mvs
             //parse string into entries
             msel <- mvstr|>Game.GetEntries
-            game <- gm|>FsChess.Game.GetaMoves
             pgn.DocumentText <- mvtags()
             //need to select move that matches current board
             let rec getnxt cbd ci (mtel:MvStrEntry list) =
@@ -401,7 +389,7 @@ module Library2 =
                 else
                     let mte = mtel.Head
                     match mte with
-                    |MvEntry(_,_,_) ->
+                    |MvEntry(_,_,_,_) ->
                         let mv = cmvs.[ci]
                         let nbd = cbd|>FsChess.Board.Push mv
                         if nbd=board then ci
@@ -416,139 +404,39 @@ module Library2 =
                     if el.Id=id.ToString() then
                         el|>highlight
 
- 
-        ///Sets the Game to be displayed
-        member pgn.SetGame(gm:FsChess.Types.Game) = 
-            game <- gm|>FsChess.Game.GetaMoves
-            pgn.DocumentText <- mvtags()
-            board <- FsChess.Board.Start
-            oldstyle <- None
-            irs <- [-1]
-            board|>bdchngEvt.Trigger
-
-        ///Goes to the next Move in the Game
-        member pgn.NextMove() = 
-            let rec getnxt oi ci (mtel:FsChess.Types.MoveTextEntry list) =
-                if ci=mtel.Length then oi
-                else
-                    let mte = mtel.[ci]
-                    match mte with
-                    |FsChess.Types.HalfMoveEntry(_,_,_,amv) ->
-                        if amv.IsNone then failwith "should have valid aMove"
-                        else
-                            board <- amv.Value.PostBrd
-                            board|>bdchngEvt.Trigger
-                        ci
-                    |_ -> getnxt oi (ci+1) mtel
-            if irs.Length>1 then 
-                let rec getmv (mtel:FsChess.Types.MoveTextEntry list) (intl:int list) =
-                    if intl.Length=1 then
-                        let oi = intl.Head
-                        let ni = getnxt oi (oi+1) mtel
-                        let st = irs|>List.rev|>List.tail|>List.rev
-                        irs <- st@[ni]
-                    else
-                        let ih = intl.Head
-                        let mte = mtel.[ih]
-                        match mte with
-                        |FsChess.Types.RAVEntry(nmtel) -> getmv nmtel intl.Tail
-                        |_ -> failwith "should be a RAV"
-                getmv game.MoveText irs
-            else
-                let ni = getnxt irs.Head (irs.Head+1) game.MoveText
-                irs <- [ni]
-            //now need to select the element
-            let id = getir irs
-            for el in pgn.Document.GetElementsByTagName("span") do
-                if el.GetAttribute("className") = "mv" then
-                    if el.Id=id.ToString() then
-                        el|>highlight
-        
-        ///Goes to the last Move in the Variation
-        member pgn.LastMove() = 
-            let rec gofwd lirs =
-                pgn.NextMove()
-                if irs<>lirs then gofwd irs
-            gofwd irs
-        
-        ///Goes to the previous Move in the Game
-        member pgn.PrevMove() = 
-            let rec getprv oi ci (mtel:FsChess.Types.MoveTextEntry list) =
-                if ci<0 then oi
-                else
-                    let mte = mtel.[ci]
-                    match mte with
-                    |FsChess.Types.HalfMoveEntry(_,_,_,amv) ->
-                        if amv.IsNone then failwith "should have valid aMove"
-                        else
-                            board <- amv.Value.PostBrd
-                            board|>bdchngEvt.Trigger
-                        ci
-                    |_ -> getprv oi (ci-1) mtel
-            if irs.Length>1 then 
-                let rec getmv (mtel:FsChess.Types.MoveTextEntry list) (intl:int list) =
-                    if intl.Length=1 then
-                        let oi = intl.Head
-                        let ni = getprv oi (oi-1) mtel
-                        let st = irs|>List.rev|>List.tail|>List.rev
-                        irs <- st@[ni]
-                    else
-                        let ih = intl.Head
-                        let mte = mtel.[ih]
-                        match mte with
-                        |FsChess.Types.RAVEntry(nmtel) -> getmv nmtel intl.Tail
-                        |_ -> failwith "should be a RAV"
-                getmv game.MoveText irs
-            else
-                let ni = getprv irs.Head (irs.Head-1) game.MoveText
-                irs <- [ni]
-            //now need to select the element
-            let id = getir irs
-            for el in pgn.Document.GetElementsByTagName("span") do
-                if el.GetAttribute("className") = "mv" then
-                    if el.Id=id.ToString() then
-                        el|>highlight
-
-        ///Goes to the first Move in the Variation
-        member pgn.FirstMove() = 
-            let rec goback lirs =
-                pgn.PrevMove()
-                if irs<>lirs then goback irs
-            goback irs
 
         ///Make a Move in the Game - may change the Game or just select a Move
         member pgn.DoMove(mv:FsChess.Types.Move) =
-            let rec getnxt oi ci (mtel:FsChess.Types.MoveTextEntry list) =
-                if ci=mtel.Length then ci,false,true//implies is an extension
+            let rec getnxt oi ci (imsel:MvStrEntry list) =
+                if ci=imsel.Length then ci,false,true//implies is an extension
                 else
-                    let mte = mtel.[ci]
+                    let mte = imsel.[ci]
                     match mte with
-                    |FsChess.Types.HalfMoveEntry(_,_,_,amv) ->
-                        if amv.IsNone then failwith "should have valid aMove"
-                        elif amv.Value.Mv=mv then
-                            board <- amv.Value.PostBrd
+                    |MvEntry(_,_,_,amv) ->
+                        if amv.Mv=mv then
+                            board <- amv.PostBrd
                             ci,true,false
                         else ci,false,false
-                    |_ -> getnxt oi (ci+1) mtel
+                    |_ -> getnxt oi (ci+1) imsel
             let isnxt,isext =
                 if irs.Length>1 then 
-                    let rec getmv (mtel:FsChess.Types.MoveTextEntry list) (intl:int list) =
+                    let rec getmv (imsel:MvStrEntry list) (intl:int list) =
                         if intl.Length=1 then
                             let oi = intl.Head
-                            let ni,fnd,isext = getnxt oi (oi+1) mtel
+                            let ni,fnd,isext = getnxt oi (oi+1) imsel
                             if fnd then
                                 let st = irs|>List.rev|>List.tail|>List.rev
                                 irs <- st@[ni]
                             fnd,isext
                         else
                             let ih = intl.Head
-                            let mte = mtel.[ih]
+                            let mte = imsel.[ih]
                             match mte with
-                            |FsChess.Types.RAVEntry(nmtel) -> getmv nmtel intl.Tail
+                            |RvEntry(nmsel) -> getmv nmsel intl.Tail
                             |_ -> failwith "should be a RAV"
-                    getmv game.MoveText irs
+                    getmv msel irs
                 else
-                    let ni,fnd,isext = getnxt irs.Head (irs.Head+1) game.MoveText
+                    let ni,fnd,isext = getnxt irs.Head (irs.Head+1) msel
                     if fnd then irs <- [ni]
                     fnd,isext
             if isnxt then
@@ -559,67 +447,66 @@ module Library2 =
                         if el.Id=id.ToString() then
                             el|>highlight
             elif isext then
-                let pmv = mv|>FsChess.Move.TopMove board
-                let ngame,nirs = FsChess.Game.AddMv game irs pmv 
-                game <- ngame
+                let nbd = board|>FsChess.Board.Push mv
+                let nmsel,nirs = Game.AddMv msel irs {PreBrd=board;Mv=mv;PostBrd=nbd} 
+                msel <- nmsel
                 irs <- nirs
-                board <- board|>FsChess.Board.Push mv
+                board <- nbd
                 pgn.DocumentText <- mvtags()
                 game|>gmchngEvt.Trigger
             else
                 //Check if first move in RAV
-                let rec inrav oi ci (mtel:FsChess.Types.MoveTextEntry list) =
-                    if ci=mtel.Length then ci,false //Should not hit this as means has no moves
+                let rec inrav oi ci (imsel:MvStrEntry list) =
+                    if ci=imsel.Length then ci,false //Should not hit this as means has no moves
                     else
-                        let mte = mtel.[ci]
+                        let mte = imsel.[ci]
                         match mte with
-                        |FsChess.Types.HalfMoveEntry(_,_,_,amv) ->
-                            if amv.IsNone then failwith "should have valid aMove"
-                            elif amv.Value.Mv=mv then
-                                board <- amv.Value.PostBrd
+                        |MvEntry(_,_,_,amv) ->
+                            if amv.Mv=mv then
+                                board <- amv.PostBrd
                                 ci,true
                             else ci,false
-                        |_ -> inrav oi (ci+1) mtel
+                        |_ -> inrav oi (ci+1) imsel
                 //next see if moving into RAV
-                let rec getnxtrv oi ci mct (mtel:FsChess.Types.MoveTextEntry list) =
-                    if ci=mtel.Length then ci,0,false //TODO this is an extension to RAV or Moves
+                let rec getnxtrv oi ci mct (imsel:MvStrEntry list) =
+                    if ci=imsel.Length then ci,0,false //TODO this is an extension to RAV or Moves
                     else
-                        let mte = mtel.[ci]
+                        let mte = imsel.[ci]
                         if mct = 0 then
                             match mte with
-                            |FsChess.Types.HalfMoveEntry(_,_,_,amv) ->
-                                getnxtrv oi (ci+1) (mct+1) mtel
-                            |_ -> getnxtrv oi (ci+1) mct mtel
+                            |MvEntry(_,_,_,amv) ->
+                                getnxtrv oi (ci+1) (mct+1) imsel
+                            |_ -> getnxtrv oi (ci+1) mct imsel
                         else
                             match mte with
-                            |FsChess.Types.HalfMoveEntry(_,_,_,amv) ->
+                            |MvEntry(_,_,_,amv) ->
                                 ci,0,false
-                            |FsChess.Types.RAVEntry(nmtel) ->
+                            |RvEntry(nmsel) ->
                                 //now need to see if first move in rav is mv
-                                let sci,fnd = inrav 0 0 nmtel
+                                let sci,fnd = inrav 0 0 nmsel
                                 if fnd then
                                     ci,sci,fnd
-                                else getnxtrv oi (ci+1) mct mtel
-                            |_ -> getnxtrv oi (ci+1) mct mtel
+                                else getnxtrv oi (ci+1) mct imsel
+                            |_ -> getnxtrv oi (ci+1) mct imsel
                 let isnxtrv =
                     if irs.Length>1 then 
-                        let rec getmv (mtel:FsChess.Types.MoveTextEntry list) (intl:int list) =
+                        let rec getmv (imsel:MvStrEntry list) (intl:int list) =
                             if intl.Length=1 then
                                 let oi = intl.Head
-                                let ni,sci,fnd = getnxtrv oi (oi+1) 0 mtel
+                                let ni,sci,fnd = getnxtrv oi (oi+1) 0 imsel
                                 if fnd then
                                     let st = irs|>List.rev|>List.tail|>List.rev
                                     irs <- st@[ni;sci]
                                 fnd
                             else
                                 let ih = intl.Head
-                                let mte = mtel.[ih]
+                                let mte = imsel.[ih]
                                 match mte with
-                                |FsChess.Types.RAVEntry(nmtel) -> getmv nmtel intl.Tail
+                                |RvEntry(nmsel) -> getmv nmsel intl.Tail
                                 |_ -> failwith "should be a RAV"
-                        getmv game.MoveText irs
+                        getmv msel irs
                     else
-                        let ni,sci,fnd = getnxtrv irs.Head (irs.Head+1) 0 game.MoveText
+                        let ni,sci,fnd = getnxtrv irs.Head (irs.Head+1) 0 msel
                         if fnd then irs <- [ni;sci]
                         fnd
                 if isnxtrv then
@@ -631,10 +518,11 @@ module Library2 =
                                 el|>highlight
                     else
                         //need to create a new RAV
-                        let ngame,nirs = FsChess.Game.AddRav game irs (mv|>FsChess.Move.TopMove board) 
-                        game <- ngame
+                        let nbd = board|>FsChess.Board.Push mv
+                        let nmsel,nirs = FsChess.Game.AddRav msel irs {PreBrd=board;Mv=mv;PostBrd=nbd} 
+                        msel <- nmsel
                         irs <- nirs
-                        board <- board|>FsChess.Board.Push mv
+                        board <- nbd
                         pgn.DocumentText <- mvtags()
                         game|>gmchngEvt.Trigger
 
@@ -645,5 +533,5 @@ module Library2 =
         ///Provides the new Game after a change
         member __.GmChng = gmchngEvt.Publish
 
-        ///Provides the new Game after a change to the header
+        ///Provides the new Hdr after a change to the header
         member __.HdrChng = hdrchngEvt.Publish
