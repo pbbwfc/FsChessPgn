@@ -1,8 +1,5 @@
 ﻿namespace Olm
 
-open FsChess
-open FsChessPgn
-
 module Find =
     let GetBoard (bd:Brd) (cp:ChessPack) (hdr:Hdr) =
         let rec getbd cbd (imvl:Move list) =
@@ -49,7 +46,7 @@ module Find =
         let fnd,mv = getbd initbd mvs
         if fnd then Some(hdr,mv) else None
 
-    let Board (bd:FsChess.Types.Brd) (cp:ChessPack) =
+    let Board (bd:Brd) (cp:ChessPack) =
         let prnks = [|A2; B2; C2; D2; E2; F2; G2; H2; A7; B7; C7; D7; E7; F7; G7; H7|]
         let empties = prnks|>Array.filter(fun sq -> (sq|>Square.ToRank)=Rank2 && bd.[sq]<>Piece.WPawn || (sq|>Square.ToRank)=Rank7 && bd.[sq]<>Piece.BPawn)|>Set.ofArray
         let possibles = cp.Indx.[empties|>Set.map(Square.Name)|>Set.toArray|>Array.reduce(+)]

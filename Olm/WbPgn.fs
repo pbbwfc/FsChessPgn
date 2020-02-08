@@ -2,7 +2,6 @@
 
 open System.Windows.Forms
 open System.Drawing
-//open FsChess
 
 [<AutoOpen>]
 module Library2 =
@@ -11,7 +10,6 @@ module Library2 =
         inherit WebBrowser(AllowWebBrowserDrop = false,IsWebBrowserContextMenuEnabled = false,WebBrowserShortcutsEnabled = false)
         
         //mutables
-        let mutable game = FsChess.Game.Start
         let mutable msel:MvStrEntry list = []
         let mutable chdr:Hdr = new Hdr()
         let mutable cmvs:FsChess.Types.Move[] = [||]
@@ -115,7 +113,7 @@ module Library2 =
                     msel <- Game.EditComment msel rirs comm.Text
                     pgn.DocumentText <- mvtags()
 
-                game|>gmchngEvt.Trigger
+                (msel|>Game.MoveText,cmvs)|>gmchngEvt.Trigger
                 dlg.Close()
 
             do 
@@ -169,7 +167,7 @@ module Library2 =
                     msel <- Game.DeleteNag msel rirs
                     pgn.DocumentText <- mvtags()
 
-                game|>gmchngEvt.Trigger
+                (msel|>Game.MoveText,cmvs)|>gmchngEvt.Trigger
                 dlg.Close()
 
             do 
@@ -233,7 +231,6 @@ module Library2 =
                 chdr.Event<-evtb.Text
                 chdr.Round<-rdtb.Text
                 chdr.Site<-sttb.Text
-                game|>gmchngEvt.Trigger
                 chdr|>hdrchngEvt.Trigger
                 dlg.Close()
 
@@ -453,7 +450,7 @@ module Library2 =
                 irs <- nirs
                 board <- nbd
                 pgn.DocumentText <- mvtags()
-                game|>gmchngEvt.Trigger
+                (msel|>Game.MoveText,cmvs)|>gmchngEvt.Trigger
             else
                 //Check if first move in RAV
                 let rec inrav oi ci (imsel:MvStrEntry list) =
@@ -519,12 +516,12 @@ module Library2 =
                     else
                         //need to create a new RAV
                         let nbd = board|>FsChess.Board.Push mv
-                        let nmsel,nirs = FsChess.Game.AddRav msel irs {PreBrd=board;Mv=mv;PostBrd=nbd} 
+                        let nmsel,nirs = Game.AddRav msel irs {PreBrd=board;Mv=mv;PostBrd=nbd} 
                         msel <- nmsel
                         irs <- nirs
                         board <- nbd
                         pgn.DocumentText <- mvtags()
-                        game|>gmchngEvt.Trigger
+                        (msel|>Game.MoveText,cmvs)|>gmchngEvt.Trigger
 
         //publish
         ///Provides the new Board after a change

@@ -1,6 +1,5 @@
 ﻿namespace Olm
 
-open FsChess
 open System.IO
 
 module Convert =

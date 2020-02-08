@@ -127,8 +127,10 @@ module Library4 =
             (filtgms,cbd,cp)|>filtEvt.Trigger
 
         ///Changes the contents of the Game that is selected
-        member _.ChangeGame(igm:Game) =
-            cgm <- igm
+        member _.ChangeGame(mvstr:string,mvs:Move[]) =
+            //TODO
+            cmvstr <- mvstr
+            cmvs <- mvs
             gmchg <- true
 
         ///Changes the header of the Game that is selected

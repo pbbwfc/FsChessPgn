@@ -6,10 +6,21 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
+    <Compile Include="Direction.fs" />
+    <Compile Include="Player.fs" />
     <Compile Include="GmResult.fs" />
     <Compile Include="Nag.fs" />
+    <Compile Include="Rank.fs" />
+    <Compile Include="File.fs" />
+    <Compile Include="Square.fs" />
+    <Compile Include="PieceType.fs" />
+    <Compile Include="Piece.fs" />
     <Compile Include="Pack.fs" />
     <Compile Include="Game.fs" />
+    <Compile Include="Bitboard.fs" />
+    <Compile Include="Attacks.fs" />
+    <Compile Include="FEN.fs" />
+    <Compile Include="Board.fs" />
     <Compile Include="Convert.fs" />
     <Compile Include="Stats.fs" />
     <Compile Include="Find.fs" />
