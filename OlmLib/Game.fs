@@ -164,7 +164,104 @@ module Game =
          let str = ml|>List.mapi doent|>List.reduce(+)
          str
     
-    
+    let CommentBefore (msel:MvStrEntry list) (irs:int list) (str:string) =
+         let mte = CommEntry(str)
+         if irs.Length=1 then
+             //allow for empty list
+             if msel.IsEmpty then
+                 [mte]
+             else
+                 let i = irs.Head
+                 let nmsel = 
+                     if i=0 then mte::msel
+                     else
+                         msel.[..i-1]@[mte]@msel.[i..]
+                 nmsel
+         else
+             let rec getnmsel (cirs:int list) (imsel:MvStrEntry list) =
+                 if cirs.Length=1 then 
+                     let i = cirs.Head
+                     let nmsel = 
+                         if i=0 then mte::imsel
+                         else
+                             imsel.[..i-1]@[mte]@imsel.[i..]
+                     nmsel
+                 else
+                     let i = cirs.Head
+                     let rav = imsel.[i]
+                     match rav with
+                     |RvEntry(nmsel) ->
+                         imsel.[..i-1]@[RvEntry(getnmsel cirs.Tail nmsel)]@imsel.[i+1..]
+                     |_ -> failwith "should be RAV"
+             let nmsel = getnmsel irs msel
+             nmsel
+
+    let CommentAfter (msel:MvStrEntry list) (irs:int list) (str:string) =
+        let mte = CommEntry(str)
+        if irs.Length=1 then
+            //allow for empty list
+            if msel.IsEmpty then
+                [mte]
+            else
+                let i = irs.Head
+                let nmsel = 
+                    if i=msel.Length-1 then msel@[mte]
+                    else
+                        msel.[..i]@[mte]@msel.[i+1..]
+                nmsel
+        else
+            let rec getnmsel (cirs:int list) (imsel:MvStrEntry list) =
+                if cirs.Length=1 then 
+                    let i = cirs.Head
+                    let nmsel = 
+                        if i=imsel.Length-1 then imsel@[mte]
+                        else
+                            imsel.[..i]@[mte]@imsel.[i+1..]
+                    nmsel
+                else
+                    let i = cirs.Head
+                    let rav = imsel.[i]
+                    match rav with
+                    |RvEntry(nmsel) ->
+                        imsel.[..i-1]@[RvEntry(getnmsel cirs.Tail nmsel)]@imsel.[i+1..]
+                    |_ -> failwith "should be RAV"
+            let nmsel = getnmsel irs msel
+            nmsel
+ 
+    let EditComment (msel:MvStrEntry list) (irs:int list) (str:string) =
+        let mte = CommEntry(str)
+        if irs.Length=1 then
+            //allow for empty list
+            if msel.IsEmpty then
+                [mte]
+            else
+                let i = irs.Head
+                let nmsel = 
+                    if i=0 then mte::msel.Tail
+                    else
+                        msel.[..i-1]@[mte]@msel.[i+1..]
+                nmsel
+        else
+            let rec getnmsel (cirs:int list) (imsel:MvStrEntry list) =
+                if cirs.Length=1 then 
+                    let i = cirs.Head
+                    let nmsel = 
+                        if i=0 then mte::imsel.Tail
+                        elif i=imsel.Length-1 then imsel.[..i-1]@[mte]
+                        else
+                            imsel.[..i-1]@[mte]@imsel.[i+1..]
+                    nmsel
+                else
+                    let i = cirs.Head
+                    let rav = imsel.[i]
+                    match rav with
+                    |RvEntry(nmsel) ->
+                        imsel.[..i-1]@[RvEntry(getnmsel cirs.Tail nmsel)]@imsel.[i+1..]
+                    |_ -> failwith "should be RAV"
+            let nmsel = getnmsel irs msel
+            nmsel
+
+
     //TODO need to remove all code from FsChessPgn
     let Set (cp:ChessPack,i:int) =
         let hdr = cp.Hdrs.[i]
