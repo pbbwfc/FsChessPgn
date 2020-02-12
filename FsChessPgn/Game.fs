@@ -88,7 +88,8 @@ module Game =
                     let nmct = if bd.WhosTurn=Player.White then mct else mct+1
                     setamv pmvl.Tail nmct amv.PreBrd amv.PostBrd (nmte::opmvl)
                 |RAVEntry(mtel) -> 
-                    let nmtel = setamv mtel mct prebd prebd []
+                    let nmct = if prebd.WhosTurn=Player.Black then mct-1 else mct
+                    let nmtel = setamv mtel nmct prebd prebd []
                     let nmte = RAVEntry(nmtel)
                     setamv pmvl.Tail mct prebd bd (nmte::opmvl)
                 |_ -> setamv pmvl.Tail mct prebd bd (mte::opmvl)

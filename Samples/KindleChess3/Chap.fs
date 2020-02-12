@@ -52,16 +52,19 @@ module Chap =
                 |_ ->
                     let nmtel = torav (mtel|>List.rev) [] []
                     torav imtel.Tail (RAVEntry(nmtel)::ravl) omtel
-            |HalfMoveEntry(_) -> 
+            |HalfMoveEntry(_,_,pmv,amv) -> 
                 if ravl.IsEmpty then torav imtel.Tail ravl (mte::omtel)
-                else torav imtel.Tail [] (RAVEntry(mte::omtel)::ravl)
+                else 
+                    let nmte = if amv.Value.Isw then mte else HalfMoveEntry(amv.Value.Mno|>Some,true,pmv,amv)
+                    torav imtel.Tail [] (RAVEntry(nmte::omtel)::ravl)
             |_ -> torav imtel.Tail ravl (mte::omtel)
 
     ///ToVar - converts to create Variations html
     let ToVar fol i (nm : string) =
         let ch = (i + 1).ToString()
         let nl = System.Environment.NewLine
-        let gm = get nm fol
+        let gm0 = get nm fol
+        let gm = gm0|>Game.GetaMoves
         //1. Turn mains into RAVs
         let mtel1 = torav (gm.MoveText|>List.rev) [] []
         //let tst1 = mtel1|>Game.MovesStr
@@ -119,7 +122,19 @@ module Chap =
                 else str0
             if mvl.IsEmpty then ""
             else
-                mvl|>List.map mvtostr|>List.reduce(fun a b -> a + " " + b)
+                //need to add a number if black
+                let fmvstr = mvl.Head|>Game.MoveStr
+                //let amv = 
+                //    match fmv with
+                //    |HalfMoveEntry(_,_,_,amv) -> amv
+                //    |_ -> failwith "should be a move"
+                //let nmstr = if amv.Value.Isw then "" else amv.Value.Mno.ToString() + "... " 
+                let mvlstr = 
+                    if mvl.Tail.IsEmpty then fmvstr 
+                    else
+                        fmvstr + " " +
+                        (mvl.Tail|>List.map mvtostr|>List.reduce(fun a b -> a + " " + b))
+                mvlstr
         let mvfilt mte =
             match mte with
             |HalfMoveEntry(_) -> true
@@ -130,7 +145,7 @@ module Chap =
             |_ -> false
         let rec ravtohtm indt idstr i (rav:MoveTextEntry) =
             let id = idstr + "." + (i+1).ToString()
-            let lnk = "<li><a href=\"CH" + ch + ".html#" + id + "\">" + id + "</a>"
+            let lnk = "<li><a href=\"CH" + ch + ".html#" + id + "\">" + id + "</a>  "
             match rav with
             |RAVEntry(mtel) ->
                 let mvl = mtel|>List.filter mvfilt
