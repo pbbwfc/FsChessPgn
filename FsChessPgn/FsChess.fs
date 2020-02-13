@@ -162,6 +162,9 @@ module Game =
     //Edits a comment to the Game at the address provided
     let EditComment = FsChessPgn.Game.EditComment
 
+    //Deletes a Commenet in the Game at the address provided
+    let DeleteComment = FsChessPgn.Game.DeleteComment
+
 
 module Pretty =
 

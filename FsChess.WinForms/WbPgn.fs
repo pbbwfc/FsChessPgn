@@ -277,7 +277,6 @@ module Library2 =
                 okbtn.Click.Add(dook)
 
             dlg
-
         
         let onclick(mve:HtmlElement) = 
             let i = mve.Id|>int
@@ -330,12 +329,21 @@ module Library2 =
             m
 
         let cmctxmnu = 
+            let delcm(e) =
+                game <- Game.DeleteComment game rirs
+                pgn.DocumentText <- mvtags()
+            
             let m = new ContextMenuStrip()
             //do edit comm 
             let ed =
                 new ToolStripMenuItem(Text = "Edit Comment")
             ed.Click.Add(fun _ -> dlgcomm(0,ccm).ShowDialog() |> ignore)
             m.Items.Add(ed) |> ignore
+            //do delete comm 
+            let dl =
+                new ToolStripMenuItem(Text = "Delete Comment")
+            dl.Click.Add(delcm)
+            m.Items.Add(dl) |> ignore
             m
 
         let ngctxmnu = 

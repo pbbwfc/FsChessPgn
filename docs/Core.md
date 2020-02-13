@@ -101,3 +101,4 @@ The following Game related functions are provided in the module Game:
 | CommentBefore   | Game -> int list -> string -> Game           | Adds a comment to the Game before the address provided                                 |
 | CommentAfter    | Game -> int list -> string -> Game           | Adds a comment to the Game after the address provided                                  |
 | EditComment     | Game -> int list -> string -> Game           | Edits a comment to the Game at the address provided                                    |
+| DeleteComment   | Game -> int list ->  Game                    | Deletes a Commenet in the Game at the address provided                                 |
