@@ -183,6 +183,54 @@ module Game =
             let nirs = getnmirs irs [] gm.MoveText
             {gm with MoveText=nmtel},nirs
 
+    let DeleteRav (gm:Game) (iirs:int list)  =
+        if iirs.Length=1 then
+            {gm with MoveText=[]}
+        else
+            let irs = iirs.[..iirs.Length-2]
+            if irs.Length=1 then
+                let i = irs.Head
+                let nmtel = 
+                    if i=0 then gm.MoveText.Tail
+                    else
+                        //fix Black by removing mn and cont
+                        let pmte = 
+                            let hm = gm.MoveText.[i+1]
+                            match hm with
+                            |HalfMoveEntry(_,_,pmv,amv) ->
+                                let isw = amv.Value.Isw
+                                if isw then hm else HalfMoveEntry(None,false,pmv,amv)
+                            |_ -> hm
+                        gm.MoveText.[..i-1]@[pmte]@gm.MoveText.[i+2..]
+                {gm with MoveText=nmtel}
+            else
+                let rec getnmtel (cirs:int list) (mtel:MoveTextEntry list) =
+                    if cirs.Length=1 then 
+                        let i = cirs.Head
+                        let nmtel = 
+                            if i=0 then mtel.Tail
+                            elif i=mtel.Length-1 then mtel.[..i-1]
+                            else
+                                //fix Black by removing mn and cont
+                                let pmte = 
+                                    let hm = gm.MoveText.[i+1]
+                                    match hm with
+                                    |HalfMoveEntry(_,_,pmv,amv) ->
+                                        let isw = amv.Value.Isw
+                                        if isw then hm else HalfMoveEntry(None,false,pmv,amv)
+                                    |_ -> hm
+                                mtel.[..i-1]@[pmte]@mtel.[i+2..]
+                        nmtel
+                    else
+                        let i = cirs.Head
+                        let rav = mtel.[i]
+                        match rav with
+                        |RAVEntry(nmtel) ->
+                            mtel.[..i-1]@[RAVEntry(getnmtel cirs.Tail nmtel)]@mtel.[i+1..]
+                        |_ -> failwith "should be RAV"
+                let nmtel = getnmtel irs gm.MoveText
+                {gm with MoveText=nmtel}
+
     let AddMv (gm:Game) (irs:int list) (pmv:pMove) = 
         let rec getext ci nmte (imtel:MoveTextEntry list) (omtel:MoveTextEntry list) =
             if ci>omtel.Length then getext ci nmte imtel.Tail (imtel.Head::omtel)

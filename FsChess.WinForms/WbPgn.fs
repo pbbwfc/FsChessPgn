@@ -305,6 +305,10 @@ module Library2 =
             |_ -> failwith "not done yet"
         
         let mvctxmnu = 
+            let delrav(e) =
+                game <- Game.DeleteRav game rirs
+                pgn.DocumentText <- mvtags()
+
             let m = new ContextMenuStrip()
             //do edit comm before
             let adb =
@@ -326,6 +330,11 @@ module Library2 =
                 new ToolStripMenuItem(Text = "Edit Game Headers")
             hdr.Click.Add(fun _ -> dlghdr().ShowDialog() |> ignore)
             m.Items.Add(hdr) |> ignore
+            //do delete rav
+            let dlr =
+                new ToolStripMenuItem(Text = "Delete Variation")
+            dlr.Click.Add(delrav)
+            m.Items.Add(dlr) |> ignore
             m
 
         let cmctxmnu = 

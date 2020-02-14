@@ -153,6 +153,9 @@ module Game =
     //Adds a RAV to the Game given the pMove is contains and its address
     let AddRav = FsChessPgn.Game.AddRav
 
+    //Deletes a RAV in the Game at the address provided
+    let DeleteRav = FsChessPgn.Game.DeleteRav
+
     //Adds a comment to the Game before the address provided
     let CommentBefore = FsChessPgn.Game.CommentBefore
 
@@ -162,7 +165,7 @@ module Game =
     //Edits a comment to the Game at the address provided
     let EditComment = FsChessPgn.Game.EditComment
 
-    //Deletes a Commenet in the Game at the address provided
+    //Deletes a comment in the Game at the address provided
     let DeleteComment = FsChessPgn.Game.DeleteComment
 
 

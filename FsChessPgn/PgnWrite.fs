@@ -76,18 +76,24 @@ module PgnWrite =
                 writer.Write(mn.Value)
                 writer.Write(if ic then "... " else ". ")
             Move(mv, writer)
-        |CommentEntry(str) -> writer.Write("{" + str + "}")
+            writer.Write(" ")
+        |CommentEntry(str) -> 
+            writer.WriteLine()
+            writer.Write("{" + str + "} ")
         |GameEndEntry(gr) -> writer.Write(ResultString(gr))
-        |NAGEntry(cd) -> writer.Write("$" + (cd|>int).ToString())
+        |NAGEntry(cd) -> 
+            writer.Write("$" + (cd|>int).ToString())
+            writer.Write(" ")
         |RAVEntry(ml) -> 
+            writer.WriteLine()
             writer.Write("(")
             MoveText(ml, writer)
-            writer.Write(")")
+            writer.WriteLine(")")
     
     and MoveText(ml:MoveTextEntry list, writer:TextWriter) =
         let doent i m =
             MoveTextEntry(m,writer)
-            if i<ml.Length-1 then writer.Write(" ")
+            //if i<ml.Length-1 then writer.Write(" ")
 
         ml|>List.iteri doent
     
