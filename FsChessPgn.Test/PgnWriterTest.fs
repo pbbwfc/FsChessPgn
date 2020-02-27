@@ -19,6 +19,7 @@ type PgnWriterTest () =
 [WhiteElo ""-""]
 [BlackElo ""-""]
 
+
 {some moves} 1-0
 
 "

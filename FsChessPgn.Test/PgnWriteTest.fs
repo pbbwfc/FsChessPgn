@@ -8,7 +8,7 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 
 [<TestClass>]
 type MoveFormatterTest()=
-
+    let nl = System.Environment.NewLine
     let _move1 = pMove.CreateOrig(MoveType.Capture,Sq(FileD, Rank5),None,Some(FileE),None)
     let _move2 = pMove.Create(MoveType.Simple,Sq(FileD, Rank4),PieceType.Knight|>Some)
 
@@ -22,6 +22,7 @@ type MoveFormatterTest()=
 [Result ""1-0""]
 [WhiteElo ""-""]
 [BlackElo ""-""]
+
 
 {some moves} 1-0
 "
@@ -172,41 +173,40 @@ type MoveFormatterTest()=
         writer.Write("Foo ")
         let entry = HalfMoveEntry(None,false,_move1,None)
         PgnWrite.MoveTextEntry(entry, writer)
-        writer.Write(" ")
         let entry = HalfMoveEntry(None,false,_move2,None)
         PgnWrite.MoveTextEntry(entry, writer)
 
-        Assert.AreEqual("Foo exd5 Nd4", writer.ToString())
+        Assert.AreEqual("Foo exd5 Nd4 ", writer.ToString())
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_move_pair() =
         let entry1 = HalfMoveEntry(None,false,_move1,None)
         let entry2 = HalfMoveEntry(None,false,_move2,None)
-        let act = PgnWrite.MoveTextEntryStr(entry1) + " " + PgnWrite.MoveTextEntryStr(entry2)
+        let act = PgnWrite.MoveTextEntryStr(entry1) + PgnWrite.MoveTextEntryStr(entry2)
 
-        Assert.AreEqual("exd5 Nd4", act)
+        Assert.AreEqual("exd5 Nd4 ", act)
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_move_pair_with_number() =
         let entry1 = HalfMoveEntry(Some(6),false,_move1,None)
         let entry2 = HalfMoveEntry(None,false,_move2,None)
-        let act = PgnWrite.MoveTextEntryStr(entry1) + " " + PgnWrite.MoveTextEntryStr(entry2)
+        let act = PgnWrite.MoveTextEntryStr(entry1) + PgnWrite.MoveTextEntryStr(entry2)
 
-        Assert.AreEqual("6. exd5 Nd4", act)
+        Assert.AreEqual("6. exd5 Nd4 ", act)
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_starting_single_move() =
         let entry = HalfMoveEntry(Some(6),false,_move1,None)
         let act = PgnWrite.MoveTextEntryStr (entry)
 
-        Assert.AreEqual("6. exd5", act)
+        Assert.AreEqual("6. exd5 ", act)
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_continued_single_move() =
         let entry = HalfMoveEntry(Some(6),true,_move2,None)
         let act = PgnWrite.MoveTextEntryStr (entry)
 
-        Assert.AreEqual("6... Nd4", act)
+        Assert.AreEqual("6... Nd4 ", act)
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_a_GameEndEntry() =
@@ -216,17 +216,17 @@ type MoveFormatterTest()=
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_a_CommentEntry() =
-        Assert.AreEqual("{This is a test comment}", PgnWrite.MoveTextEntryStr(CommentEntry("This is a test comment")))
+        Assert.AreEqual(nl + "{This is a test comment} ", PgnWrite.MoveTextEntryStr(CommentEntry("This is a test comment")))
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_a_NAGEntry() =
-        Assert.AreEqual("$5", PgnWrite.MoveTextEntryStr(NAGEntry(NAG.Speculative)))
+        Assert.AreEqual("$5 ", PgnWrite.MoveTextEntryStr(NAGEntry(NAG.Speculative)))
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_a_RAVEntry() =
         let entry = HalfMoveEntry(Some(6),true,_move2,None)
         let ravEntry = RAVEntry([entry])
-        Assert.AreEqual("(6... Nd4)", PgnWrite.MoveTextEntryStr(ravEntry))
+        Assert.AreEqual(nl + "(6... Nd4 )" + nl, PgnWrite.MoveTextEntryStr(ravEntry))
 
     [<TestMethod>]
     member this.PgnWrite_should_PgnWrite_move_text() =
@@ -242,7 +242,7 @@ type MoveFormatterTest()=
         let entry7 = CommentEntry("game ends in win, whooot")
 
         let ml = [entry1;entry2;entry3;entry4;entry5a;entry5b;entry6;entry7]
-        Assert.AreEqual("37. Nxe5 $3 ({comment} 37. Ne3) 37... Rd8 38. h4 Rd5 1-0 {game ends in win, whooot}", PgnWrite.MoveTextStr(ml))
+        Assert.AreEqual("37. Nxe5 $3 " + nl + "(" + nl + "{comment} 37. Ne3 )" + nl + "37... Rd8 38. h4 Rd5 1-0" + nl + "{game ends in win, whooot} ", PgnWrite.MoveTextStr(ml))
 
     [<TestMethod>]
     member this.ormat_should_deal_with_empty_move_text() =

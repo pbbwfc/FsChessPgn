@@ -8,9 +8,11 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 
 [<TestClass>]
 type MoveSeriesRegParserTest() =
+    let nl = System.Environment.NewLine
+    
     [<TestMethod>]
     member this.parse_simple_piece_move() =
-        let s = "Qf5"
+        let s = "Qf5 "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -26,7 +28,7 @@ type MoveSeriesRegParserTest() =
 
     [<TestMethod>]
     member this.parse_simple_white_move() =
-        let s = "12. Qf5"
+        let s = "12. Qf5 "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -42,7 +44,7 @@ type MoveSeriesRegParserTest() =
 
     [<TestMethod>]
     member this.parse_simple_cont_move() =
-        let s = "12... Qf5"
+        let s = "12... Qf5 "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -58,7 +60,7 @@ type MoveSeriesRegParserTest() =
 
     [<TestMethod>]
     member this.parse_simple_moves() =
-        let s = "1. e4 c5 2. Nf3 d6 3. Bb5+ Bd7"
+        let s = "1. e4 c5 2. Nf3 d6 3. Bb5+ Bd7 "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -90,7 +92,7 @@ type MoveSeriesRegParserTest() =
 
     [<TestMethod>]
     member this.parse_comment() =
-        let s = "{this is a comment}"
+        let s = nl + "{this is a comment} "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -111,7 +113,7 @@ type MoveSeriesRegParserTest() =
         Assert.AreEqual(7, mt.Length)
         let (CommentEntry (str)) = mt.[5]
         Assert.AreEqual("This opening is called the Ruy Lopez.",str)
-        Assert.AreEqual("1. e4 e5 2. Nf3 Nc6 3. Bb5 {This opening is called the Ruy Lopez.} 3... a6",mt|>PgnWrite.MoveTextStr)
+        Assert.AreEqual("1. e4 e5 2. Nf3 Nc6 3. Bb5 " + nl + "{This opening is called the Ruy Lopez.} 3... a6 ",mt|>PgnWrite.MoveTextStr)
 
     [<TestMethod>]
     member this.parse_single_line_comments() =
@@ -127,7 +129,7 @@ type MoveSeriesRegParserTest() =
         Assert.AreEqual("This opening is called the Ruy Lopez.",str)
         let (CommentEntry (str)) = mt.[6]
         Assert.AreEqual("Another comment",str)
-        Assert.AreEqual("1. e4 e5 2. Nf3 Nc6 3. Bb5 {This opening is called the Ruy Lopez.} {Another comment} 3... a6",mt|>PgnWrite.MoveTextStr)
+        Assert.AreEqual("1. e4 e5 2. Nf3 Nc6 3. Bb5 " + nl + "{This opening is called the Ruy Lopez.} " + nl + "{Another comment} 3... a6 ",mt|>PgnWrite.MoveTextStr)
 
     [<TestMethod>]
     member this.parse_draw() =
@@ -178,23 +180,9 @@ type MoveSeriesRegParserTest() =
         Assert.AreEqual(s,mt|>PgnWrite.MoveTextStr)
 
     [<TestMethod>]
-    member this.parse_post_comment() =
-        let s = "1-0 {impressive game!}"
-        let gml = Games.ReadFromString s
-        Assert.AreEqual(1, gml.Length)
-        let gm = gml.Head
-        let mt = gm.MoveText
-        Assert.AreEqual(2, mt.Length)
-        let (GameEndEntry(res)) = mt.Head
-        Assert.AreEqual(GameResult.WhiteWins,res)
-        let (CommentEntry(str)) = mt.[1]
-        Assert.AreEqual("impressive game!",str)
-        Assert.AreEqual(s,mt|>PgnWrite.MoveTextStr)
-
-    [<TestMethod>]
     member this.parse_pre_comment() =
-        let s = "{This game is gonna be awesome! Watch this}
-1. e4 e5 2. Nf3"
+        let s = "
+{This game is gonna be awesome! Watch this} 1. e4 e5 2. Nf3 "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -208,12 +196,12 @@ type MoveSeriesRegParserTest() =
         Assert.AreEqual(MoveType.Simple,mv.Mtype)
         Assert.AreEqual(PieceType.Pawn, mv.Piece.Value)
         Assert.AreEqual(E4, mv.TargetSquare)
-        Assert.AreEqual("{This game is gonna be awesome! Watch this} 1. e4 e5 2. Nf3",mt|>PgnWrite.MoveTextStr)
+        Assert.AreEqual(s,mt|>PgnWrite.MoveTextStr)
 
 
     [<TestMethod>]
     member this.parse_between_comment() =
-        let s = "1. e4 {[%emt 0.0]} c5 {[%emt 0.0]} 2. Nc3"
+        let s = "1. e4 " + nl + "{[%emt 0.0]} c5 " + nl + "{[%emt 0.0]} 2. Nc3 "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -231,7 +219,7 @@ type MoveSeriesRegParserTest() =
 
     [<TestMethod>]
     member this.parse_NAG() =
-        let s = "1. e4 c5 $6 2. Nf3 $5"
+        let s = "1. e4 c5 $6 2. Nf3 $5 "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
@@ -251,8 +239,8 @@ type MoveSeriesRegParserTest() =
 
     [<TestMethod>]
     member this.parse_RAV() =
-        let s = "6. d5 $6 (6. Bd3 cxd4 7. exd4 d5 { - B14 }) 6... exd5"
-        let gml = Games.ReadFromString s
+        let s = "6. d5 $6 " + nl + "(6. Bd3 cxd4 7. exd4 d5 " + nl + "{ - B14 } )" + nl + "6... exd5 "
+        let gml = Games.ReadFromString s 
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
         let mt = gm.MoveText
@@ -271,7 +259,7 @@ type MoveSeriesRegParserTest() =
 
     [<TestMethod>]
     member this.parse_nested_RAV() =
-        let s = "6. d5 (6. Bd3 cxd4 7. exd4 d5 (7... Qa4)) 6... exd5"
+        let s = "6. d5 " + nl + "(6. Bd3 cxd4 7. exd4 d5 " + nl + "(7... Qa4 )" + nl + ")" + nl + "6... exd5 "
         let gml = Games.ReadFromString s
         Assert.AreEqual(1, gml.Length)
         let gm = gml.Head
