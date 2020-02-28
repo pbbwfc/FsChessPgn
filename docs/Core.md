@@ -103,3 +103,11 @@ The following Game related functions are provided in the module Game:
 | CommentAfter    | Game -> int list -> string -> Game           | Adds a comment to the Game after the address provided                                  |
 | EditComment     | Game -> int list -> string -> Game           | Edits a comment to the Game at the address provided                                    |
 | DeleteComment   | Game -> int list ->  Game                    | Deletes a comment in the Game at the address provided                                  |
+
+## Stockfish
+
+The following Stockfish related functions are provided in the module Stockfish:
+
+| Function        | Type                                         | Description                                                                            |
+|:----------------|:---------------------------------------------|:---------------------------------------------------------------------------------------|
+| GetBestMove     | Brd * int -> string * string                 | Get best move for current Board to the specified depth                                 |

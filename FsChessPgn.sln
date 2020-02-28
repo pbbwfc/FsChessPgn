@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{19D9
 		scripts\Pgn4.fsx = scripts\Pgn4.fsx
 		scripts\setup.fsx = scripts\setup.fsx
 		scripts\setupdll.fsx = scripts\setupdll.fsx
+		scripts\sf1.fsx = scripts\sf1.fsx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7E12609F-0CE8-4BF7-8734-AA0E4FC38DEC}"

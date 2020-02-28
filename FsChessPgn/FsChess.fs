@@ -168,6 +168,11 @@ module Game =
     //Deletes a comment in the Game at the address provided
     let DeleteComment = FsChessPgn.Game.DeleteComment
 
+module Stockfish =
+
+    ///Get best move for current Board and move number
+    let GetBestMove = FsChessPgn.Stockfish.GetBestMove
+
 
 module Pretty =
 

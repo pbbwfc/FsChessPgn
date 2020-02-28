@@ -116,6 +116,7 @@
     <Compile Include="RegParse.fs" />
     <Compile Include="Games.fs" />
     <Compile Include="PgnWriter.fs" />
+    <Compile Include="Stockfish.fs" />
     <Compile Include="FsChess.fs" />
     <Compile Include="FsChess.Pgn.fs" />
   </ItemGroup>
