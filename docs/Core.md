@@ -110,4 +110,4 @@ The following Stockfish related functions are provided in the module Stockfish:
 
 | Function        | Type                                         | Description                                                                            |
 |:----------------|:---------------------------------------------|:---------------------------------------------------------------------------------------|
-| GetBestMove     | Brd * int -> string * string                 | Get best move for current Board to the specified depth                                 |
+| GetBestMove     | Brd * int -> float * string                  | Get the scrore and best move for current Board to the specified depth                  |

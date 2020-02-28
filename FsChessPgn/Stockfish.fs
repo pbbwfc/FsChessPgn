@@ -44,17 +44,17 @@ module Stockfish =
                 let ucis = msg.Substring(st+2)
                 //need to change to SAN format
                 let bits = ucis.Trim().Split([|' '|])//|>Convert.UcisToSans bd mno
-                bits.[0]
+                bits.[0]|>MoveUtil.fromUci bd|>MoveUtil.toPgn bd
             let scr =
                 let st = msg.LastIndexOf("cp")
                 let ss = msg.Substring(st+2,10).Trim()
                 let bits = ss.Split([|' '|])
                 let cp = float(bits.[0])/100.0
-                cp.ToString("0.00")
+                cp
 
             scr,mv
         else
-            "0.00",msg
+            0.0,msg
 
     //anl
     let Stop() = 

@@ -50,6 +50,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pgn", "pgn", "{C578B2C6-1132-47A2-BD82-3E48691F13E2}"
 	ProjectSection(SolutionItems) = preProject
 		scripts\data\pgn\anastasian-lewis.pgn = scripts\data\pgn\anastasian-lewis.pgn
+		scripts\data\pgn\AndrewPLewis.pgn = scripts\data\pgn\AndrewPLewis.pgn
 		scripts\data\pgn\french_Qd7.pgn = scripts\data\pgn\french_Qd7.pgn
 		scripts\data\pgn\kasparov-deep-blue-1997.pgn = scripts\data\pgn\kasparov-deep-blue-1997.pgn
 		scripts\data\pgn\molinari-bordais-1979.pgn = scripts\data\pgn\molinari-bordais-1979.pgn
