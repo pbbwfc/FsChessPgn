@@ -29,21 +29,21 @@ module Library2 =
         let ftr = "</body></html>"
         //given a rav id get then list of indexes to locate
         //[2;3;5] indicates go to RAV at index 2, withing this go to RAV at index 3 and then get item at index 5
-        let rec getirs ir irl =
-            if ir<256 then ir::irl
+        let rec getirs (ir:int64) irl =
+            if ir<256L then (ir|>int)::irl
             else
                 let nir = ir >>> 8
-                let i = ir &&& 0x3F
-                getirs nir (i::irl)
+                let i = ir &&& (0x3F|>int64)
+                getirs nir ((i|>int)::irl)
         //get a rav id from a list of indexes to locate
         //[2;,3;5] indicates go to RAV at index 2, withing this go to RAV at index 3 and then get item at index 5
         let getir (iirl:int list) =
             let rec dogetir (irl:int list) ir =
                 if irl.IsEmpty then ir
                 else
-                    let nir = irl.Head|||(ir<<<8)
+                    let nir = (irl.Head|>int64)|||(ir<<<8)
                     dogetir irl.Tail nir
-            dogetir iirl 0
+            dogetir iirl 0L
         
         let highlight (mve:HtmlElement) =
             if oldstyle.IsSome then
@@ -53,13 +53,14 @@ module Library2 =
             oldstyle <- Some(mve,curr)
             mve.Style <- "BACKGROUND-COLOR: powderblue"
         
-        let rec mvtag ravno i (mte:MoveTextEntry) =
-            let ir = i|||(ravno<<<8)
+        let rec mvtag (ravno:int64) i (mte:MoveTextEntry) =
+            let ir = (i|>int64)|||(ravno<<<8)
+
             let idstr = "id = \"" + ir.ToString() + "\""
             match mte with
             |HalfMoveEntry(_,_,_,_) ->
                 let str = mte|>Game.MoveStr
-                if ravno=0 then " <span " + idstr + " class=\"mv\" style=\"color:black\">" + str + "</span>"
+                if ravno=0L then " <span " + idstr + " class=\"mv\" style=\"color:black\">" + str + "</span>"
                 else " <span " + idstr + " class=\"mv\" style=\"color:darkslategray\">" + str + "</span>"
             |CommentEntry(_) ->
                 let str = (mte|>Game.MoveStr).Trim([|'{';'}'|])
@@ -83,7 +84,7 @@ module Library2 =
             if mt.IsEmpty then hdr+ftr
             else
                 hdr +
-                (mt|>List.mapi (mvtag 0)|>List.reduce(+))
+                (mt|>List.mapi (mvtag 0L)|>List.reduce(+))
                 + ftr
         
         //dialogs
@@ -279,7 +280,7 @@ module Library2 =
             dlg
         
         let onclick(mve:HtmlElement) = 
-            let i = mve.Id|>int
+            let i = mve.Id|>int64
             irs <- getirs i []
             let mv =
                 if irs.Length>1 then 
@@ -293,7 +294,7 @@ module Library2 =
                             |_ -> failwith "should be a RAV"
                     getmv game.MoveText irs
                 else
-                    game.MoveText.[i]
+                    game.MoveText.[i|>int]
             match mv with
             |HalfMoveEntry(_,_,_,amv) ->
                 if amv.IsNone then failwith "should have valid aMove"
@@ -365,7 +366,7 @@ module Library2 =
             m
 
         let onrightclick(el:HtmlElement,psn) = 
-            rirs <- getirs (el.Id|>int) []
+            rirs <- getirs (el.Id|>int64) []
             if el.GetAttribute("className") = "mv" then mvctxmnu.Show(pgn,psn)
             elif el.GetAttribute("className") = "cm" then 
                 ccm <- el.InnerText

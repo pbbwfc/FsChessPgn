@@ -23,7 +23,8 @@ let getscrmno (i:int) (igm:Game) =
 
     let famvl =
         let hamvl = amvl|>List.filter(fun amv -> amv.PreBrd.WhosTurn=if isw then Player.White else Player.Black)
-        hamvl.[..19]
+        let lst = if hamvl.Length<20 then hamvl.Length-1 else 19
+        hamvl.[..lst]
 
     let getscr (amv:aMove) = 
         let scr,mv = Stockfish.GetBestMove(amv.PostBrd,15)
